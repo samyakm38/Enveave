@@ -1,0 +1,10 @@
+import { Navbar } from 'flowbite-react'
+import React from 'react'
+
+const Header = () => {
+  return (
+    <Navbar>Header</Navbar>
+  )
+}
+
+export default Header
