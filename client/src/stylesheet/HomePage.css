@@ -1,0 +1,19 @@
+.home-heading{
+    color: #113627;
+    font-family: 'Montserrat';
+    font-size: 3rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.home-partner-image{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*margin-left: 0.5rem;*/
+}
