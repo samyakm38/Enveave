@@ -2,7 +2,7 @@ import React from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from './pages/Home'
 import AboutUs from './pages/About-us.jsx'
-import Header from './components/Header'
+import Header from './components/main components/Header.jsx'
 import ContactUs from "./pages/Contact-us.jsx";
 import Volunteers from "./pages/Volunteers.jsx";
 import NGOs from "./pages/NGOs.jsx";
