@@ -1,10 +1,12 @@
 import React from 'react';
-import Header from "../components/Header.jsx";
+import Header from "../components/main components/Header.jsx";
+import Footer from "../components/main components/Footer.jsx";
 
 const Opportunities=() => {
     return (
         <>
             <Header/>
+            <Footer/>
         </>
     );
 };

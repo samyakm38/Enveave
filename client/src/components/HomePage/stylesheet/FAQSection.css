@@ -1,0 +1,74 @@
+/* Container for the entire FAQ section */
+.faq-container {
+    max-width: 80rem;
+    /*margin: 0 auto;*/
+    padding: 20px;
+    margin-bottom: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Heading for the FAQ section */
+.faq-heading {
+    color: #000;
+    font-family: 'Montserrat';
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Each FAQ item: full width with only a bottom border */
+.faq-item {
+    width: 100%;
+    border-bottom: 1px solid #000;
+    padding: 1.5rem 0;
+}
+
+/* FAQ question button styles */
+.faq-question {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    text-align: left;
+    font-family: 'Montserrat';
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* FAQ answer container padding */
+.faq-answer-container {
+    padding-top: 10px;
+}
+
+/* FAQ answer paragraph styles */
+.faq-answer {
+    width: 100%;
+    font-family: 'Montserrat';
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    color: #000;
+    margin: 0;
+}
+
+/* Arrow icon that rotates when open */
+.faq-arrow {
+    transition: transform 0.3s ease;
+}
+
+.faq-arrow.open {
+    transform: rotate(180deg);
+}
