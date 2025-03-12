@@ -24,7 +24,7 @@ const storySchema = new mongoose.Schema({
     creatorModel: {
         type: String,
         required: true,
-        enum: ['Volunteer', 'OpportunityProvider']
+        enum: ['Volunteer', 'OpportunityProvider', 'AuthVolunteer', 'AuthOpportunityProvider']
     },
     published: {
         type: Boolean,

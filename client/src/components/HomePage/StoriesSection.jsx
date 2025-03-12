@@ -1,70 +1,70 @@
-import React from 'react';
-import './stylesheet/StorySection.css';
+import React, { useState, useEffect } from 'react';
+import { Carousel } from 'flowbite-react';
+import { useMediaQuery } from 'react-responsive';
+import axios from 'axios'; // Import axios
+import StoryCard from '../main components/Card.jsx'; // Adjust the import path as needed
 
 const StoriesSection = () => {
-    // Data for three cards; update image paths, titles, and descriptions as needed
-    const cardData = [
-        {
-            image: '/home-story-1.png',
-            title: 'Planting Hope: A Volunteer’s Journey',
-            description:
-                'Inspired by Enveave, volunteers came together to plant over 5,000 trees in a barren village, transforming it into a thriving green haven. Their passion proves that small actions lead to big changes.',
-            link: '#'
-        },
-        {
-            image: '/home-story-2.png',
-            title: 'Clean Shores, Clear Futures',
-            description:
-                'With support from Enveave, an NGO organized a coastal cleanup drive that removed 10 tons of plastic waste from beaches, restoring marine habitats and raising awareness about plastic pollution.',
-            link: '#'
-        },
-        {
-            image: '/home-story-3.png',
-            title: 'Greener Workplaces, Greener Planet',
-            description:
-                'A corporate team partnered with Enveave to set up rooftop solar panels in schools, ensuring clean energy access for 1,000+ students while reducing their carbon footprint.',
-            link: '#'
-        }
-    ];
+    const [stories, setStories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Detect if the screen is mobile (max-width: 640px)
+    const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+
+    // Fetch stories from backend using axios with env variable
+    useEffect(() => {
+        const fetchStories = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/get-stories`);
+                const formattedStories = response.data.stories.map((story) => ({
+                    // image: story.photo || './public/home-story-1.png', // Fallback image if no photo
+                    image: '/home-story-1.png',
+                    title: story.title,
+                    description: story.content, // Map content to description
+                    link: '#', // Static link for now
+                }));
+                setStories(formattedStories);
+            } catch (err) {
+                setError(err.response?.data?.message || err.message || 'Failed to fetch stories');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStories();
+    }, []);
+
+    // Loading state
+    if (loading) {
+        return <div className="p-4 text-center">Loading stories...</div>;
+    }
+
+    // Error state
+    if (error) {
+        return <div className="p-4 text-center text-red-500">Error: {error}</div>;
+    }
 
     return (
-        <div className="flex justify-center gap-8 p-4">
-            {cardData.map((card, index) => (
-                <div
-                    key={index}
-                    className="max-w-sm bg-white border border-gray-200 rounded-xl shadow-lg dark:bg-gray-800 dark:border-gray-700 flex flex-col"
-                >
-                    <a href={card.link}>
-                        <img
-                            className="w-full rounded-t-xl p-4"
-                            src={card.image}
-                            alt={card.title}
-                        />
-                    </a>
-                    <div className="home-story-card-container">
-                        {/* Title in its own div */}
-                        <div className="home-story-card-title-container">
-                            <a href={card.link}>
-                                <h5>
-                                    {card.title}
-                                </h5>
-                            </a>
-                        </div>
-                        {/* Description in its own div with flex-grow to take up extra space */}
-                        <div className="home-story-description-container">
-                            <p>
-                                {card.description}
-                            </p>
-                        </div>
-                        {/* Button in its own div */}
-                        <div className="home-story-button">
-                            <a href={card.link}>
-                                Read more {">"}
-                            </a>
-                        </div>
-                    </div>
+        <div className="p-4">
+            {/* Conditional Rendering */}
+            {isMobile ? (
+                <div className="carousel-container px-8">
+                    <Carousel indicators={true} controls={true}>
+                        {stories.map((card, index) => (
+                            <StoryCard key={index} {...card} />
+                        ))}
+                    </Carousel>
                 </div>
-            ))}
+            ) : (
+                <div className="flex justify-center gap-8">
+                    {stories.map((card, index) => (
+                        <div key={index} className="max-w-sm">
+                            <StoryCard {...card} />
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

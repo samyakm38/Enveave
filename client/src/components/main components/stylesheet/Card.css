@@ -1,0 +1,90 @@
+/* Base styles optimized for mobile (max-width: 767px) */
+.card-container {
+    height: 100%;
+    padding: 0.75rem; /* Reduced padding for mobile */
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Smaller gap for mobile */
+    width: 100%; /* Full width on mobile */
+    max-width: 350px; /* Cap width to prevent stretching on larger mobile screens */
+    box-sizing: border-box; /* Include padding in width/height calculations */
+    margin: 0 auto; /* Center the card */
+}
+
+.card-title-container {
+    text-align: left;
+    height: 20%; /* Relative height */
+    min-height: 2rem; /* Ensure title is visible on small screens */
+}
+
+.card-description-container {
+    height: 60%; /* Relative height */
+    min-height: 8rem; /* Smaller minimum height for mobile */
+    overflow: hidden; /* Prevent overflow on small screens */
+}
+
+.card-description-container p {
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.875rem; /* Smaller font size for mobile */
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.4; /* Improved readability */
+    padding: 0.5rem 0; /* Vertical padding only */
+    margin: 0; /* Remove default margins */
+}
+
+.card-button {
+    width: 40%; /* Full width for easier tapping on mobile */
+    border-radius: 0.5rem;
+    border: 1px solid #000;
+    padding: 0.6rem; /* Slightly smaller padding */
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.875rem; /* Smaller font size for mobile */
+    font-style: normal;
+    font-weight: 500;
+    /*line-height: normal;*/
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box; /* Include padding in width */
+    min-height: 44px; /* Ensure button meets minimum touch target size */
+}
+
+.card-title-container h5 {
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem; /* Smaller title for mobile */
+    font-style: normal;
+    font-weight: 700;
+    margin: 0; /* Remove default margins */
+}
+
+/* Media Query for Smaller Mobile Screens (max-width: 576px) */
+@media (max-width: 576px) {
+    .card-container {
+        padding: 0.5rem; /* Even smaller padding for very small screens */
+        gap: 0.5rem;
+        max-width: 300px; /* Slightly narrower for smaller phones */
+    }
+
+    .card-description-container {
+        min-height: 6rem; /* Further reduce height */
+    }
+
+    .card-description-container p {
+        font-size: 0.75rem; /* Even smaller text for tiny screens */
+        padding: 0.4rem 0;
+    }
+
+    .card-button {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+        min-height: 40px; /* Slightly smaller but still tappable */
+    }
+
+    .card-title-container h5 {
+        font-size: 0.875rem; /* Smaller title for tiny screens */
+    }
+}

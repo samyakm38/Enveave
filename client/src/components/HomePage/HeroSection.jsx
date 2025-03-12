@@ -1,37 +1,30 @@
 import './stylesheet/HeroSection.css'
+import {Link} from "react-router-dom";
+import {useMediaQuery} from "react-responsive";
 
 const HeroSection=() => {
-    return (
-        <div className='home-hero-section-container'>
-            <div className='home-hero-section-mini-container'>
-                <div className='home-hero-section-text-container'>
-                    <p className='home-hero-section-sub-title'>Lead. Initiate. Collaborate.</p>
-                    <h1 className='home-hero-section-heading'>Connecting <br/> Volunteers with NGOs</h1>
-                    <p className='home-hero-section-sub-title'>Let a Million Environment Flowers Bloom.</p>
-                    <div className='home-hero-section-CTA-buttons-container'>
-                        <button className='home-hero-section-CTA-button-1'>Get Started</button>
-                        <button className='home-hero-section-CTA-button-2'>Learn More</button>
-                    </div>
-                </div>
-                <div className='home-hero-section-number-container'>
-                    <ul className='home-hero-section-number'>
-                        <li className='home-hero-section-number-item'>
-                            <h2 className='home-hero-section-number-item-title'>280k</h2>
-                            <p className='home-hero-section-number-item-sub-title'>Volunteers</p>
-                        </li>
-                        <li className='home-hero-section-number-item'>
-                            <h2 className='home-hero-section-number-item-title'>6k</h2>
-                            <p className='home-hero-section-number-item-sub-title'>Organizations</p>
-                        </li>
-                        <li className='home-hero-section-number-item'>
-                            <h2 className='home-hero-section-number-item-title'>12k</h2>
-                            <p className='home-hero-section-number-item-sub-title'>Activities</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
 
-            <img src='/home-hero-section-image.png' alt='Home Image'/>
+    const isMobile = useMediaQuery({ query: '(max-width: 640px)' });
+
+    const hero_section_background = {
+        backgroundImage: 'url("/home-hero-section.png")',
+        backgroundSize: 'cover',       // Ensures the image covers the entire div
+        backgroundPosition: 'center',   // Centers the image within the div
+        width: '100%',                 // Full width of the parent container
+        height: isMobile ? '50rem' : '42.5rem',               // Fixed height for the section
+    };
+    return (
+        <div className='home-hero-section-container' style={hero_section_background}>
+            <div className='home-hero-heading-container'>
+                <h1>Changing Lives For the Better</h1>
+                <h3>Enveave provides a one-stop platform for individuals, communities and organisations to come together, launch environmental initiatives and access support from volunteers, funders, and experts.</h3>
+            </div>
+            <Link to='/'>
+                <div className='home-hero-button'>
+                    Join Enveave
+                </div>
+            </Link>
+
         </div>
     );
 };

@@ -1,217 +1,92 @@
-/* ----------------------------------------------------
-   Base CSS (existing rules)
------------------------------------------------------*/
 .home-hero-section-container {
     display: flex;
-    /*width: 100%;*/
-}
-
-.home-hero-section-mini-container {
-    display: flex;
     flex-direction: column;
-}
-
-.home-hero-section-text-container {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /*align-items: center;*/
-    /*text-align: center;*/
-    width: 70rem;
-    height: 35rem;
-    flex-wrap: wrap;
-}
-
-.home-hero-section-sub-title {
-    /*width: 100%;*/
-    margin-left: 14rem;
-    color: #000;
-    font-family: "Montserrat";
-    font-size: 1.5rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    text-align: left;
-    flex-wrap: wrap;
-}
-
-.home-hero-section-heading {
-    color: #000;
-    /*width: 100%;*/
-    margin-left: 14rem;
-    font-family: "Montserrat";
-    font-size: 4rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    text-align: left;
-    flex-wrap: wrap;
-}
-
-.home-hero-section-container img {
-    flex: 1 1 auto;
-    width: 5rem;
-    height: 42rem;
-}
-
-.home-hero-section-number-container {
-    display: flex;
-    height: 7rem;
-    width: 70rem;
-    background: #113627;
-    /*flex-wrap: wrap;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    flex-direction: row;
-}
-
-.home-hero-section-number {
-    flex: 1;
-    display: flex;
-    gap: 13rem;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+
 }
 
-.home-hero-section-number-item {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+.home-hero-heading-container {
+    width: 80%; /* Changed from fixed width to percentage */
+    /*max-width: 64.3125rem; !* Maintains max width but allows flexibility *!*/
     text-align: center;
-}
-
-/* The spinning animation will be applied to this element */
-.home-hero-section-number-item-title {
-    color: #FFF;
-    font-size: 2.8rem;
-}
-
-.home-hero-section-number-item-sub-title {
-    color: #BABABA;
-    font-size: 1rem;
-}
-
-.home-hero-section-CTA-buttons-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    width: 56rem;
-    margin-left: 14rem;
     margin-top: 2rem;
-    gap: 2rem;
+    padding: 0 1rem; /* Adds horizontal padding for small screens */
 }
 
-.home-hero-section-CTA-button-1 {
+.home-hero-heading-container h1 {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4rem); /* Scales between 2.5rem and 4rem */
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.2; /* Improved readability */
+}
+
+.home-hero-heading-container h3 {
+    color: #000;
+    text-align: center;
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(1rem, 3vw, 1.25rem); /* Scales between 1rem and 1.25rem */
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.4; /* Improved readability */
+    margin: 1rem 0; /* Adds vertical spacing */
+}
+
+.home-hero-button {
+    margin-bottom: 2rem;
+    padding: 1rem 2rem; /* Increased horizontal padding for better touch target */
+    display: inline-flex; /* Better button behavior */
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
     border-radius: 0.5rem;
-    background: #113627;
-    padding: 1.0625rem 1.75rem;
+    background: #E46C43;
     color: #FFF;
-    font-family: 'Montserrat';
-    font-size: 1rem;
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.375rem); /* Scales button text */
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    text-decoration: none; /* If used as a link */
+    transition: transform 0.2s ease; /* Smooth scaling on hover */
 }
 
-.home-hero-section-CTA-button-2 {
-    border-radius: 0.5rem;
-    border: 2px solid #113627;
-    padding: 1.0625rem 1.75rem;
-    color: #113627;
-    font-family: 'Montserrat';
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-}
-
-/* ----------------------------------------------------
-   Animations
------------------------------------------------------*/
-
-/* Slide In Animation for text elements and CTA container */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50px);
+/* Media Queries for additional control */
+@media screen and (max-width: 768px) {
+    .home-hero-heading-container {
+        margin-top: 1.5rem;
+        padding: 0 0.5rem;
     }
-    to {
-        opacity: 1;
-        transform: translateX(0);
+
+    .home-hero-button {
+        padding: 0.875rem 1.5rem; /* Slightly smaller on tablets */
+        width: 80%; /* Makes button wider on smaller screens */
+        max-width: 20rem; /* Prevents it from getting too wide */
     }
 }
 
-/* Roll In Animation for the image */
-@keyframes rollIn {
-    from {
-        opacity: 0;
-        transform: rotate(-90deg) scale(0);
+@media screen and (max-width: 480px) {
+    .home-hero-section-container {
+        padding: 0.5rem;
+        /*height: 20rem;*/
     }
-    to {
-        opacity: 1;
-        transform: rotate(0deg) scale(1);
-    }
-}
 
-/* Spin In Animation for the number titles */
-@keyframes spinIn {
-    from {
-        opacity: 0;
-        transform: rotate(-360deg);
+    .home-hero-heading-container {
+        margin-top: 1rem;
     }
-    to {
-        opacity: 1;
-        transform: rotate(0deg);
+
+    .home-hero-button {
+        padding: 0.75rem 1rem;
+        width: 100%;
     }
 }
 
-/*@property --num {*/
-/*    syntax: "<integer>";*/
-/*    initial-value: 280;*/
-/*    inherits: false;*/
-/*}*/
-
-/*.home-hero-section-number-item-title {*/
-/*    animation: counter 3s alternate ease-in-out;*/
-/*    counter-reset: num var(--num);*/
-/*    !*font: 800 40px system-ui;*!*/
-/*    !*padding: 2rem;*!*/
-/*}*/
-/*.home-hero-section-number-item-title::after {*/
-/*    content: counter(num);*/
-/*}*/
-
-/*@keyframes counter {*/
-/*    from {*/
-/*        --num: 250;*/
-/*    }*/
-/*    to {*/
-/*        --num: 280;*/
-/*    }*/
-/*}*/
-
-/* Apply the sliding animation to text and CTA container */
-.home-hero-section-heading {
-    animation: slideIn 1s ease-out forwards;
-    animation-delay: 0.2s;
+/* Hover effect for larger screens */
+@media screen and (min-width: 769px) {
+    .home-hero-button:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
 }
-
-.home-hero-section-sub-title {
-    animation: slideIn 1s ease-out forwards;
-    animation-delay: 0.2s;
-}
-
-.home-hero-section-CTA-buttons-container {
-    animation: slideIn 1s ease-out forwards;
-    animation-delay: 0.2s;
-}
-
-
-/* Apply the spinning animation to number titles */
-/*.home-hero-section-number-item-title {*/
-/*    animation: spinIn 1s ease-out forwards;*/
-/*    animation-delay: 0.3s;*/
-/*}*/
