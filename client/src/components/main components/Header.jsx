@@ -59,7 +59,7 @@ const Header = () => {
                 <div className="flex md:order-2">
                     {/*{!isLoggedIn ? (*/}
                     {/*    <Link to="/login">*/}
-                    {/*      <Button color="gray">Login</Button>*/}
+                    {/*      <ButtonOrange color="gray">Login</ButtonOrange>*/}
                     {/*    </Link>*/}
                     {/*) : (*/}
                     {/*    <>*/}

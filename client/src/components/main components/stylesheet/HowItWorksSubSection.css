@@ -1,0 +1,42 @@
+.how-it-works-SubSection-text-container{
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.how-it-works-SubSection-text-container h2{
+    color: #236D4E;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.71706rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.how-it-works-SubSection-text-container h1{
+    color: #236D4E;
+    font-family: Montserrat, sans-serif;
+    font-size: 3.05263rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.how-it-works-SubSection-text-container h3{
+    color: #000;
+    font-family: Montserrat,sans-serif;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.how-it-works-SubSection-text-container p{
+    width: 12.9375rem;
+    color: #575757;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

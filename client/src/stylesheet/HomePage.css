@@ -52,44 +52,7 @@
     line-height: normal;
 }
 
-.home-CTA-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 3rem;
-}
 
-.home-CTA-section h5 {
-    color: #FFF;
-    font-family: 'Montserrat',sans-serif;
-    font-size: 1.25rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-}
-
-.home-CTA-section h1 {
-    color: #FFF;
-    text-align: center;
-    font-family: 'Montserrat',sans-serif;
-    font-size: 2.5rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-}
-
-.home-CTA-button {
-    border-radius: 0.5rem;
-    background: #F2F2E6;
-    color: #000;
-    font-family: 'Montserrat',sans-serif;
-    font-size: 1.375rem;
-    font-style: normal;
-    font-weight: 700;
-    padding: 1.0625rem 1.75rem;
-    line-height: normal;
-}
 
 /* Responsive Adjustments */
 @media (max-width: 640px) {
