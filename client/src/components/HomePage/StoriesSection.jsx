@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Carousel } from 'flowbite-react';
 import { useMediaQuery } from 'react-responsive';
 import axios from 'axios'; // Import axios
-import StoryCard from '../main components/Card.jsx'; // Adjust the import path as needed
+import StoryCard from '../main components/Story-Card.jsx'; // Adjust the import path as needed
 
 const StoriesSection = () => {
     const [stories, setStories] = useState([]);

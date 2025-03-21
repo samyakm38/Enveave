@@ -11,6 +11,7 @@ import '../stylesheet/HomePage.css'
 import FQASection from "../components/HomePage/FQASection.jsx";
 import Footer from "../components/main components/Footer.jsx";
 import PartnersSection from "../components/HomePage/PartnersSection.jsx";
+import CTASection from "../components/main components/CTASection.jsx";
 
 const Home = () => {
     // Style object for the stories background section
@@ -66,13 +67,7 @@ const Home = () => {
             <VisionSection/>
 
             {/*Call to Action section*/}
-            <div style={home_background_CTA} className='home-CTA-section'>
-                <h5>Lets start with the first step</h5>
-                <h1>Lead. Initiate. Collaborate.<br/>Let a Million Environment Flowers Bloom.</h1>
-                <a href=''>
-                    <div className='home-CTA-button'>Join Enveave</div>
-                </a>
-            </div>
+            <CTASection/>
 
             {/*FQA Section*/}
             <FQASection/>

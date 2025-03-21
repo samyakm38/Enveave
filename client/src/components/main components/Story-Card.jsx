@@ -1,7 +1,7 @@
 import React from 'react';
 import './stylesheet/Card.css';
 
-const Card = ({ image, title, description, link }) => (
+const StoryCard = ({ image, title, description, link }) => (
     <div className="bg-white border border-gray-200 rounded-xl shadow-lg dark:bg-gray-800 dark:border-gray-700 flex flex-col h-full">
         <a href={link}>
             <img className="w-full rounded-t-xl p-4" src={image} alt={title} />
@@ -22,4 +22,4 @@ const Card = ({ image, title, description, link }) => (
     </div>
 );
 
-export default Card;
+export default StoryCard;

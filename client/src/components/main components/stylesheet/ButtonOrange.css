@@ -1,0 +1,19 @@
+.button-orange-container{
+    border-radius: 0.5rem;
+    background: #E46C43;
+    display: inline-flex;
+    padding: 0.75rem 1.5rem;
+    justify-content: center;
+    align-items: center;
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.275rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.button-orange-container:hover {
+    background: #C95A34; /* Darker shade of the original orange */
+    cursor: pointer;
+}
