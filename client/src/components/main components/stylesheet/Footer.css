@@ -1,0 +1,189 @@
+.footer-container {
+    background-color: #123324; /* Dark green background */
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.footer-logo {
+    color: #FFF;
+    font-family: "Montserrat Alternates", sans-serif;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.footer-nav {
+    margin: 18px 0;
+}
+
+.footer-menu {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-menu li a {
+    color: #FFF;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    transition: color 0.3s ease-in-out;
+}
+
+.footer-menu li .active {
+    color: #f2f576; /* Yellow highlight for active link */
+    font-weight: bold;
+}
+
+.footer-menu li a:hover {
+    color: #f2f576;
+}
+
+.footer-line {
+    width: 85%;
+    height: 1px;
+    background: rgba(242, 242, 230, 0.50);
+    margin: 10px auto;
+}
+
+.footer-social {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.footer-icon {
+    font-size: 1.5rem;
+    color: #000000;
+    transition: transform 0.3s ease-in-out;
+}
+
+.footer-icon-wrapper:hover {
+    transform: scale(1.2);
+}
+
+.footer-copyright {
+    color: #FFF;
+    font-family: 'Montserrat';
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-top: 10px;
+}
+
+.footer-nav-container {
+    display: flex;
+    gap: 28rem;
+}
+
+.footer-content {
+    display: flex;
+    gap: 58rem;
+}
+
+.footer-icon-wrapper {
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: #FFFFFF;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+    .footer-container {
+        padding: 15px 0; /* Reduce padding */
+    }
+
+    .footer-logo {
+        font-size: 1.25rem; /* Reduce logo size */
+    }
+
+    .footer-nav {
+        display: none;
+        margin: 12px 0; /* Reduce margin */
+    }
+
+    .footer-menu {
+        flex-direction: column; /* Stack menu items vertically */
+        gap: 10px; /* Reduce gap between items */
+    }
+
+    .footer-line {
+        width: 90%; /* Slightly wider line for mobile */
+    }
+
+    .footer-social {
+        gap: 10px; /* Reduce gap between icons */
+        margin: 10px 0; /* Reduce margin */
+    }
+
+    .footer-icon {
+        font-size: 1.25rem; /* Reduce icon size */
+    }
+
+    .footer-icon-wrapper {
+        width: 2rem; /* Reduce wrapper size */
+        height: 2rem; /* Reduce wrapper size */
+    }
+
+    .footer-copyright {
+        font-size: 0.625rem; /* Reduce copyright text size */
+        margin-top: 8px; /* Reduce margin */
+    }
+
+    .footer-nav-container {
+        flex-direction: column; /* Stack nav containers vertically */
+        gap: 1.5rem; /* Reduce gap */
+    }
+
+    .footer-content {
+        flex-direction: column; /* Stack content vertically */
+        gap: 1rem; /* Reduce gap */
+    }
+}
+
+/* Optional: Tablet Adjustments (641px to 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .footer-container {
+        padding: 18px 0; /* Slightly reduced padding */
+    }
+
+    .footer-logo {
+        font-size: 1.375rem; /* Slightly smaller logo */
+    }
+
+    .footer-menu {
+        gap: 30px; /* Reduce gap between menu items */
+    }
+
+    .footer-social {
+        gap: 12px; /* Slightly reduce gap between icons */
+    }
+
+    .footer-icon {
+        font-size: 1.375rem; /* Slightly smaller icons */
+    }
+
+    .footer-copyright {
+        font-size: 0.7rem; /* Slightly smaller copyright text */
+    }
+
+    .footer-nav-container {
+        gap: 20rem; /* Slightly reduced gap */
+    }
+
+    .footer-content {
+        gap: 40rem; /* Slightly reduced gap */
+    }
+}

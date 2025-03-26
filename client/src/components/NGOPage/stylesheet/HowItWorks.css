@@ -1,0 +1,9 @@
+.how-it-works-text-container{
+    display : flex;
+    flex-direction: row;
+    gap: 8rem;
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center;
+
+}

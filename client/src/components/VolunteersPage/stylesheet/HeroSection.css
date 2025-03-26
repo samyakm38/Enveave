@@ -1,0 +1,37 @@
+.volunteer-hero-section-container{
+    display: flex;
+    flex-direction: column;
+    padding-top: 7rem;
+    padding-left: 5rem;
+    gap: 3rem;
+}
+
+.volunteer-hero-section-text-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    text-align: left;
+
+    gap: 1rem;
+}
+
+.volunteer-hero-section-text-container h3{
+    color: #FFF;
+    /*text-align: center;*/
+    font-family: Montserrat, sans-serif;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.volunteer-hero-section-text-container h1{
+    width: 40.1875rem;
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: 4rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+

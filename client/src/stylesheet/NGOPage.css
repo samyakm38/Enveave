@@ -1,0 +1,58 @@
+.NGO-CTA{
+    background: #113627;
+    width: 100%;
+    height: 13.75rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.NGO-CTA-text-container{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.NGO-CTA-text-container h1{
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: 2.75rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.NGO-CTA-text-container p{
+    color: #D5D5D5;
+    font-family: Montserrat,sans-serif;
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.NGO-how-it-works{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3.75rem;
+}
+
+.NGO-how-it-works-heading{
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 2.25rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.NGO-how-it-works-image-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*margin-top: 0.5rem;*/
+    /*padding: 1rem;*/
+    gap: 0.25rem;
+}

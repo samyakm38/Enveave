@@ -1,0 +1,92 @@
+.home-hero-section-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.home-hero-heading-container {
+    width: 80%; /* Changed from fixed width to percentage */
+    /*max-width: 64.3125rem; !* Maintains max width but allows flexibility *!*/
+    text-align: center;
+    margin-top: 2rem;
+    padding: 0 1rem; /* Adds horizontal padding for small screens */
+}
+
+.home-hero-heading-container h1 {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4rem); /* Scales between 2.5rem and 4rem */
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.2; /* Improved readability */
+}
+
+.home-hero-heading-container h3 {
+    color: #000;
+    text-align: center;
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(1rem, 3vw, 1.25rem); /* Scales between 1rem and 1.25rem */
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.4; /* Improved readability */
+    margin: 1rem 0; /* Adds vertical spacing */
+}
+
+.home-hero-button {
+    margin-bottom: 2rem;
+    padding: 1rem 2rem; /* Increased horizontal padding for better touch target */
+    display: inline-flex; /* Better button behavior */
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    background: #E46C43;
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.375rem); /* Scales button text */
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-decoration: none; /* If used as a link */
+    transition: transform 0.2s ease; /* Smooth scaling on hover */
+}
+
+/* Media Queries for additional control */
+@media screen and (max-width: 768px) {
+    .home-hero-heading-container {
+        margin-top: 1.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .home-hero-button {
+        padding: 0.875rem 1.5rem; /* Slightly smaller on tablets */
+        width: 80%; /* Makes button wider on smaller screens */
+        max-width: 20rem; /* Prevents it from getting too wide */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .home-hero-section-container {
+        padding: 0.5rem;
+        /*height: 20rem;*/
+    }
+
+    .home-hero-heading-container {
+        margin-top: 1rem;
+    }
+
+    .home-hero-button {
+        padding: 0.75rem 1rem;
+        width: 100%;
+    }
+}
+
+/* Hover effect for larger screens */
+@media screen and (min-width: 769px) {
+    .home-hero-button:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+}
