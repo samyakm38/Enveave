@@ -24,13 +24,7 @@ const Home = () => {
         height: '49.5rem',               // Fixed height for the section
     };
 
-    const home_background_CTA = {
-        backgroundImage: 'url("/home-background-CTA.png")',
-        backgroundSize: 'cover',       // Ensures the image covers the entire div
-        backgroundPosition: 'center',   // Centers the image within the div
-        width: '100%',                 // Full width of the parent container
-        height: '21.5625rem',               // Fixed height for the section
-    };
+
 
     return (
         <>

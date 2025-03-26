@@ -1,10 +1,10 @@
-.how-it-works-SubSection-text-container{
+.how-it-works-SubSection-text-container {
     display: flex;
     flex-direction: column;
     padding: 2rem;
 }
 
-.how-it-works-SubSection-text-container h2{
+.how-it-works-SubSection-text-container h2 {
     color: #236D4E;
     font-family: Montserrat, sans-serif;
     font-size: 1.71706rem;
@@ -13,7 +13,7 @@
     line-height: normal;
 }
 
-.how-it-works-SubSection-text-container h1{
+.how-it-works-SubSection-text-container h1 {
     color: #236D4E;
     font-family: Montserrat, sans-serif;
     font-size: 3.05263rem;
@@ -22,16 +22,16 @@
     line-height: normal;
 }
 
-.how-it-works-SubSection-text-container h3{
+.how-it-works-SubSection-text-container h3 {
     color: #000;
-    font-family: Montserrat,sans-serif;
+    font-family: Montserrat, sans-serif;
     font-size: 1.5rem;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
 }
 
-.how-it-works-SubSection-text-container p{
+.how-it-works-SubSection-text-container p {
     width: 12.9375rem;
     color: #575757;
     font-family: Montserrat, sans-serif;
@@ -39,4 +39,51 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+}
+
+/* Media Query for mobile devices */
+@media screen and (max-width: 768px) {
+    .how-it-works-SubSection-text-container {
+        padding: 1.5rem; /* Reduced padding */
+    }
+
+    .how-it-works-SubSection-text-container h2 {
+        font-size: 1.5rem; /* Slightly smaller */
+    }
+
+    .how-it-works-SubSection-text-container h1 {
+        font-size: 2.25rem; /* Reduced font size */
+    }
+
+    .how-it-works-SubSection-text-container h3 {
+        font-size: 1.25rem; /* Reduced font size */
+    }
+
+    .how-it-works-SubSection-text-container p {
+        width: 100%; /* Full width instead of fixed */
+        font-size: 1rem; /* Slightly smaller */
+    }
+}
+
+/* Additional breakpoint for very small screens */
+@media screen and (max-width: 480px) {
+    .how-it-works-SubSection-text-container {
+        padding: 1rem; /* Further reduced padding */
+    }
+
+    .how-it-works-SubSection-text-container h2 {
+        font-size: 1.25rem;
+    }
+
+    .how-it-works-SubSection-text-container h1 {
+        font-size: 1.875rem;
+    }
+
+    .how-it-works-SubSection-text-container h3 {
+        font-size: 1.125rem;
+    }
+
+    .how-it-works-SubSection-text-container p {
+        font-size: 0.875rem;
+    }
 }

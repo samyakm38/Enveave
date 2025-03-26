@@ -1,9 +1,26 @@
-.how-it-works-text-container{
-    display : flex;
+.how-it-works-text-container {
+    display: flex;
     flex-direction: row;
     gap: 8rem;
     margin-top: 1rem;
     justify-content: center;
     align-items: center;
+}
 
+/* Media Query for mobile devices */
+@media screen and (max-width: 768px) {
+    .how-it-works-text-container {
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        gap: 2rem; /* Reduced gap for mobile */
+        padding: 0 1rem; /* Added padding for edges */
+    }
+}
+
+/* Additional breakpoint for very small screens */
+@media screen and (max-width: 480px) {
+    .how-it-works-text-container {
+        gap: 1.5rem; /* Further reduced gap */
+        padding: 0 0.75rem; /* Slightly smaller padding */
+    }
 }

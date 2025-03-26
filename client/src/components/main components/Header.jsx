@@ -99,7 +99,7 @@ const Header = () => {
                                 fontFamily: 'Montserrat',
                             }}
                         >
-                            Sign-up
+                            Sign-in
                         </Button>
                     </Link>
                     <Navbar.Toggle />
@@ -128,7 +128,7 @@ const Header = () => {
                         onClick={() => setActiveLink('/ngos')}
                         style={getLinkStyle('/ngos')}
                     >
-                        NGOs
+                        Organization
                     </Link>
                     <Link
                         key={3}
