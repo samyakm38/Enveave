@@ -9,6 +9,7 @@ import rateLimit from 'express-rate-limit';
 import {env} from "./config/env.js";
 import {applySignupDelay} from "./helpers/securityHelper.js";
 import storyRoute from "./routes/story.route.js";
+import opportunityRoutes from "./routes/opportunity.route.js";
 import cors from 'cors';
 
 
@@ -35,17 +36,14 @@ const ipRateLimiter = rateLimit({
 // Apply rate limiting and custom delay to all /api routes
 app.use('/api/auth', ipRateLimiter, applySignupDelay);
 
-// Mount auth routes
+// Mount routes
 app.use('/api', authRoutes);
 app.use('/api', storyRoute);
+app.use('/api/opportunities', opportunityRoutes);
+app.use('/api/volunteer', volunteerRoutes);
 
 
 const { port } = env;
 app.listen(port, () => {
   console.log('Server is running on http://localhost:3000');
 });
-
-
-
-app.use('/api/volunteer', volunteerRoutes);
-app.use('/api/auth', authRoutes);

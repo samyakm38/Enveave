@@ -97,12 +97,6 @@ const opportunitySchema = new mongoose.Schema({
         endDate: {
             type: Date,
             required: true,
-            validate: {
-                validator: function(value) {
-                    return this.startDate <= value;
-                },
-                message: 'End date must be after start date'
-            }
         },
         timeCommitment: {
             type: String,

@@ -1,5 +1,3 @@
-
-
 // controllers/authController.js
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -215,6 +213,147 @@ export const signupVolunteer = async (req, res) => {
     } catch (error) {
         console.error('Error in volunteer signup:', error);
         if (error.code === 11000) return res.status(400).json({ message: 'Email already exists' });
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Admin Login
+export const loginAdmin = async (req, res) => {
+    try {
+        // Validate input
+        const loginSchema = Joi.object({
+            email: Joi.string().email().required().trim(),
+            password: Joi.string().required()
+        });
+
+        const { error } = loginSchema.validate(req.body);
+        if (error) return res.status(400).json({ message: error.details[0].message });
+
+        const { email, password } = req.body;
+        
+        // Sanitize email
+        const sanitizedEmail = sanitizeInput(email);
+        
+        // Find admin by email
+        const admin = await Admin.findOne({ email: sanitizedEmail });
+        if (!admin) return res.status(401).json({ message: 'Invalid email or password' });
+        
+        // Verify password
+        const isPasswordValid = await bcrypt.compare(password, admin.password);
+        if (!isPasswordValid) return res.status(401).json({ message: 'Invalid email or password' });
+        
+        // Generate JWT
+        const token = jwt.sign(
+            { id: admin._id, role: 'admin' }, 
+            env.jwtSecret, 
+            { expiresIn: '8h' }
+        );
+        
+        // Exclude password from response
+        const adminResponse = admin.toObject();
+        delete adminResponse.password;
+        
+        res.status(200).json({ 
+            message: 'Admin logged in successfully', 
+            admin: adminResponse, 
+            token 
+        });
+    } catch (error) {
+        console.error('Error in admin login:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Opportunity Provider Login
+export const loginOpportunityProvider = async (req, res) => {
+    try {
+        // Validate input
+        const loginSchema = Joi.object({
+            email: Joi.string().email().required().trim(),
+            password: Joi.string().required()
+        });
+
+        const { error } = loginSchema.validate(req.body);
+        if (error) return res.status(400).json({ message: error.details[0].message });
+
+        const { email, password } = req.body;
+        
+        // Sanitize email
+        const sanitizedEmail = sanitizeInput(email);
+        
+        // Find provider by email
+        const provider = await AuthOpportunityProvider.findOne({ 'contactPerson.email': sanitizedEmail });
+        if (!provider) return res.status(401).json({ message: 'Invalid email or password' });
+        
+        // Verify password
+        const isPasswordValid = await bcrypt.compare(password, provider.password);
+        if (!isPasswordValid) return res.status(401).json({ message: 'Invalid email or password' });
+        
+        // Generate JWT
+        const token = jwt.sign(
+            { id: provider._id, role: 'provider' }, 
+            env.jwtSecret, 
+            { expiresIn: '8h' }
+        );
+        
+        // Exclude password from response
+        const providerResponse = provider.toObject();
+        delete providerResponse.password;
+        
+        res.status(200).json({ 
+            message: 'Opportunity Provider logged in successfully', 
+            provider: providerResponse, 
+            token 
+        });
+    } catch (error) {
+        console.error('Error in opportunity provider login:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Volunteer Login
+export const loginVolunteer = async (req, res) => {
+    try {
+        // Validate input
+        const loginSchema = Joi.object({
+            email: Joi.string().email().required().trim(),
+            password: Joi.string().required()
+        });
+
+        const { error } = loginSchema.validate(req.body);
+        if (error) return res.status(400).json({ message: error.details[0].message });
+
+        const { email, password } = req.body;
+        
+        // Sanitize email
+        const sanitizedEmail = sanitizeInput(email);
+        
+        // Find volunteer by email
+        const volunteer = await AuthVolunteer.findOne({ email: sanitizedEmail });
+        if (!volunteer) return res.status(401).json({ message: 'Invalid email or password' });
+        
+        // Verify password
+        const isPasswordValid = await bcrypt.compare(password, volunteer.password);
+        if (!isPasswordValid) return res.status(401).json({ message: 'Invalid email or password' });
+        
+        // Generate JWT
+        const token = jwt.sign(
+            { id: volunteer._id, role: 'volunteer' }, 
+            env.jwtSecret, 
+            { expiresIn: '8h' }
+        );
+        
+        // Exclude password from response
+        const volunteerResponse = volunteer.toObject();
+        delete volunteerResponse.password;
+        
+        res.status(200).json({ 
+            message: 'Volunteer logged in successfully', 
+            volunteer: volunteerResponse, 
+            token 
+        });
+    } catch (error) {
+        console.error('Error in volunteer login:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

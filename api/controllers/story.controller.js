@@ -3,6 +3,10 @@ import Joi from 'joi';
 import {env} from "../config/env.js";
 import {sanitizeNestedObject} from "../helpers/securityHelper.js";
 import Story from "../models/story.model.js";
+import AuthVolunteer from "../models/auth.volunteer.model.js";
+import AuthOpportunityProvider from "../models/auth.opportunityprovider.model.js";
+import Volunteer from "../models/volunteer.model.js";
+import OpportunityProvider from "../models/opportunityprovider.model.js";
 
 const storySchema = Joi.object({
     title: Joi.string().max(100).required().trim(),
@@ -71,7 +75,18 @@ export const viewThreeStories = async (req, res) => {
         const stories = await Story.find({ published: true })
             .sort({ publishedAt: -1, createdAt: -1 })
             .limit(3)
-            .populate('creator', 'name email -_id')
+            .populate({
+                path: 'creator',
+                select: '-password -__v',
+                // Explicitly tell Mongoose which model to use based on the creatorModel field
+                match: (doc) => {
+                    if (doc.creatorModel === 'Volunteer' || doc.creatorModel === 'OpportunityProvider' || 
+                        doc.creatorModel === 'AuthVolunteer' || doc.creatorModel === 'AuthOpportunityProvider') {
+                        return {}; // Valid model, proceed with population
+                    }
+                    return null; // Invalid model, don't populate
+                }
+            })
             .lean();
 
         if (!stories.length) return res.status(404).json({ message: 'No published stories found.' });
