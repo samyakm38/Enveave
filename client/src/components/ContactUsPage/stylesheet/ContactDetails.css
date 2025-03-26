@@ -8,12 +8,13 @@
 
 .contact-us-image {
     border-radius: 1rem;
+    max-width: 100%; /* Added for responsiveness */
+    height: auto; /* Maintain aspect ratio */
 }
 
 .contact-us-content {
     text-align: left;
     width: 39.625rem;
-    /*padding: 1.5rem;*/
 }
 
 .contact-us-content h2 {
@@ -42,7 +43,7 @@
 .contact-us-icon {
     font-size: 24px;
     margin-right: 10px;
-    color: #4CAF50; /* Green color for icons */
+    color: #4CAF50;
 }
 
 .contact-us-label {
@@ -65,12 +66,12 @@
     margin-left: 0.5rem;
 }
 
-.contact-us-mini-container{
+.contact-us-mini-container {
     display: flex;
     flex-direction: column;
 }
 
-.contact-us-icon-container{
+.contact-us-icon-container {
     border: #113627 solid 1px;
     border-radius: 100%;
     width: 2.3125rem;
@@ -80,4 +81,71 @@
     align-items: center;
 }
 
+/* Media Query for mobile devices */
+@media screen and (max-width: 768px) {
+    .contact-us-container {
+        padding: 15px; /* Reduced padding */
+    }
 
+    .contact-us-content {
+        width: 100%; /* Full width on mobile */
+        padding: 0 1rem; /* Added padding */
+    }
+
+    .contact-us-content h2 {
+        width: 100%; /* Full width on mobile */
+        font-size: 1rem; /* Reduced font size */
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+    }
+
+    .contact-us-item {
+        margin-bottom: 12px; /* Slightly reduced spacing */
+    }
+
+    .contact-us-icon {
+        font-size: 20px; /* Slightly smaller icons */
+        margin-right: 8px;
+    }
+
+    .contact-us-label {
+        font-size: 0.8125rem; /* Slightly smaller */
+    }
+
+    .contact-us-value {
+        font-size: 0.6875rem; /* Slightly smaller */
+    }
+
+    .contact-us-icon-container {
+        width: 2rem; /* Slightly smaller */
+        height: 2rem;
+    }
+}
+
+/* Additional breakpoint for very small screens */
+@media screen and (max-width: 480px) {
+    .contact-us-container {
+        padding: 10px;
+    }
+
+    .contact-us-content h2 {
+        font-size: 0.875rem;
+    }
+
+    .contact-us-label {
+        font-size: 0.75rem;
+    }
+
+    .contact-us-value {
+        font-size: 0.625rem;
+    }
+
+    .contact-us-icon {
+        font-size: 18px;
+    }
+
+    .contact-us-icon-container {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+}

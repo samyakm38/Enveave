@@ -32,7 +32,7 @@ const Volunteers=() => {
                         <img src='/how-it-works-img-5.png' alt='how-it-works-img-5'/>
                     </div>
                 </div>
-                <CTASection/>
+                {/*<CTASection/>*/}
             <Footer/>
         </>
     );

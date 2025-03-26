@@ -7,6 +7,10 @@ import ContactUs from "./pages/Contact-us.jsx";
 import Volunteers from "./pages/Volunteers.jsx";
 import NGOs from "./pages/NGOs.jsx";
 import Opportunities from "./pages/Opportunities.jsx";
+import SignUpOption from "./pages/Sign-up-option.jsx";
+import SignUpVolunteer from "./pages/Sign-up-Volunteer.jsx";
+import SignUpNgo from "./pages/Sign-up-NGO.jsx";
+import Login from "./pages/Login.jsx";
 
 const App=() => {
     return (
@@ -19,6 +23,11 @@ const App=() => {
                 <Route path="/volunteers" element={<Volunteers/>}/>
                 <Route path='/ngos' element={<NGOs/>}/>
                 <Route path='/opportunities' element={<Opportunities/>}/>
+                <Route path='/sign-up-option' element={<SignUpOption/>}/>
+                <Route path='/sign-up/volunteer' element={<SignUpVolunteer/>}/>
+                <Route path='/sign-up/ngo' element={<SignUpNgo/>}/>
+                <Route path='/login' element={<Login/>}/>
+
             </Routes>
 
         </BrowserRouter>

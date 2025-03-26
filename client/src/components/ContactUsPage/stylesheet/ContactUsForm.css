@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     padding: 20px;
-    /*max-width: 600px;*/
     margin: 0 auto;
     width: 37.375rem;
     height: 36.125rem;
@@ -12,11 +11,8 @@
 }
 
 .contact-form {
-    /*background-color: #f9f9f9;*/
     padding: 20px;
-    /*border-radius: 10px;*/
     width: 100%;
-
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -34,8 +30,6 @@
     width: 100%;
     padding: 10px;
     border-radius: 0.5rem;
-    /*font-size: 16px;*/
-    /*color: #333;*/
     border: 1px solid #D6D6D6;
     background: #F5F5F5;
     color: #4B4B4B;
@@ -49,7 +43,7 @@
 .contact-form-input::placeholder,
 .contact-form-textarea::placeholder {
     color: #4B4B4B;
-    font-family: Montserrat,sans-serif;
+    font-family: Montserrat, sans-serif;
     font-size: 1rem;
     font-style: normal;
     font-weight: 500;
@@ -68,7 +62,7 @@
 
 .contact-form-submit {
     border-radius: 0.5rem;
-    background: #E46C43; /* Orange color from the image */
+    background: #E46C43;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -84,19 +78,79 @@
 
 .contact-form-privacy {
     font-size: 14px;
-    color: #4CAF50; /* Green color for the privacy text */
+    color: #4CAF50;
     margin: 0;
 }
 
-/* Responsive design */
-/*@media (min-width: 768px) {*/
-/*    .contact-form-footer {*/
-/*        flex-direction: row;*/
-/*        align-items: center;*/
-/*        justify-content: space-between;*/
-/*    }*/
+/* Media Query for mobile devices */
+@media screen and (max-width: 768px) {
+    .contact-form-container {
+        width: 100%; /* Full width on mobile */
+        height: auto; /* Allow height to adjust */
+        padding: 15px;
+        margin: 0 10px; /* Add some side margin */
+    }
 
-/*    .contact-form-submit {*/
-/*        margin-bottom: 0;*/
-/*    }*/
-/*}*/
+    .contact-form {
+        padding: 15px;
+        gap: 0.5rem; /* Reduced gap */
+    }
+
+    .contact-form-input,
+    .contact-form-textarea {
+        font-size: 0.875rem; /* Slightly smaller font */
+        padding: 8px; /* Reduced padding */
+    }
+
+    .contact-form-input::placeholder,
+    .contact-form-textarea::placeholder {
+        font-size: 0.875rem;
+    }
+
+    .contact-form-group {
+        margin-bottom: 12px; /* Slightly reduced */
+    }
+
+    .contact-form-submit {
+        width: 100%; /* Full width button */
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .contact-form-privacy {
+        font-size: 12px;
+    }
+}
+
+/* Additional breakpoint for very small screens */
+@media screen and (max-width: 480px) {
+    .contact-form-container {
+        padding: 10px;
+        margin: 0 5px;
+        border-radius: 0.75rem; /* Slightly smaller radius */
+    }
+
+    .contact-form {
+        padding: 10px;
+    }
+
+    .contact-form-input,
+    .contact-form-textarea {
+        font-size: 0.8125rem;
+        padding: 6px;
+    }
+
+    .contact-form-input::placeholder,
+    .contact-form-textarea::placeholder {
+        font-size: 0.8125rem;
+    }
+
+    .contact-form-submit {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+
+    .contact-form-privacy {
+        font-size: 11px;
+    }
+}
