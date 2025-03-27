@@ -40,3 +40,27 @@
     width: 45%;
     border-radius: 195px;
 }
+
+.vision-mission {
+    padding: 60px 10%;
+    background-color: #f8f8f8; /* Light background */
+}
+
+
+
+@media (max-width: 768px) {
+    .content-block {
+        flex-direction: column;
+        text-align: center; /* Centers text */
+        gap: 20px;
+    }
+
+    .text-content {
+        max-width: 90%; /* Make text take more space */
+    }
+
+    .vision-image, .mission-image {
+        width: 80%; /* Reduce image size for small screens */
+        border-radius: 30px;
+    }
+}

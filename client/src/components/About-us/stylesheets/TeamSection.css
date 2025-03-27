@@ -19,11 +19,23 @@
 }
 
 
+@media (max-width: 1024px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    }
+}
+
+/* Small screens (Mobile) */
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: repeat(1, 1fr); /* 1 column */
+    }
+}
+
+/* Ensures images don't get too large on smaller screens */
 .team-image {
-width: 100px;
-height: 100px;
-border-radius: 50%;
-object-fit: cover;
+    width: 80px; /* Slightly smaller images */
+    height: 80px;
 }
 
 h3 {
