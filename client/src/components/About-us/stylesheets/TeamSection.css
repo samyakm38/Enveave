@@ -1,0 +1,46 @@
+.team-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* ✅ Exactly 4 columns */
+    gap: 20px; /* Space between grid items */
+    justify-content: center; /* Center the grid */
+    padding: 20px;
+}
+
+.team-member {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center align everything */
+  text-align: center; /* Ensure text is centered */
+}
+
+
+.team-image {
+width: 100px;
+height: 100px;
+border-radius: 50%;
+object-fit: cover;
+}
+
+h3 {
+font-size: 1rem;
+margin-top: 10px;
+}
+
+p {
+color: #4CAF50;
+font-size: 0.9rem;
+}
+
+h2{
+    color: #000;
+    font-family: Montserrat;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}

@@ -8,7 +8,7 @@ import StoriesSection from "../components/HomePage/StoriesSection.jsx";
 import VisionSection from "../components/HomePage/VisionSection.jsx";
 // Global styles for homepage
 import '../stylesheet/HomePage.css'
-import FQASection from "../components/HomePage/FQASection.jsx";
+import FAQSection from "../components/main components/FAQSection.jsx";
 import Footer from "../components/main components/Footer.jsx";
 import PartnersSection from "../components/HomePage/PartnersSection.jsx";
 import CTASection from "../components/main components/CTASection.jsx";
@@ -63,8 +63,8 @@ const Home = () => {
             {/*Call to Action section*/}
             <CTASection/>
 
-            {/*FQA Section*/}
-            <FQASection/>
+            {/*FAQ Section*/}
+            <FAQSection/>
 
             {/*Footer*/}
             <Footer/>
