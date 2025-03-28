@@ -16,9 +16,11 @@ import cors from 'cors';
 dotenv.config();
 
 
-// console.log(process.env.MONGODB_URL);
-
-await connectDB();
+// Connect to database only if not in test mode
+// This prevents multiple connection attempts during testing
+if (process.env.NODE_ENV !== 'test') {
+  await connectDB();
+}
 
 const app = express();
 
@@ -33,8 +35,12 @@ const ipRateLimiter = rateLimit({
   message: 'Too many signup attempts from this IP, please try again after 15 minutes',
 });
 
-// Apply rate limiting and custom delay to all /api routes
-app.use('/api/auth', ipRateLimiter, applySignupDelay);
+// Apply rate limiting and custom delay to all /api routes ONLY in non-test environments
+if (process.env.NODE_ENV !== 'test') {
+  app.use('/api/auth', ipRateLimiter, applySignupDelay);
+} else {
+  console.log('Test mode: Rate limiting disabled');
+}
 
 // Mount routes
 app.use('/api', authRoutes);
@@ -43,7 +49,13 @@ app.use('/api/opportunities', opportunityRoutes);
 app.use('/api/volunteer', volunteerRoutes);
 
 
-const { port } = env;
-app.listen(port, () => {
-  console.log('Server is running on http://localhost:3000');
-});
+// Start the server only if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  const { port } = env;
+  app.listen(port, () => {
+    console.log('Server is running on http://localhost:3000');
+  });
+}
+
+// Export the app for testing
+export default app;
