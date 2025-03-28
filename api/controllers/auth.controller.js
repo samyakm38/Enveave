@@ -51,24 +51,27 @@ export const signupAdmin = async (req, res) => {
         const sanitizedData = sanitizeNestedObject({ name, email, phoneNumber });
         const { name: sanitizedName, email: sanitizedEmail, phoneNumber: sanitizedPhoneNumber } = sanitizedData;
 
-        // Update failed attempts
-        const attempt = req.attempt;
-        attempt.count += 1;
-        attempt.lastAttempt = Date.now();
-        failedAttempts.set(sanitizedEmail, attempt);
+        // Update failed attempts if security middleware is active
+        if (req.attempt) {
+            req.attempt.count += 1;
+            req.attempt.lastAttempt = Date.now();
+            failedAttempts.set(sanitizedEmail, req.attempt);
+        }
 
         // Check for existing admin
         const existingAdmin = await Admin.findOne({ email: sanitizedEmail });
         if (existingAdmin) {
-            if (attempt.count >= env.maxAttempts) {
-                attempt.lockedUntil = Date.now() + env.lockoutDuration;
-                failedAttempts.set(sanitizedEmail, attempt);
+            if (req.attempt && req.attempt.count >= env.maxAttempts) {
+                req.attempt.lockedUntil = Date.now() + env.lockoutDuration;
+                failedAttempts.set(sanitizedEmail, req.attempt);
             }
             return res.status(400).json({ message: 'Admin with this email already exists' });
         }
 
-        // Reset failed attempts on success
-        failedAttempts.delete(sanitizedEmail);
+        // Reset failed attempts on success if security middleware is active
+        if (req.attempt) {
+            failedAttempts.delete(sanitizedEmail);
+        }
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -110,26 +113,29 @@ export const signupOpportunityProvider = async (req, res) => {
         const sanitizedData = sanitizeNestedObject({ organizationName, contactPerson });
         const { organizationName: sanitizedOrganizationName, contactPerson: sanitizedContactPerson } = sanitizedData;
 
-        // Update failed attempts
-        const attempt = req.attempt;
-        attempt.count += 1;
-        attempt.lastAttempt = Date.now();
-        failedAttempts.set(sanitizedContactPerson.email, attempt);
+        // Update failed attempts if security middleware is active
+        if (req.attempt) {
+            req.attempt.count += 1;
+            req.attempt.lastAttempt = Date.now();
+            failedAttempts.set(sanitizedContactPerson.email, req.attempt);
+        }
 
         // Check for existing provider
         const existingProvider = await AuthOpportunityProvider.findOne({
             'contactPerson.email': sanitizedContactPerson.email,
         });
         if (existingProvider) {
-            if (attempt.count >= env.maxAttempts) {
-                attempt.lockedUntil = Date.now() + env.lockoutDuration;
-                failedAttempts.set(sanitizedContactPerson.email, attempt);
+            if (req.attempt && req.attempt.count >= env.maxAttempts) {
+                req.attempt.lockedUntil = Date.now() + env.lockoutDuration;
+                failedAttempts.set(sanitizedContactPerson.email, req.attempt);
             }
             return res.status(400).json({ message: 'Opportunity Provider with this email already exists' });
         }
 
-        // Reset failed attempts on success
-        failedAttempts.delete(sanitizedContactPerson.email);
+        // Reset failed attempts on success if security middleware is active
+        if (req.attempt) {
+            failedAttempts.delete(sanitizedContactPerson.email);
+        }
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -161,7 +167,6 @@ export const signupOpportunityProvider = async (req, res) => {
 // Volunteer Signup
 export const signupVolunteer = async (req, res) => {
     try {
-        // Validate input
         const { error } = volunteerSchema.validate(req.body);
         if (error) return res.status(400).json({ message: error.details[0].message });
 
@@ -171,24 +176,27 @@ export const signupVolunteer = async (req, res) => {
         const sanitizedData = sanitizeNestedObject({ name, email });
         const { name: sanitizedName, email: sanitizedEmail } = sanitizedData;
 
-        // Update failed attempts
-        const attempt = req.attempt;
-        attempt.count += 1;
-        attempt.lastAttempt = Date.now();
-        failedAttempts.set(sanitizedEmail, attempt);
+        // Update failed attempts if security middleware is active
+        if (req.attempt) {
+            req.attempt.count = (req.attempt.count || 0) + 1;
+            req.attempt.lastAttempt = Date.now();
+            failedAttempts.set(sanitizedEmail, req.attempt);
+        }
 
         // Check for existing volunteer
         const existingVolunteer = await AuthVolunteer.findOne({ email: sanitizedEmail });
         if (existingVolunteer) {
-            if (attempt.count >= env.maxAttempts) {
-                attempt.lockedUntil = Date.now() + env.lockoutDuration;
-                failedAttempts.set(sanitizedEmail, attempt);
+            if (req.attempt && req.attempt.count >= env.maxAttempts) {
+                req.attempt.lockedUntil = Date.now() + env.lockoutDuration;
+                failedAttempts.set(sanitizedEmail, req.attempt);
             }
             return res.status(400).json({ message: 'Volunteer with this email already exists' });
         }
 
-        // Reset failed attempts on success
-        failedAttempts.delete(sanitizedEmail);
+        // Reset failed attempts on success if security middleware is active
+        if (req.attempt) {
+            failedAttempts.delete(sanitizedEmail);
+        }
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
