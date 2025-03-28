@@ -1,0 +1,66 @@
+.vision-mission {
+    padding: 60px 10%;
+    background-color: #f8f8f8; /* Light background */
+}
+
+.content-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    gap:150px;
+}
+
+.reverse {
+    flex-direction: row-reverse; /* For alternating layout */
+}
+
+.text-content {
+    max-width: 50%;
+}
+
+.text-content h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.highlight {
+    border-left: 10px solid #165d3d;
+    padding-left: 10px;
+}
+
+.text-content p {
+    font-size: 1.1rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+.vision-image, .mission-image {
+    width: 45%;
+    border-radius: 195px;
+}
+
+.vision-mission {
+    padding: 60px 10%;
+    background-color: #f8f8f8; /* Light background */
+}
+
+
+
+@media (max-width: 768px) {
+    .content-block {
+        flex-direction: column;
+        text-align: center; /* Centers text */
+        gap: 20px;
+    }
+
+    .text-content {
+        max-width: 90%; /* Make text take more space */
+    }
+
+    .vision-image, .mission-image {
+        width: 80%; /* Reduce image size for small screens */
+        border-radius: 30px;
+    }
+}

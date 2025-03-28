@@ -1,0 +1,101 @@
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+/* Headings */
+h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem); /* Adjusts dynamically */
+  font-weight: bold;
+}
+
+.subheading {
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-top: 20px;
+  max-width: 90%;
+  margin: auto;
+}
+
+/* CTA Button */
+.cta-button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #e76f51;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cta-button:hover {
+  background-color: #d65a3f;
+}
+
+/* Stats Section */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+  color: #165d3d;
+  max-width: 800px;
+  margin: auto;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #165d3d;
+}
+
+.stat p {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 15px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+  }
+}
+
+@media (max-width: 480px) {
+  .stats {
+    grid-template-columns: 1fr; /* Single column for mobile */
+  }
+}
+
+@media (min-width: 1024px) { /* Only for PCs and large screens */
+  .cta-button {
+    margin-bottom: 40px; /* Adds space below the button */
+  }
+  .description{
+    margin-bottom: 40px;
+  }
+}
+
+.break{
+  display: block;
+}

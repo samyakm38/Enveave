@@ -1,0 +1,58 @@
+.team-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* ✅ Exactly 4 columns */
+    gap: 20px; /* Space between grid items */
+    justify-content: center; /* Center the grid */
+    padding: 20px;
+}
+
+.team-member {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center align everything */
+  text-align: center; /* Ensure text is centered */
+}
+
+
+@media (max-width: 1024px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    }
+}
+
+/* Small screens (Mobile) */
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: repeat(1, 1fr); /* 1 column */
+    }
+}
+
+/* Ensures images don't get too large on smaller screens */
+.team-image {
+    width: 80px; /* Slightly smaller images */
+    height: 80px;
+}
+
+h3 {
+font-size: 1rem;
+margin-top: 10px;
+}
+
+p {
+color: #4CAF50;
+font-size: 0.9rem;
+}
+
+h2{
+    color: #000;
+    font-family: Montserrat;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
