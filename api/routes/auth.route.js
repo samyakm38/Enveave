@@ -6,9 +6,11 @@ import {
     signupVolunteer,
     loginAdmin,
     loginOpportunityProvider,
-    loginVolunteer, verifyOtp
+    loginVolunteer,
+    verifyOtp,
+    unifiedLogin
 } from '../controllers/auth.controller.js';
-import {applyOtpRateLimit} from "../helpers/securityHelper.js";
+import {applyOtpRateLimit, applyLoginRateLimit} from "../helpers/securityHelper.js";
 
 const router = express.Router();
 
@@ -17,14 +19,17 @@ router.post('/auth/admin/signup', signupAdmin);
 router.post('/auth/opportunity-provider/signup', signupOpportunityProvider);
 router.post('/auth/volunteer/signup', signupVolunteer);
 
-// Login routes
-router.post('/auth/admin/login', loginAdmin);
-router.post('/auth/opportunity-provider/login', loginOpportunityProvider);
-router.post('/auth/volunteer/login', loginVolunteer);
+// Unified login route (new) with rate limiting
+router.post('/auth/login', applyLoginRateLimit, unifiedLogin);
+
+// Individual login routes (kept for backward compatibility) with rate limiting
+router.post('/auth/admin/login', applyLoginRateLimit, loginAdmin);
+router.post('/auth/opportunity-provider/login', applyLoginRateLimit, loginOpportunityProvider);
+router.post('/auth/volunteer/login', applyLoginRateLimit, loginVolunteer);
 
 // Apply OTP specific rate limiting
 router.post('/auth/volunteer/verify-otp', applyOtpRateLimit, verifyOtp);
-router.post('/auth/opportunity-provider/verify-otp',applyOtpRateLimit, verifyOtp);
+router.post('/auth/opportunity-provider/verify-otp', applyOtpRateLimit, verifyOtp);
 
 
 export default router;
