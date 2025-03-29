@@ -12,7 +12,7 @@ const HeroSection = () => {
         Creating a way to connect people ready to work, with people
         <span className="break"></span> who need work done
       </p>
-      <Link to="/contact">
+      <Link to="/contact-us">
         <button className="cta-button">Contact Us</button>
       </Link>
       <p className="description">
