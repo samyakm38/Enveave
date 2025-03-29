@@ -144,7 +144,7 @@ const Header = () => {
                         onClick={() => setActiveLink('/about-us')}
                         style={getLinkStyle('/about-us')}
                     >
-                        About us
+                        About Us
                     </Link>
                     <Link
                         key={5}
