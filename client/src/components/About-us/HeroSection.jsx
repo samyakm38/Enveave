@@ -20,7 +20,7 @@ const HeroSection = () => {
         communities, and organizations<span className="break"></span> to drive
         environmental change. We bring together volunteers, funders, and experts
         to launch and support<span className="break"></span> impactful
-        initiatives. Whether it's conservation, sustainability, or research,
+        initiatives. Whether it&#39;s conservation, sustainability, or research,
         Enveave makes it easy to<span className="break"></span> connect,
         collaborate, and create a greener future.
       </p>

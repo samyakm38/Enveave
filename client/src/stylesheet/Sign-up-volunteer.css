@@ -1,8 +1,13 @@
+/* --- Existing CSS from your request --- */
+
 .sign-up-volunteer-main-container{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50rem;
+    /* Consider using min-height instead of fixed height for flexibility */
+    min-height: calc(100vh - 160px); /* Example: viewport height minus header/footer */
+    padding: 2rem 0; /* Add some padding */
+    /* height: 50rem; */ /* Removed fixed height */
 }
 
 /* Updated Styles with prefix */
@@ -12,7 +17,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     max-width: 400px;
-    width: 100%;
+    width: 90%; /* Use percentage for better responsiveness */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -21,9 +26,10 @@
 }
 
 .sign-up-volunteer-logo {
-    /*width: 50px;*/
+    /*width: 50px;*/ /* Uncomment and adjust if needed */
     /*height: auto;*/
     margin-bottom: 25px;
+    max-width: 100px; /* Example constraint */
 }
 
 .sign-up-volunteer-heading { /* Added rule */
@@ -32,22 +38,24 @@
 
     /* Display sm/Semibold */
     font-family: Inter,sans-serif;
-    font-size: 1.875rem;
+    font-size: 1.875rem; /* 30px */
     font-style: normal;
     font-weight: 600;
-    line-height: 2.375rem; /* 126.667% */
+    line-height: 2.375rem; /* 38px */
+    margin-bottom: 8px; /* Added margin */
 }
 
 .sign-up-volunteer-subheading {
     color:  #535862;
     text-align: center;
+    margin-bottom: 25px; /* Added margin */
 
     /* Text md/Regular */
     font-family: Inter, sans-serif;
-    font-size: 1rem;
+    font-size: 1rem; /* 16px */
     font-style: normal;
     font-weight: 400;
-    line-height: 1.5rem; /* 150% */
+    line-height: 1.5rem; /* 24px */
 }
 
 /* Select form directly, no class needed unless specifically styling the form tag */
@@ -68,7 +76,7 @@
     margin-bottom: 8px;
     color: #34495e;
     font-weight: 500;
-    font-size: 0.9em;
+    font-size: 0.9em; /* 14.4px */
 }
 
 .sign-up-volunteer-input { /* Updated class */
@@ -76,9 +84,10 @@
     padding: 12px 15px;
     border: 1px solid #bdc3c7;
     border-radius: 6px;
-    box-sizing: border-box;
-    font-size: 1em;
+    box-sizing: border-box; /* Important */
+    font-size: 1em; /* 16px */
     color: #34495e;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Smooth transition */
 }
 
 .sign-up-volunteer-input::placeholder { /* Target updated class */
@@ -88,8 +97,16 @@
 .sign-up-volunteer-input:focus { /* Target updated class */
     outline: none;
     border-color: #E46C43;
-    box-shadow: 0 0 0 2px rgba(232, 119, 77, 0.2);
+    box-shadow: 0 0 0 3px rgba(228, 108, 67, 0.2); /* Slightly larger shadow */
 }
+
+/* Style for disabled inputs */
+.sign-up-volunteer-input:disabled {
+    background-color: #ecf0f1; /* Light grey background */
+    cursor: not-allowed; /* Indicate non-interactive state */
+    color: #95a5a6; /* Dim text color */
+}
+
 
 .sign-up-volunteer-submit-button {
     width: 100%;
@@ -98,15 +115,24 @@
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 1.1em;
+    font-size: 1.1em; /* 17.6px */
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-top: 10px;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    margin-top: 10px; /* Space above button */
 }
 
 .sign-up-volunteer-submit-button:hover {
-    background-color: #d36a3f;
+    background-color: #d36a3f; /* Darker shade on hover */
+}
+
+/* --- New/Missing CSS Rule --- */
+/* Style for disabled submit button */
+.sign-up-volunteer-submit-button:disabled {
+    background-color: #f3a58b; /* Lighter, less saturated orange */
+    color: #ffffff;
+    cursor: not-allowed; /* Indicate disabled state */
+    opacity: 0.7; /* Slightly faded */
 }
 
 .sign-up-volunteer-separator {
@@ -116,7 +142,7 @@
     color: #bdc3c7;
     margin: 25px 0;
     width: 100%;
-    font-size: 0.9em;
+    font-size: 0.9em; /* 14.4px */
 }
 
 .sign-up-volunteer-separator::before,
@@ -128,20 +154,61 @@
 
 .sign-up-volunteer-separator span {
     padding: 0 15px;
+    color: #95a5a6; /* Slightly adjust color */
 }
 
 .sign-up-volunteer-login-prompt {
-    color: #7f8c8d;
-    font-size: 0.95em;
-    margin-top: 0;
+    color: #535862; /* Match subheading color */
+    font-size: 0.95em; /* 15.2px */
+    margin-top: 0; /* Reset default margin if needed */
 }
 
 .sign-up-volunteer-login-link {
-    color: #006400;
+    color: #006400; /* Existing link color */
     text-decoration: none;
     font-weight: 600;
+    transition: color 0.2s ease; /* Smooth transition */
 }
 
 .sign-up-volunteer-login-link:hover {
     text-decoration: underline;
+    color: #004d00; /* Darker green on hover */
+}
+
+/* --- New/Missing CSS Rule --- */
+/* Styling for error messages */
+.sign-up-volunteer-error {
+    color: #c0392b; /* A standard error red color */
+    font-size: 0.85em; /* Slightly smaller text */
+    margin-top: 10px; /* Space above the error */
+    margin-bottom: 5px; /* Space below the error */
+    text-align: left; /* Align with the form labels/inputs */
+    width: 100%; /* Ensure it takes full width */
+    font-weight: 500; /* Make it slightly noticeable */
+}
+
+/* --- New/Missing CSS Rule --- */
+/* Styling for the button that should look like a link */
+.link-button-style {
+    background: none; /* Remove default button background */
+    border: none; /* Remove default button border */
+    padding: 0; /* Remove default button padding */
+    margin: 0; /* Remove default button margin */
+    font: inherit; /* Use the parent element's font */
+    color: #006400; /* Match link color */
+    cursor: pointer; /* Ensure pointer cursor */
+    text-decoration: underline; /* Make it look like a link */
+    font-weight: 600; /* Match link weight */
+    display: inline; /* Allow it to flow with text */
+}
+
+.link-button-style:hover {
+    color: #004d00; /* Darker green on hover, matching link hover */
+    text-decoration: underline; /* Ensure underline persists */
+}
+
+/* Optional: Add focus style for accessibility */
+.link-button-style:focus {
+    outline: 1px dotted #006400; /* Simple outline on focus */
+    outline-offset: 2px;
 }
