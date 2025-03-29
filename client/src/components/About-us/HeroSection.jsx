@@ -19,9 +19,10 @@ const HeroSection = () => {
         Enveave is a collaborative platform dedicated to empowering individuals,
         communities, and organizations<span className="about-us-break"></span> to drive
         environmental change. We bring together volunteers, funders, and experts
-        to launch and support<span className="about-us-break"></span> impactful
-        initiatives. Whether it's conservation, sustainability, or research,
-        Enveave makes it easy to<span className="about-us-break"></span> connect,
+
+        to launch and support<span className="break"></span> impactful
+        initiatives. Whether it&#39;s conservation, sustainability, or research,
+        Enveave makes it easy to<span className="break"></span> connect,
         collaborate, and create a greener future.
       </p>
       <div className="about-us-stats">
