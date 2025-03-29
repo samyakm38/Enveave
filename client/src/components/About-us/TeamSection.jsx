@@ -45,8 +45,8 @@ const teamMembers = [
 
 function renderTeamList(teamMembers) {
   return teamMembers.map((member, index) => (
-    <div key={index} className="team-member">
-      <img src={member.image} alt={member.name} className="team-image" />
+    <div key={index} className="about-us-team-member">
+      <img src={member.image} alt={member.name} className="about-us-team-image" />
       <h3>{member.name}</h3>
       <p>{member.role}</p>
     </div>
@@ -55,9 +55,9 @@ function renderTeamList(teamMembers) {
 
 const TeamSection = () => {
   return (
-    <section className="team-section">
+    <section className="about-us-team-section">
       <h2>Our Team</h2>
-      <div className="team-grid">{renderTeamList(teamMembers)}</div>
+      <div className="about-us-team-grid">{renderTeamList(teamMembers)}</div>
     </section>
   );
 };
