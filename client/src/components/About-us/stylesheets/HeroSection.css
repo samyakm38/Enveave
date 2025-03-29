@@ -1,4 +1,4 @@
-.hero {
+.about-us-hero {
   text-align: center;
   padding: 60px 20px;
 }
@@ -9,12 +9,12 @@ h1 {
   font-weight: bold;
 }
 
-.subheading {
+.about-us-subheading {
   font-size: 1.1rem;
   margin-top: 10px;
 }
 
-.description {
+.about-us-description {
   font-size: 1rem;
   color: #555;
   line-height: 1.6;
@@ -24,7 +24,7 @@ h1 {
 }
 
 /* CTA Button */
-.cta-button {
+.about-us-cta-button {
   margin-top: 20px;
   padding: 12px 24px;
   font-size: 1rem;
@@ -36,12 +36,12 @@ h1 {
   cursor: pointer;
 }
 
-.cta-button:hover {
+.about-us-cta-button:hover {
   background-color: #d65a3f;
 }
 
 /* Stats Section */
-.stats {
+.about-us-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 20px;
@@ -51,24 +51,24 @@ h1 {
   margin: auto;
 }
 
-.stat {
+.about-us-stat {
   text-align: center;
 }
 
-.stat h2 {
+.about-us-stat h2 {
   font-size: 2rem;
   font-weight: bold;
   color: #165d3d;
 }
 
-.stat p {
+.about-us-stat p {
   font-size: 1rem;
   font-weight: 500;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .hero {
+  .about-us-hero {
     padding: 40px 15px;
   }
 
@@ -76,26 +76,26 @@ h1 {
     font-size: 2rem;
   }
 
-  .stats {
+  .about-us-stats {
     grid-template-columns: repeat(2, 1fr); /* Two columns */
   }
 }
 
 @media (max-width: 480px) {
-  .stats {
+  .about-us-stats {
     grid-template-columns: 1fr; /* Single column for mobile */
   }
 }
 
 @media (min-width: 1024px) { /* Only for PCs and large screens */
-  .cta-button {
+  .about-us-cta-button {
     margin-bottom: 40px; /* Adds space below the button */
   }
-  .description{
+  .about-us-description{
     margin-bottom: 40px;
   }
 }
 
-.break{
+.about-us-break{
   display: block;
 }
