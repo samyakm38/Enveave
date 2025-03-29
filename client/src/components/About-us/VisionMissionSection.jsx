@@ -2,16 +2,16 @@ import "./stylesheets/VisionMissionSection.css";
 
 const VisionMissionSection = () => {
   return (
-    <section className="vision-mission">
-      <div className="content-block">
+    <section className="about-us-vision-mission">
+      <div className="about-us-content-block">
         <img
           src="/about-us-vision.png"
           alt="Hands holding plants"
-          className="vision-image"
+          className="about-us-vision-image"
         />
-        <div className="text-content">
+        <div className="about-us-text-content">
           <h2>
-            <span className="highlight"></span> Vision
+            <span className="about-us-highlight"></span> Vision
           </h2>
           <p>
             Enveave strives to be the leading platform for environmental
@@ -23,15 +23,15 @@ const VisionMissionSection = () => {
         </div>
       </div>
       {/* Mission Section */}
-      <div className="content-block reverse">
+      <div className="about-us-content-block about-us-reverse">
         <img
           src="/about-us-mission.png"
           alt="People planting trees"
-          className="mission-image"
+          className="about-us-mission-image"
         />
-        <div className="text-content">
+        <div className="about-us-text-content">
           <h2>
-            <span className="highlight"></span> Mission
+            <span className="about-us-highlight"></span> Mission
           </h2>
           <p>
             Enveave aims to get together civil society, individuals, expert

@@ -1,9 +1,9 @@
-.team-section {
+.about-us-team-section {
     text-align: center;
     padding: 40px 20px;
 }
 
-.team-grid {
+.about-us-team-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* ✅ Exactly 4 columns */
     gap: 20px; /* Space between grid items */
@@ -11,7 +11,7 @@
     padding: 20px;
 }
 
-.team-member {
+.about-us-team-member {
   display: flex;
   flex-direction: column; /* Stack items vertically */
   align-items: center; /* Center align everything */
@@ -20,20 +20,20 @@
 
 
 @media (max-width: 1024px) {
-    .team-grid {
+    .about-us-team-grid {
         grid-template-columns: repeat(2, 1fr); /* 2 columns */
     }
 }
 
 /* Small screens (Mobile) */
 @media (max-width: 768px) {
-    .team-grid {
+    .about-us-team-grid {
         grid-template-columns: repeat(1, 1fr); /* 1 column */
     }
 }
 
 /* Ensures images don't get too large on smaller screens */
-.team-image {
+.about-us-team-image {
     width: 80px; /* Slightly smaller images */
     height: 80px;
 }
