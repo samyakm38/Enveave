@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import for navigation
+import { useNavigate, Link } from 'react-router-dom'; // Added Link for navigation
 import axios from 'axios'; // Import axios for API calls
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
@@ -100,9 +100,9 @@ const Login = () => {
 
                         {/* Remember Me & Forgot Password Row */}
                         <div className="login-options-row">
-                            <a href="/forgot-password" className="login-forgot-password">
+                            <Link to="/forgot-password" className="login-forgot-password">
                                 Forgot password
-                            </a>
+                            </Link>
                         </div>
 
                         {/* Sign In Button */}

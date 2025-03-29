@@ -16,15 +16,25 @@ const otpSchema = new mongoose.Schema({
     },
     hashedPassword: { // Store the hash temporarily
         type: String,
-        required: [true, 'Hashed password is required.'],
+        // Not required for password reset purpose (will be set in password reset phase)
+        required: function() { return this.purpose !== 'password_reset'; },
     },
     userType: { // To distinguish between volunteer and provider data
         type: String,
         required: [true, 'User type is required.'],
         enum: {
-            values: ['volunteer', 'provider'],
+            values: ['volunteer', 'provider', 'admin'],
             message: '{VALUE} is not a supported user type for OTP.'
         }
+    },
+    userId: { // Reference to the user's ID (if known, used for password reset)
+        type: mongoose.Schema.Types.ObjectId,
+        required: false, // Optional, mostly used for password reset
+    },
+    purpose: { // Purpose of the OTP
+        type: String,
+        enum: ['registration', 'password_reset'],
+        default: 'registration',
     },
 
     // --- User Data (Fields relevant to the specific user type) ---

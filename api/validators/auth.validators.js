@@ -159,3 +159,40 @@ export const loginSchema = Joi.object({
             'any.required': commonMessages.password['any.required'],
         }),
 }).options({ abortEarly: false });
+
+// Schema for forgot password request (email only)
+export const forgotPasswordRequestSchema = Joi.object({
+    email: Joi.string().trim().email({ minDomainSegments: 2 }).max(254).required()
+        .messages(commonMessages.email)
+}).options({ abortEarly: false });
+
+// Schema for OTP verification during password reset
+export const forgotPasswordVerifySchema = Joi.object({
+    email: Joi.string().trim().email({ minDomainSegments: 2 }).max(254).required()
+        .messages(commonMessages.email),
+    
+    otp: Joi.string().trim().length(6).pattern(/^[0-9]+$/).required()
+        .messages({
+            'string.length': 'OTP must be exactly 6 digits.',
+            'string.pattern.base': 'OTP must only contain digits (0-9).',
+            'string.empty': 'OTP is required.',
+            'any.required': 'OTP is required.',
+        })
+}).options({ abortEarly: false });
+
+// Schema for password reset
+export const passwordResetSchema = Joi.object({
+    email: Joi.string().trim().email({ minDomainSegments: 2 }).max(254).required()
+        .messages(commonMessages.email),
+    
+    otp: Joi.string().trim().length(6).pattern(/^[0-9]+$/).required()
+        .messages({
+            'string.length': 'OTP must be exactly 6 digits.',
+            'string.pattern.base': 'OTP must only contain digits (0-9).',
+            'string.empty': 'OTP is required.',
+            'any.required': 'OTP is required.',
+        }),
+    
+    newPassword: Joi.string().min(8).max(72).required()
+        .messages(commonMessages.password)
+}).options({ abortEarly: false });

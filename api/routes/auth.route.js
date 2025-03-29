@@ -8,7 +8,10 @@ import {
     loginOpportunityProvider,
     loginVolunteer,
     verifyOtp,
-    unifiedLogin
+    unifiedLogin,
+    forgotPasswordRequest,
+    forgotPasswordVerifyOtp,
+    resetPassword
 } from '../controllers/auth.controller.js';
 import {applyOtpRateLimit, applyLoginRateLimit} from "../helpers/securityHelper.js";
 
@@ -31,5 +34,9 @@ router.post('/auth/volunteer/login', applyLoginRateLimit, loginVolunteer);
 router.post('/auth/volunteer/verify-otp', applyOtpRateLimit, verifyOtp);
 router.post('/auth/opportunity-provider/verify-otp', applyOtpRateLimit, verifyOtp);
 
+// Forgot Password Routes
+router.post('/auth/forgot-password/request', applyOtpRateLimit, forgotPasswordRequest);
+router.post('/auth/forgot-password/verify-otp', applyOtpRateLimit, forgotPasswordVerifyOtp);
+router.post('/auth/forgot-password/reset', applyOtpRateLimit, resetPassword);
 
 export default router;

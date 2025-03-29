@@ -11,6 +11,7 @@ import SignUpOption from "./pages/Sign-up-option.jsx";
 import SignUpVolunteer from "./pages/Sign-up-Volunteer.jsx";
 import SignUpNgo from "./pages/Sign-up-NGO.jsx";
 import Login from "./pages/Login.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/sign-up/volunteer" element={<SignUpVolunteer />} />
         <Route path="/sign-up/ngo" element={<SignUpNgo />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   );
