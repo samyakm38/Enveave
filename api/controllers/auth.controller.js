@@ -25,7 +25,10 @@ import {
     providerSchema,    // <-- Import from validator file
     volunteerSchema,   // <-- Import from validator file
     otpSchema,         // <-- Import from validator file
-    loginSchema        // <-- Import from validator file (assuming you created one)
+    loginSchema,       // <-- Import from validator file (assuming you created one)
+    forgotPasswordRequestSchema, // <-- Import from validator file
+    forgotPasswordVerifySchema,  // <-- Import from validator file
+    passwordResetSchema          // <-- Import from validator file
 } from '../validators/auth.validators.js'; // <-- Adjust path if needed
 
 // Test signup function (keep or remove as needed)
@@ -684,5 +687,220 @@ export const unifiedLogin = async (req, res) => {
     } catch (error) {
         console.error('Error in unified login:', error);
         res.status(500).json({ message: 'Server error during login', error: error.message });
+    }
+};
+
+// --- FORGOT PASSWORD: REQUEST OTP ---
+export const forgotPasswordRequest = async (req, res) => {
+    // 1. Validate input
+    const { error: validationError, value: validatedData } = forgotPasswordRequestSchema.validate(req.body);
+    if (validationError) {
+        const messages = validationError.details.map(d => d.message).join('. ');
+        if (req.attemptInfo) recordFailedAttempt(req);
+        return res.status(400).json({ message: messages });
+    }
+
+    // 2. Sanitize
+    const { email } = validatedData;
+    const sanitizedEmail = sanitizeInput(email);
+    if (!sanitizedEmail) {
+        if (req.attemptInfo) recordFailedAttempt(req);
+        return res.status(400).json({ message: "Invalid email format after sanitization." });
+    }
+
+    try {
+        // 3. Check if user exists (admin, volunteer, or provider)
+        const admin = await Admin.findOne({ email: sanitizedEmail });
+        const volunteer = await AuthVolunteer.findOne({ email: sanitizedEmail });
+        const provider = await AuthOpportunityProvider.findOne({ 'contactPerson.email': sanitizedEmail });
+
+        if (!admin && !volunteer && !provider) {
+            // For security reasons, we don't reveal if the email exists or not
+            // We'll just respond with success even if the email doesn't exist
+            return res.status(200).json({ 
+                message: 'If your email address is registered with us, you will receive a verification code shortly.' 
+            });
+        }
+
+        // 4. Generate OTP
+        const otpCode = generateOtp();
+
+        // 5. Determine user type
+        let userType = null;
+        let userId = null;
+
+        if (admin) {
+            userType = 'admin';
+            userId = admin._id;
+        } else if (volunteer) {
+            userType = 'volunteer';
+            userId = volunteer._id;
+        } else if (provider) {
+            userType = 'provider';
+            userId = provider._id;
+        }
+
+        // 6. Clear any previous password reset OTP records for this email
+        await Otp.deleteMany({ email: sanitizedEmail, purpose: 'password_reset' });
+
+        // 7. Create the OTP record for password reset
+        const otpEntry = new Otp({
+            email: sanitizedEmail,
+            otp: otpCode,
+            userType: userType,
+            userId: userId,
+            purpose: 'password_reset', // Indicate this is for password reset
+            hashedPassword: '', // Not needed for password reset request
+            // createdAt & expires are handled by the schema defaults/TTL
+        });
+        await otpEntry.save();
+
+        // 8. Send OTP Email
+        const emailSent = await sendOtpEmail(sanitizedEmail, otpCode);
+
+        if (!emailSent) {
+            console.warn(`Password reset OTP created, but failed to send email to ${sanitizedEmail}`);
+            return res.status(200).json({
+                message: 'Verification code generated. You should receive it shortly. If not, please check your spam folder or try again.'
+            });
+        }
+
+        // 9. Respond: Success
+        if (req.attemptInfo) resetAttempts(req);
+        res.status(200).json({
+            message: 'Verification code sent successfully. Please check your email inbox (and spam folder).'
+        });
+
+    } catch (error) {
+        console.error('Error in forgot password request:', error);
+        res.status(500).json({ 
+            message: 'An error occurred while processing your request. Please try again later.' 
+        });
+    }
+};
+
+// --- FORGOT PASSWORD: VERIFY OTP ---
+export const forgotPasswordVerifyOtp = async (req, res) => {
+    // 1. Validate input
+    const { error: validationError, value: validatedData } = forgotPasswordVerifySchema.validate(req.body);
+    if (validationError) {
+        const messages = validationError.details.map(d => d.message).join('. ');
+        if (req.attemptInfo) recordFailedAttempt(req);
+        return res.status(400).json({ message: messages });
+    }
+
+    // 2. Sanitize
+    const { email, otp } = validatedData;
+    const sanitizedEmail = sanitizeInput(email);
+    if (!sanitizedEmail) {
+        if (req.attemptInfo) recordFailedAttempt(req);
+        return res.status(400).json({ message: "Invalid email format after sanitization." });
+    }
+
+    try {
+        // 3. Find the OTP record for password reset
+        const otpRecord = await Otp.findOne({ 
+            email: sanitizedEmail, 
+            otp: otp,
+            purpose: 'password_reset'
+        });
+
+        if (!otpRecord) {
+            if (req.attemptInfo) recordFailedAttempt(req);
+            return res.status(400).json({ message: 'Invalid or expired verification code.' });
+        }
+
+        // 4. Respond with success, leave OTP record intact for the reset step
+        if (req.attemptInfo) resetAttempts(req);
+        res.status(200).json({
+            message: 'Verification successful. Please proceed to reset your password.'
+        });
+
+    } catch (error) {
+        console.error('Error in verifying password reset OTP:', error);
+        res.status(500).json({ 
+            message: 'An error occurred while verifying your code. Please try again.' 
+        });
+    }
+};
+
+// --- FORGOT PASSWORD: RESET PASSWORD ---
+export const resetPassword = async (req, res) => {
+    // 1. Validate input
+    const { error: validationError, value: validatedData } = passwordResetSchema.validate(req.body);
+    if (validationError) {
+        const messages = validationError.details.map(d => d.message).join('. ');
+        if (req.attemptInfo) recordFailedAttempt(req);
+        return res.status(400).json({ message: messages });
+    }
+
+    // 2. Sanitize
+    const { email, otp, newPassword } = validatedData;
+    const sanitizedEmail = sanitizeInput(email);
+    if (!sanitizedEmail) {
+        if (req.attemptInfo) recordFailedAttempt(req);
+        return res.status(400).json({ message: "Invalid email format after sanitization." });
+    }
+
+    try {
+        // 3. Find and verify the OTP record for password reset
+        const otpRecord = await Otp.findOne({ 
+            email: sanitizedEmail, 
+            otp: otp,
+            purpose: 'password_reset' 
+        });
+
+        if (!otpRecord) {
+            if (req.attemptInfo) recordFailedAttempt(req);
+            return res.status(400).json({ message: 'Invalid or expired verification code.' });
+        }
+
+        // 4. Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // 5. Find and update the user's password based on user type
+        const { userType } = otpRecord;
+        let updateResult;
+
+        if (userType === 'admin') {
+            updateResult = await Admin.findOneAndUpdate(
+                { email: sanitizedEmail },
+                { password: hashedPassword },
+                { new: true }
+            );
+        } else if (userType === 'volunteer') {
+            updateResult = await AuthVolunteer.findOneAndUpdate(
+                { email: sanitizedEmail },
+                { password: hashedPassword },
+                { new: true }
+            );
+        } else if (userType === 'provider') {
+            updateResult = await AuthOpportunityProvider.findOneAndUpdate(
+                { 'contactPerson.email': sanitizedEmail },
+                { password: hashedPassword },
+                { new: true }
+            );
+        }
+
+        if (!updateResult) {
+            // This should not happen since we've already verified the user exists
+            console.error(`Failed to update password for ${userType} with email: ${sanitizedEmail}`);
+            return res.status(404).json({ message: 'User account not found.' });
+        }
+
+        // 6. Delete the OTP record now that it's been used
+        await Otp.deleteOne({ _id: otpRecord._id });
+
+        // 7. Reset attempts and respond with success
+        if (req.attemptInfo) resetAttempts(req);
+        res.status(200).json({
+            message: 'Password has been reset successfully. You can now log in with your new password.'
+        });
+
+    } catch (error) {
+        console.error('Error in resetting password:', error);
+        res.status(500).json({ 
+            message: 'An error occurred while resetting your password. Please try again later.' 
+        });
     }
 };
