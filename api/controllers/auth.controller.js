@@ -237,6 +237,7 @@ export const signupVolunteer = async (req, res) => {
             hashedPassword: hashedPassword, // Store the hash
             profileStatus: profileStatus || 'NOT_STARTED',
             otp: otpCode,
+            userType: 'volunteer', // Set the type
             // createdAt & expires are handled by the schema defaults/TTL
         });
         await otpEntry.save(); // Save the temporary record
@@ -554,5 +555,134 @@ export const loginVolunteer = async (req, res) => {
     } catch (error) {
         console.error('Error in volunteer login:', error);
         res.status(500).json({ message: 'Server error during volunteer login', error: error.message });
+    }
+};
+
+// --- Unified Login (Handles all three user types: admin, provider, volunteer) ---
+export const unifiedLogin = async (req, res) => {
+    try {
+        // 1. Validate input
+        const { error: validationError, value: validatedData } = loginSchema.validate(req.body);
+        if (validationError) {
+            const messages = validationError.details.map(d => d.message).join('. ');
+            if (req.attemptInfo) recordFailedAttempt(req);
+            return res.status(400).json({ message: messages });
+        }
+
+        // 2. Sanitize
+        const { email, password } = validatedData;
+        const sanitizedEmail = sanitizeInput(email);
+        if (!sanitizedEmail) {
+            if (req.attemptInfo) recordFailedAttempt(req);
+            return res.status(400).json({ message: "Invalid email format after sanitization." });
+        }
+
+        // 3. Determine user type by checking all collections
+        // Try admin first
+        const admin = await Admin.findOne({ email: sanitizedEmail });
+        if (admin) {
+            // User is an admin
+            // Verify password
+            const isPasswordValid = await bcrypt.compare(password, admin.password);
+            if (!isPasswordValid) {
+                if (req.attemptInfo) recordFailedAttempt(req);
+                return res.status(401).json({ message: 'Invalid email or password' });
+            }
+
+            // Login Success - Reset attempts
+            if (req.attemptInfo) resetAttempts(req);
+
+            // Generate JWT
+            const token = jwt.sign(
+                { id: admin._id, role: 'admin' },
+                env.jwtSecret,
+                { expiresIn: env.jwtExpiration }
+            );
+
+            // Prepare Response
+            const adminResponse = admin.toObject();
+            delete adminResponse.password;
+
+            return res.status(200).json({
+                message: 'Admin logged in successfully',
+                user: adminResponse,
+                userType: 'admin',
+                token
+            });
+        }
+
+        // Try volunteer
+        const volunteer = await AuthVolunteer.findOne({ email: sanitizedEmail });
+        if (volunteer) {
+            // User is a volunteer
+            // Verify password
+            const isPasswordValid = await bcrypt.compare(password, volunteer.password);
+            if (!isPasswordValid) {
+                if (req.attemptInfo) recordFailedAttempt(req);
+                return res.status(401).json({ message: 'Invalid email or password' });
+            }
+
+            // Login Success - Reset attempts
+            if (req.attemptInfo) resetAttempts(req);
+
+            // Generate JWT
+            const token = jwt.sign(
+                { id: volunteer._id, role: 'volunteer' },
+                env.jwtSecret,
+                { expiresIn: env.jwtExpiration }
+            );
+
+            // Prepare Response
+            const volunteerResponse = volunteer.toObject();
+            delete volunteerResponse.password;
+
+            return res.status(200).json({
+                message: 'Volunteer logged in successfully',
+                user: volunteerResponse,
+                userType: 'volunteer',
+                token
+            });
+        }
+
+        // Try opportunity provider (check contact person email)
+        const provider = await AuthOpportunityProvider.findOne({ 'contactPerson.email': sanitizedEmail });
+        if (provider) {
+            // User is a provider
+            // Verify password
+            const isPasswordValid = await bcrypt.compare(password, provider.password);
+            if (!isPasswordValid) {
+                if (req.attemptInfo) recordFailedAttempt(req);
+                return res.status(401).json({ message: 'Invalid email or password' });
+            }
+
+            // Login Success - Reset attempts
+            if (req.attemptInfo) resetAttempts(req);
+
+            // Generate JWT
+            const token = jwt.sign(
+                { id: provider._id, role: 'provider' },
+                env.jwtSecret,
+                { expiresIn: env.jwtExpiration }
+            );
+
+            // Prepare Response
+            const providerResponse = provider.toObject();
+            delete providerResponse.password;
+
+            return res.status(200).json({
+                message: 'Opportunity Provider logged in successfully',
+                user: providerResponse,
+                userType: 'provider',
+                token
+            });
+        }
+
+        // If we get here, no user was found with the provided email
+        if (req.attemptInfo) recordFailedAttempt(req);
+        return res.status(401).json({ message: 'Invalid email or password' });
+
+    } catch (error) {
+        console.error('Error in unified login:', error);
+        res.status(500).json({ message: 'Server error during login', error: error.message });
     }
 };
