@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../redux/hooks';
+import { useToast } from '../components/main components/ToastContext';
 import '../stylesheet/Sign-up-volunteer.css';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
@@ -17,6 +18,8 @@ function SignUpVolunteer() {
     // Use our custom Redux auth hook
     const { registerVolunteer, verifyVolunteerOtp, loading, error } = useAuth();
     const navigate = useNavigate();
+    // Use our custom toast hook
+    const { showToast } = useToast();
 
     // Handler for Signup Form Submission
     const handleSignupSubmit = async (event) => {
@@ -34,11 +37,13 @@ function SignUpVolunteer() {
             const response = await registerVolunteer(signupData);
             console.log('Signup successful:', response);
             
+            showToast('Account created successfully! Please verify with OTP.', 'SUCCESS');
             setSubmittedEmail(email);
             setShowOtpForm(true);
         } catch (err) {
             // Error is handled by the hook and stored in error state
             console.error('Signup failed');
+            showToast('Signup failed. Please try again.', 'ERROR');
         }
     };
 
@@ -50,13 +55,23 @@ function SignUpVolunteer() {
             // Use our Redux hook to verify OTP
             await verifyVolunteerOtp(submittedEmail, otp);
             
-            alert('Account verified successfully! Please log in.');
-            navigate('/login');
+            showToast('Account verified successfully! Redirecting to login...', 'SUCCESS');
+            // Give the user time to see the toast before redirecting
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
         } catch (err) {
             // Error is handled by the hook
             console.error('OTP Verification failed');
+            showToast('OTP verification failed. Please try again.', 'ERROR');
             setOtp('');
         }
+    };
+
+    // Helper to go back from OTP form to Signup form
+    const handleGoBack = () => {
+        setShowOtpForm(false);
+        setOtp(''); // Clear OTP input
     };
 
     return (
@@ -169,7 +184,7 @@ function SignUpVolunteer() {
 
                             <p className="sign-up-volunteer-login-prompt" style={{marginTop: '15px'}}>
                                 Didn&#39;t receive OTP? Check spam or{' '}
-                                <button onClick={() => setShowOtpForm(false)} className="link-button-style">
+                                <button onClick={handleGoBack} className="link-button-style">
                                     go back
                                 </button>
                             </p>
