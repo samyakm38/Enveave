@@ -3,6 +3,7 @@ import {
   loginStart, 
   loginSuccess, 
   loginFailure, 
+  clearError,
   logout as logoutAction,
   updateUserProfile,
   registrationComplete
@@ -13,6 +14,11 @@ import { authService } from '../services/authService';
 export const useAuth = () => {
   const dispatch = useDispatch();
   const { currentUser, loading, error, userType } = useSelector((state) => state.auth);
+
+  // Clear error messages
+  const clearErrorMessage = () => {
+    dispatch(clearError());
+  };
 
   // Login user
   const login = async (email, password) => {
@@ -25,7 +31,7 @@ export const useAuth = () => {
       }));
       return data;
     } catch (error) {
-      dispatch(loginFailure(error.response?.data?.message || 'Login failed'));
+      dispatch(loginFailure(error.response?.data?.message || 'Wrong email or password'));
       throw error;
     }
   };
@@ -135,6 +141,7 @@ export const useAuth = () => {
     isProvider: userType === 'provider',
     loading,
     error,
+    clearErrorMessage,
     login,
     logout,
     registerVolunteer,

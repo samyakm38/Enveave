@@ -12,24 +12,27 @@ import SignUpVolunteer from "./pages/Sign-up-Volunteer.jsx";
 import SignUpNgo from "./pages/Sign-up-NGO.jsx";
 import Login from "./pages/Login.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
+import { ToastProvider } from "./components/main components/ToastContext.jsx";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/volunteers" element={<Volunteers />} />
-        <Route path="/ngos" element={<NGOs />} />
-        <Route path="/opportunities" element={<Opportunities />} />
-        <Route path="/sign-up-option" element={<SignUpOption />} />
-        <Route path="/sign-up/volunteer" element={<SignUpVolunteer />} />
-        <Route path="/sign-up/ngo" element={<SignUpNgo />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-      </Routes>
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/volunteers" element={<Volunteers />} />
+          <Route path="/ngos" element={<NGOs />} />
+          <Route path="/opportunities" element={<Opportunities />} />
+          <Route path="/sign-up-option" element={<SignUpOption />} />
+          <Route path="/sign-up/volunteer" element={<SignUpVolunteer />} />
+          <Route path="/sign-up/ngo" element={<SignUpNgo />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 };
 
