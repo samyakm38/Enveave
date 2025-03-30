@@ -16,7 +16,7 @@ const StoriesSection = () => {
     useEffect(() => {
         const fetchStories = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/get-stories`);
+                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/get-stories`);
                 const formattedStories = response.data.stories.map((story) => ({
                     // image: story.photo || './public/home-story-1.png', // Fallback image if no photo
                     image: '/home-story-1.png',

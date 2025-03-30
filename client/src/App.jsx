@@ -21,33 +21,38 @@ import OpportunityForm2 from "./pages/forms/Opportunity-form-2.jsx";
 import OpportunityForm3 from "./pages/forms/Opportunity-form-3.jsx";
 import OpportunityForm4 from "./pages/forms/Opportunity-form-4.jsx";
 import StoryForm from "./pages/forms/Story-form.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import { ToastProvider } from "./components/main components/ToastContext.jsx";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/volunteers" element={<Volunteers />} />
-        <Route path="/ngos" element={<NGOs />} />
-        <Route path="/opportunities" element={<Opportunities />} />
-        <Route path="/sign-up-option" element={<SignUpOption />} />
-        <Route path="/sign-up/volunteer" element={<SignUpVolunteer />} />
-        <Route path="/sign-up/ngo" element={<SignUpNgo />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/Ngo-form-1" element={<NgoForm1 />} />
-        <Route path="/Ngo-form-2" element={<NgoForm2 />} />
-        <Route path="/Volunteer-form-1" element={<VolunteerForm1 />} />
-        <Route path="/Volunteer-form-2" element={<VolunteerForm2 />} />
-        <Route path="/Volunteer-form-3" element={<VolunteerForm3 />} />
-        <Route path="/Opportunity-form-1" element={<OpportunityForm1 />} />
-        <Route path="/Opportunity-form-2" element={<OpportunityForm2 />} />
-        <Route path="/Opportunity-form-3" element={<OpportunityForm3 />} />
-        <Route path="/Opportunity-form-4" element={<OpportunityForm4 />} />
-        <Route path="/Story-form" element={<StoryForm />} />
-      </Routes>
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/volunteers" element={<Volunteers />} />
+          <Route path="/ngos" element={<NGOs />} />
+          <Route path="/opportunities" element={<Opportunities />} />
+          <Route path="/sign-up-option" element={<SignUpOption />} />
+          <Route path="/sign-up/volunteer" element={<SignUpVolunteer />} />
+          <Route path="/sign-up/ngo" element={<SignUpNgo />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/Ngo-form-1" element={<NgoForm1 />} />
+          <Route path="/Ngo-form-2" element={<NgoForm2 />} />
+          <Route path="/Volunteer-form-1" element={<VolunteerForm1 />} />
+          <Route path="/Volunteer-form-2" element={<VolunteerForm2 />} />
+          <Route path="/Volunteer-form-3" element={<VolunteerForm3 />} />
+          <Route path="/Opportunity-form-1" element={<OpportunityForm1 />} />
+          <Route path="/Opportunity-form-2" element={<OpportunityForm2 />} />
+          <Route path="/Opportunity-form-3" element={<OpportunityForm3 />} />
+          <Route path="/Opportunity-form-4" element={<OpportunityForm4 />} />
+          <Route path="/Story-form" element={<StoryForm />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 };
 
