@@ -4,42 +4,42 @@ const teamMembers = [
   {
     name: "Olivia Rhye",
     role: "Founder & CEO",
-    image: "/about-us-team-member-0.png",
+    image: "/Team_member_images/about-us-team-member-0.png",
   },
   {
     name: "Phoenix Baker",
     role: "Engineering Manager",
-    image: "/about-us-team-member-1.png",
+    image: "/Team_member_images/about-us-team-member-1.png",
   },
   {
     name: "Lana Steiner",
     role: "Product Manager",
-    image: "/about-us-team-member-2.png",
+    image: "/Team_member_images/about-us-team-member-2.png",
   },
   {
     name: "Demi Wilkinson",
     role: "Frontend Developer",
-    image: "/about-us-team-member-3.png",
+    image: "/Team_member_images/about-us-team-member-3.png",
   },
   {
     name: "Candice Wu",
     role: "Backend Developer",
-    image: "/about-us-team-member-4.png",
+    image: "/Team_member_images/about-us-team-member-4.png",
   },
   {
     name: "Natali Craig",
     role: "Product Designer",
-    image: "/about-us-team-member-5.png",
+    image: "/Team_member_images/about-us-team-member-5.png",
   },
   {
     name: "Drew Cano",
     role: "UX Researcher",
-    image: "/about-us-team-member-6.png",
+    image: "/Team_member_images/about-us-team-member-6.png",
   },
   {
     name: "Orlando Diggs",
     role: "Customer Success",
-    image: "/about-us-team-member-7.png",
+    image: "/Team_member_images/about-us-team-member-7.png",
   },
 ];
 
