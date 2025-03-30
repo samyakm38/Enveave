@@ -1,0 +1,85 @@
+.ngo-form-2-form-container {
+    width: 75%;
+    margin: auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+    border: 2px solid #D9D9D9;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  
+  label {
+    margin-top: 10px;
+  }
+  
+
+  .ngo-form-2-input, select, textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+
+
+.ngo-form-2-progress-indicator{
+  justify-content: center;
+  display: flex;
+  margin-bottom: 25px;
+}
+
+
+
+.ngo-form-2-tagline{
+  margin-top: 35px;
+}
+
+
+@media (max-width: 768px) {
+  .ngo-form-2 {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .ngo-form-2-tagline {
+    font-size: 1.3rem;
+  }
+
+  .ngo-form-2-progress-indicator img {
+    width: 120px; /* Smaller size for tablets */
+  }
+
+  .ngo-form-2-form-container {
+    padding: 20px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ngo-form-2-progress-indicator img {
+    width: 100px; /* Smaller size for mobile screens */
+  }
+
+  .ngo-form-2-form-container {
+    padding: 10px;
+  }
+
+  label {
+    font-size: 12px;
+  }
+}
