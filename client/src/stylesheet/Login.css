@@ -150,6 +150,19 @@
     text-decoration: underline;
 }
 
+.login-error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9em;
+    box-sizing: border-box;
+}
+
 /* Media Query for mobile devices */
 @media screen and (max-width: 768px) {
     .login-page-container {

@@ -3,6 +3,7 @@ import OpportunityProvider from "../models/opportunityprovider.model.js";
 import { sanitizeNestedObject } from "../helpers/securityHelper.js";
 import mongoose from "mongoose";
 import Joi from "joi";
+import { upload, uploadImageToCloudinary } from "../helpers/imageUpload.js";
 
 /**
  * Get all opportunities
@@ -247,6 +248,20 @@ export const createOpportunity = async (req, res) => {
             return res.status(403).json({ message: 'Only opportunity providers can create opportunities' });
         }
 
+        // Handle image upload if present
+        let imageUrl = '';
+        if (req.file) {
+            try {
+                imageUrl = await uploadImageToCloudinary(
+                    req.file.buffer,
+                    'opportunities'
+                );
+            } catch (uploadError) {
+                console.error('Image upload error:', uploadError);
+                return res.status(400).json({ message: 'Error uploading image', error: uploadError.message });
+            }
+        }
+
         // Validate the opportunity data
         const opportunitySchema = Joi.object({
             basicDetails: Joi.object({
@@ -331,6 +346,11 @@ export const createOpportunity = async (req, res) => {
         // Sanitize input data
         const sanitizedData = sanitizeNestedObject(req.body);
         
+        // Add the image URL if an image was uploaded
+        if (imageUrl) {
+            sanitizedData.basicDetails.photo = imageUrl;
+        }
+        
         // Find the provider profile using auth ID from token
         const provider = await OpportunityProvider.findOne({ auth: req.user.id });
         if (!provider) {
@@ -401,6 +421,25 @@ export const updateOpportunity = async (req, res) => {
         // Check if this provider owns the opportunity
         if (opportunity.provider.toString() !== provider._id.toString()) {
             return res.status(403).json({ message: 'You are not authorized to update this opportunity' });
+        }
+        
+        // Handle image upload if present
+        if (req.file) {
+            try {
+                const imageUrl = await uploadImageToCloudinary(
+                    req.file.buffer,
+                    'opportunities'
+                );
+                
+                // Add the image URL to the body data
+                if (!req.body.basicDetails) {
+                    req.body.basicDetails = {};
+                }
+                req.body.basicDetails.photo = imageUrl;
+            } catch (uploadError) {
+                console.error('Image upload error:', uploadError);
+                return res.status(400).json({ message: 'Error uploading image', error: uploadError.message });
+            }
         }
         
         // Clean up the update data to handle empty objects and invalid dates

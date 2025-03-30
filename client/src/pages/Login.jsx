@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
@@ -11,7 +11,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     
     // Use our custom auth hook from Redux
-    const { login, loading, error } = useAuth();
+    const { login, loading, error, clearErrorMessage } = useAuth();
     const navigate = useNavigate();
 
     // Handle form submission
@@ -36,6 +36,18 @@ const Login = () => {
             // Error handling is managed by the hook
             console.error('Login attempt failed');
         }
+    };
+
+    // Handle navigation to forgot password page
+    const handleForgotPasswordClick = () => {
+        clearErrorMessage(); // Clear error state before navigating
+        navigate('/forgot-password');
+    };
+
+    // Handle navigation to signup page
+    const handleSignUpClick = () => {
+        clearErrorMessage(); // Clear error state before navigating
+        navigate('/sign-up-option');
     };
 
     return (
@@ -86,9 +98,13 @@ const Login = () => {
 
                         {/* Remember Me & Forgot Password Row */}
                         <div className="login-options-row">
-                            <Link to="/forgot-password" className="login-forgot-password">
+                            <button 
+                                type="button" 
+                                className="login-forgot-password" 
+                                onClick={handleForgotPasswordClick}
+                            >
                                 Forgot password
-                            </Link>
+                            </button>
                         </div>
 
                         {/* Sign In Button */}
@@ -103,7 +119,7 @@ const Login = () => {
 
                     {/* Sign Up Prompt */}
                     <p className="login-signup-prompt">
-                        Don&#39;t have an account? <Link to="/sign-up-option" className="login-signup-link">Sign up</Link>
+                        Don&#39;t have an account? <button onClick={handleSignUpClick} className="login-signup-link">Sign up</button>
                     </p>
                 </div>
             </div>
