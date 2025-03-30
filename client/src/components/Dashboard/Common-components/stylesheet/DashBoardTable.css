@@ -1,0 +1,171 @@
+/* =================================
+   BASE DashboardTable Styles
+   ================================= */
+.dashboard-table-container {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*flex-direction: column;*/
+    width: 98%;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 0 0 10px 0;
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+/* --- Tabs --- */
+.dashboard-table-tabs {
+    display: flex;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 5px;
+    padding: 5px 15px 0 15px;
+}
+
+.dashboard-table-tab {
+    padding: 10px 12px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    color: #6c757d;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.dashboard-table-tab:hover {
+    color: #495057;
+}
+
+.dashboard-table-tab-active {
+    color: #343a40;
+    /* Default active color - can be overridden by specific CSS */
+    border-bottom-color: #28a745;
+    font-weight: 600;
+}
+
+/* --- Table Structure --- */
+.dashboard-table-wrapper {
+    overflow-x: auto; /* Base horizontal scroll */
+    padding: 0 15px 5px 15px;
+}
+
+.dashboard-table-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88em;
+    color: #333;
+}
+
+.dashboard-table-header {
+    background-color: #f8f9fa;
+}
+
+.dashboard-table-header-cell {
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 1px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.dashboard-table-row {
+    border-bottom: 1px solid #e9ecef;
+}
+.dashboard-table-row:last-child {
+    border-bottom: none;
+}
+.dashboard-table-row:hover {
+    background-color: #f8f9fa;
+}
+
+.dashboard-table-cell {
+    padding: 10px 8px;
+    vertical-align: middle;
+    line-height: 1.4;
+}
+
+/* --- Empty State --- */
+.dashboard-table-row-empty {
+    border-bottom: none;
+}
+.dashboard-table-cell-empty {
+    text-align: center;
+    padding: 30px 10px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* =================================
+   BASE Mobile Responsiveness
+   (Card-like display method)
+   ================================= */
+@media (max-width: 768px) {
+    /* Apply mobile styles only if the container DOESN'T have a specific class like 'no-mobile-cards' */
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-header {
+        border: none; clip: rect(0 0 0 0); height: 1px; margin: -1px;
+        overflow: hidden; padding: 0; position: absolute; width: 1px;
+    }
+
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-table,
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-body,
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-row,
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell {
+        display: block;
+    }
+
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-row {
+        border: 1px solid #e9ecef; border-radius: 5px; margin-bottom: 10px; padding: 10px;
+    }
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-row:last-child{
+        margin-bottom: 0;
+    }
+    /* Don't apply card styles to the empty row */
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-row-empty {
+        border: none; border-radius: 0; margin-bottom: 0; padding: 0; display: table-row;
+    }
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell-empty {
+        display: table-cell;
+    }
+
+
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell {
+        padding: 5px 0 5px 50%; /* Default padding */
+        border-bottom: 1px dashed #eee;
+        text-align: right;
+        position: relative;
+        white-space: normal;
+        min-height: 1.5em;
+    }
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell:last-child {
+        border-bottom: none;
+    }
+
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell::before {
+        content: attr(data-label);
+        position: absolute; left: 5px; width: 45%; padding-right: 10px;
+        white-space: nowrap; text-align: left; font-weight: bold; color: #555;
+    }
+
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell-empty {
+        padding: 20px; text-align: center; padding-left: 0;
+    }
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell-empty::before {
+        content: "";
+    }
+
+    /* Adjust tabs on mobile */
+    .dashboard-table-tabs { padding: 5px 10px 0 10px; }
+    .dashboard-table-tab { padding: 8px 10px; font-size: 0.85em; }
+}
+
+@media (max-width: 480px) {
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell { padding-left: 40%; }
+    .dashboard-table-container:not(.dashboard-table-no-mobile-cards) .dashboard-table-cell::before { width: 35%; font-size: 0.9em;}
+}

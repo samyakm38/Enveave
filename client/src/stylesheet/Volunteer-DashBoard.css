@@ -1,0 +1,110 @@
+.volunteer-dashboard-card-container{
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.volunteer-dashboard-heading{
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    margin-left: 1rem;
+}
+
+.volunteer-dashboard-table-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+    .volunteer-dashboard-card-container{
+        flex-direction: column;
+    }
+}
+
+/* ========================================
+   SPECIFIC Styles for Opportunities Table
+   Target using the wrapper class added in JS
+   ======================================== */
+
+/* Example: Change active tab color specifically for this table */
+.dashboard-table-opportunities-theme .dashboard-table-tab-active {
+    border-bottom-color: #ff9800; /* Orange for opportunities */
+    color: #bf360c;
+}
+
+/* Example: Style specific cells differently */
+.dashboard-table-opportunities-theme .opportunities-cell-name {
+    font-weight: 600;
+    color: #1a237e; /* Dark blue name */
+}
+
+.dashboard-table-opportunities-theme .opportunities-cell-number {
+    /*text-align: center;*/
+    font-family: monospace; /* Different font for numbers */
+     /* Ensure padding overrides base if needed */
+}
+
+.dashboard-table-opportunities-theme .opportunities-cell-status {
+    text-align: center;
+    min-width: 110px; /* Specific width */
+}
+
+/* --- Specific Status Badge Styles (scoped to opportunities) --- */
+/* Base badge class for structure if needed, but primarily target specific statuses */
+.dashboard-table-opportunities-theme .dashboard-table-status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid transparent; /* Add base border */
+}
+
+.dashboard-table-opportunities-theme .status-rejected {
+    background-color: #ffebee; color: #c62828; border-color: #ef9a9a;
+}
+.dashboard-table-opportunities-theme .status-accepted {
+    background-color: #e8f5e9; color: #2e7d32; border-color: #a5d6a7;
+}
+.dashboard-table-opportunities-theme .status-progress {
+    background-color: #e3f2fd; color: #0d47a1; border-color: #90caf9;
+}
+.dashboard-table-opportunities-theme .status-open {
+    background-color: #fff8e1; color: #ff6f00; border-color: #ffe082;
+}
+.dashboard-table-opportunities-theme .status-completed {
+    background-color: #f3e5f5; color: #6a1b9a; border-color: #ce93d8;
+}
+.dashboard-table-opportunities-theme .status-default {
+    background-color: #eceff1; color: #37474f; border-color: #b0bec5;
+}
+
+
+/* --- Specific Mobile Overrides for Opportunities --- */
+@media (max-width: 768px) {
+    /* Example: Style the 'Volunteers' label differently on mobile */
+    .dashboard-table-opportunities-theme .dashboard-table-cell[data-label="Volunteers"]::before {
+        color: #00695c; /* Teal label */
+        font-style: italic;
+    }
+
+    /* Example: Adjust padding for status on mobile */
+    .dashboard-table-opportunities-theme .opportunities-cell-status {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+}

@@ -1,0 +1,140 @@
+/* Main container using Flexbox for layout */
+.DashBoardHeader__container {
+    display: flex;
+    justify-content: space-between; /* Pushes left and right sections apart */
+    align-items: center; /* Vertically aligns items in the middle */
+    padding: 15px 20px; /* Add some padding around the header */
+    background-color: #fff; /* Assuming a white background */
+    /*border-bottom: 1px solid #eee; !* Optional: adds a separator line *!*/
+    font-family: sans-serif; /* Basic font */
+    width: 100%; /* Take full available width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Left section container */
+.DashBoardHeader__left {
+    display: flex;
+    align-items: center; /* Align pic and text vertically */
+    gap: 15px; /* Space between profile pic and text info */
+}
+
+/* Profile Picture Styling */
+.DashBoardHeader__profilePicContainer {
+    width: 60px; /* Adjust size as needed */
+    height: 60px;
+}
+
+.DashBoardHeader__profilePic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    display: block; /* Prevents extra space below image */
+}
+
+/* User Info Text Block */
+.DashBoardHeader__userInfo {
+    display: flex;
+    flex-direction: column; /* Stack welcome message and status */
+    gap: 4px; /* Small space between lines */
+}
+
+.DashBoardHeader__welcomeMessage {
+    font-size: 1.5em; /* Larger font for welcome */
+    font-weight: bold;
+    color: #333;
+    margin: 0; /* Remove default heading margin */
+}
+
+.DashBoardHeader__statusLine {
+    font-size: 0.9em;
+    color: #666; /* Lighter color for status text */
+    display: flex; /* Align label and badge inline */
+    align-items: center;
+    gap: 5px;
+}
+
+.DashBoardHeader__statusLabel {
+    /* Style if needed */
+}
+
+.DashBoardHeader__statusBadge {
+    display: inline-block; /* Allows padding and border-radius */
+    background-color: #e7f3ff; /* Light blue background */
+    color: #007bff; /* Blue text */
+    padding: 3px 8px; /* Padding inside the badge */
+    border-radius: 12px; /* Rounded corners for pill shape */
+    font-size: 0.85em;
+    font-weight: 500;
+    border: 1px solid #bde0ff; /* Subtle border */
+}
+
+/* Right section container */
+.DashBoardHeader__right {
+    display: flex;
+    align-items: center; /* Align progress info and button */
+    gap: 20px; /* Space between progress and button */
+}
+
+/* Profile Completion Block */
+.DashBoardHeader__profileCompletion {
+    display: flex;
+    flex-direction: column; /* Stack text and progress bar */
+    align-items: flex-start; /* Align items to the start (left) */
+    gap: 5px;
+}
+
+.DashBoardHeader__completionText {
+    font-size: 0.9em;
+    color: #555;
+    margin: 0; /* Remove default paragraph margin */
+}
+
+/* Progress Bar Styling */
+.DashBoardHeader__progressBarTrack {
+    width: 150px; /* Width of the progress bar */
+    height: 8px; /* Height of the progress bar */
+    background-color: #e9ecef; /* Background color of the track */
+    border-radius: 4px; /* Rounded corners for the track */
+    overflow: hidden; /* Ensures the fill stays within bounds */
+}
+
+.DashBoardHeader__progressBarFill {
+    height: 100%;
+    background-color: #007bff; /* Blue color for the filled part */
+    border-radius: 4px; /* Match track's border-radius */
+    transition: width 0.3s ease-in-out; /* Smooth animation for width changes */
+}
+
+/* Complete Profile Button Styling */
+.DashBoardHeader__completeButton {
+    background-color: #fff;
+    color: #007bff;
+    border: 1px solid #007bff;
+    padding: 8px 16px;
+    border-radius: 20px; /* Rounded corners */
+    text-decoration: none; /* Remove underline from link */
+    font-weight: 600;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease; /* Smooth hover effect */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.DashBoardHeader__completeButton:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Optional: Media query for smaller screens if needed */
+@media (max-width: 600px) {
+    .DashBoardHeader__container {
+        flex-direction: column; /* Stack left and right sections */
+        align-items: flex-start; /* Align items to the start */
+        gap: 15px;
+    }
+    .DashBoardHeader__right {
+        width: 100%; /* Make right section take full width */
+        justify-content: space-between; /* Space out items */
+    }
+}

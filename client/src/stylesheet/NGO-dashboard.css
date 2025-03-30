@@ -1,0 +1,129 @@
+.NGO-dashboard-card-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.NGO-dashboard-heading-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 2rem 2rem;
+}
+
+.NGO-dashboard-heading-container h1{
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.NGO-dashboard-button-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    gap: 0.375rem;
+    border-radius: 0.5rem;
+    /*border: 0px solid #E5E7EB;*/
+    background: #2C66E4;
+}
+
+.NGO-dashboard-button-container p{
+    color: #FFF;
+    text-align: center;
+    font-family: Inter,sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+/* --- Add styles for the NGO Delete Button --- */
+.ngo-delete-button {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    color: #dc3545; /* Red color */
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: inline-flex; /* Helps center SVG */
+    align-items: center;
+    justify-content: center;
+}
+
+.ngo-delete-button:hover {
+    color: #a71d2a; /* Darker red on hover */
+    transform: scale(1.1); /* Slight scale effect */
+}
+
+.ngo-delete-button:focus {
+    outline: 2px solid #fdacb4; /* Focus outline for accessibility */
+    outline-offset: 1px;
+    border-radius: 3px;
+}
+
+.NGO-dashboard-table-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- Optional: Style action cell --- */
+.dashboard-table-ngo-theme .ngo-cell-action {
+    text-align: center; /* Center the button */
+    min-width: 60px; /* Give it some space */
+}
+
+/* --- Optional: Other specific NGO cell styles --- */
+.dashboard-table-ngo-theme .ngo-cell-name {
+    font-weight: 600;
+}
+
+.dashboard-table-ngo-theme .ngo-cell-number {
+    /*text-align: right;*/
+    padding-right: 15px !important;
+}
+
+.dashboard-table-ngo-theme .ngo-cell-outcome {
+    font-style: italic;
+    color: #555;
+    max-width: 250px; /* Limit width and allow wrapping */
+    white-space: normal !important;
+}
+
+/* Specific active tab color for NGO theme */
+.dashboard-table-ngo-theme .dashboard-table-tab-active {
+    border-bottom-color: #2C66E4; /* Blue to match button */
+    color: #174ab3;
+    text-align: left;
+}
+
+/* --- Mobile Adjustments --- */
+@media (max-width: 768px) {
+    /* Ensure action button label/value aligns correctly in card view */
+    .dashboard-table-ngo-theme .dashboard-table-cell[data-label="Action"] {
+        text-align: right; /* Reset alignment if needed */
+        padding-right: 5px; /* Adjust padding */
+    }
+    .dashboard-table-ngo-theme .dashboard-table-cell[data-label="Action"]::before {
+        font-weight: bold; /* Keep label bold */
+    }
+    /* Style the outcome cell on mobile */
+    .dashboard-table-ngo-theme .dashboard-table-cell[data-label="Outcome / Impact"] {
+        text-align: left; /* Example: Left align outcome text on mobile */
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .dashboard-table-ngo-theme .dashboard-table-cell[data-label="Outcome / Impact"]::before {
+        display: block; /* Put label on its own line */
+        margin-bottom: 4px;
+        position: static;
+        width: auto;
+        padding-right: 0;
+    }
+}

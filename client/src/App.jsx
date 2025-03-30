@@ -50,6 +50,8 @@ const App = () => {
           <Route path="/Opportunity-form-3" element={<OpportunityForm3 />} />
           <Route path="/Opportunity-form-4" element={<OpportunityForm4 />} />
           <Route path="/Story-form" element={<StoryForm />} />
+          <Route path='/volunteer/dashboard' element={<VolunteerDashboard />}/>
+          <Route path='/organization/dashboard' element={<NGODashboard />}/>
         </Routes>
       </BrowserRouter>
     </ToastProvider>
