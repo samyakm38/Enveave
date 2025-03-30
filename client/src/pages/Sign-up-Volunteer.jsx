@@ -1,95 +1,61 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import Axios
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../redux/hooks';
 import '../stylesheet/Sign-up-volunteer.css';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
-
-// --- Assumed Backend Endpoints ---
-// You might need to adjust these based on your actual backend setup
-const SIGNUP_ENDPOINT = `${import.meta.env.VITE_API_BASE_URL}/api/auth/volunteer/signup`;
-const VERIFY_OTP_ENDPOINT = `${import.meta.env.VITE_API_BASE_URL}/api/auth/volunteer/verify-otp`; // **Assumption:** Endpoint to verify OTP
-// --- ---
 
 function SignUpVolunteer() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [otp, setOtp] = useState(''); // State for OTP input
+    const [otp, setOtp] = useState('');
 
-    const [loading, setLoading] = useState(false); // Loading state for API calls
-    const [error, setError] = useState(null); // Error message state
-    const [showOtpForm, setShowOtpForm] = useState(false); // Toggle between forms
-    const [submittedEmail, setSubmittedEmail] = useState(''); // Store email for OTP verification
+    const [showOtpForm, setShowOtpForm] = useState(false);
+    const [submittedEmail, setSubmittedEmail] = useState('');
 
-    const navigate = useNavigate(); // Hook for navigation
+    // Use our custom Redux auth hook
+    const { registerVolunteer, verifyVolunteerOtp, loading, error } = useAuth();
+    const navigate = useNavigate();
 
-    // --- Handler for Signup Form Submission ---
+    // Handler for Signup Form Submission
     const handleSignupSubmit = async (event) => {
-        event.preventDefault(); // Prevent default form submission
-        setError(null); // Clear previous errors
-        setLoading(true); // Start loading
+        event.preventDefault();
 
         const signupData = {
             name: name,
             email: email,
             password: password,
-            profileStatus: "NOT_STARTED" // As per your example payload
+            profileStatus: "NOT_STARTED"
         };
 
         try {
-            // Make the POST request to the signup endpoint
-            const response = await axios.post(SIGNUP_ENDPOINT, signupData);
-
-            console.log('Signup successful:', response.data); // Log success response (optional)
-
-            // Assuming success means OTP was sent and we should show the OTP form
-            setSubmittedEmail(email); // Store the email for verification step
-            setShowOtpForm(true); // Show the OTP form
-            // Optionally clear signup form fields
-            // setName('');
-            // setEmail('');
-            // setPassword('');
-
+            // Use our Redux hook to register volunteer
+            const response = await registerVolunteer(signupData);
+            console.log('Signup successful:', response);
+            
+            setSubmittedEmail(email);
+            setShowOtpForm(true);
         } catch (err) {
-            console.error('Signup failed:', err);
-            // Set error message - try to get specific message from backend response
-            const errorMessage = err.response?.data?.message || err.message || 'Signup failed. Please try again.';
-            setError(errorMessage);
-        } finally {
-            setLoading(false); // Stop loading regardless of success or failure
+            // Error is handled by the hook and stored in error state
+            console.error('Signup failed');
         }
     };
 
-    // --- Handler for OTP Form Submission ---
+    // Handler for OTP Form Submission
     const handleOtpSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
-        setLoading(true);
-
-        const otpData = {
-            email: submittedEmail, // Send the email used during signup
-            otp: otp,             // Send the entered OTP
-        };
 
         try {
-            // Make the POST request to the OTP verification endpoint
-            // **IMPORTANT:** Replace VERIFY_OTP_ENDPOINT if your endpoint is different
-            const response = await axios.post(VERIFY_OTP_ENDPOINT, otpData);
-
-            console.log('OTP Verification successful:', response.data);
-
-            // On successful verification, navigate the user
-            alert('Account verified successfully! Please log in.'); // Simple feedback
-            navigate('/login'); // Redirect to login page (or dashboard)
-
+            // Use our Redux hook to verify OTP
+            await verifyVolunteerOtp(submittedEmail, otp);
+            
+            alert('Account verified successfully! Please log in.');
+            navigate('/login');
         } catch (err) {
-            console.error('OTP Verification failed:', err);
-            const errorMessage = err.response?.data?.message || err.message || 'Invalid or expired OTP. Please try again.';
-            setError(errorMessage);
-            setOtp(''); // Clear OTP input on failure
-        } finally {
-            setLoading(false);
+            // Error is handled by the hook
+            console.error('OTP Verification failed');
+            setOtp('');
         }
     };
 
@@ -119,7 +85,7 @@ function SignUpVolunteer() {
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         required
-                                        disabled={loading} // Disable during loading
+                                        disabled={loading}
                                     />
                                 </div>
 
@@ -134,7 +100,7 @@ function SignUpVolunteer() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
-                                        disabled={loading} // Disable during loading
+                                        disabled={loading}
                                     />
                                 </div>
 
@@ -149,7 +115,7 @@ function SignUpVolunteer() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
-                                        disabled={loading} // Disable during loading
+                                        disabled={loading}
                                     />
                                 </div>
 
@@ -181,14 +147,14 @@ function SignUpVolunteer() {
                                 <div className="sign-up-volunteer-form-group">
                                     <label htmlFor="otp">Enter OTP</label>
                                     <input
-                                        type="text" // Can use type="number" but text is often better for OTPs
+                                        type="text"
                                         id="otp"
                                         className="sign-up-volunteer-input"
-                                        placeholder="Enter the 6-digit OTP" // Adjust if OTP length differs
+                                        placeholder="Enter the 6-digit OTP"
                                         value={otp}
                                         onChange={(e) => setOtp(e.target.value)}
                                         required
-                                        maxLength={6} // Example: Set max length
+                                        maxLength={6}
                                         disabled={loading}
                                     />
                                 </div>
@@ -199,16 +165,13 @@ function SignUpVolunteer() {
                                 <button type="submit" className="sign-up-volunteer-submit-button" disabled={loading}>
                                     {loading ? 'Verifying...' : 'Verify Account'}
                                 </button>
-                                {/* Optional: Add a "Resend OTP" button here (requires another backend endpoint) */}
                             </form>
 
-                            {/* Link to go back or maybe login */}
                             <p className="sign-up-volunteer-login-prompt" style={{marginTop: '15px'}}>
                                 Didn&#39;t receive OTP? Check spam or{' '}
                                 <button onClick={() => setShowOtpForm(false)} className="link-button-style">
                                     go back
                                 </button>
-                                {/* Add Resend OTP logic here if needed */}
                             </p>
                         </>
                     )}
@@ -220,25 +183,3 @@ function SignUpVolunteer() {
 }
 
 export default SignUpVolunteer;
-
-// Add some basic styling for error messages and link-button if not in your CSS
-/* In your Sign-up-volunteer.css (or add a <style> tag) */
-/*
-.sign-up-volunteer-error {
-    color: red;
-    font-size: 0.9em;
-    margin-top: -10px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.link-button-style {
-    background: none;
-    border: none;
-    padding: 0;
-    color: #007bff; // Or your link color
-    text-decoration: underline;
-    cursor: pointer;
-    font-size: inherit; // Inherit font size from parent
-}
-*/
