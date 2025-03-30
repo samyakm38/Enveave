@@ -23,6 +23,8 @@ import OpportunityForm4 from "./pages/forms/Opportunity-form-4.jsx";
 import StoryForm from "./pages/forms/Story-form.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import { ToastProvider } from "./components/main components/ToastContext.jsx";
+import VolunteerDashboard from "./pages/Volunteer-Dashboard.jsx";
+import NGODashboard from "./pages/NGO-Dashboard.jsx";
 
 const App = () => {
   return (
