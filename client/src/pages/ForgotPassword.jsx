@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { useAuth } from '../redux/hooks';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
 import '../stylesheet/ForgotPassword.css';
@@ -10,106 +10,72 @@ const ForgotPassword = () => {
     const [otp, setOtp] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const [loading, setLoading] = useState(false);
     
     // Track current step of the process
     const [currentStep, setCurrentStep] = useState('requestOtp'); // requestOtp, verifyOtp, resetPassword
     
+    // Use our Redux auth hook
+    const { requestPasswordReset, verifyPasswordResetOtp, resetPassword, loading, error } = useAuth();
     const navigate = useNavigate();
 
     // Step 1: Handle request OTP submission
     const handleRequestOtp = async (event) => {
         event.preventDefault();
-        setError('');
         setSuccess('');
-        setLoading(true);
 
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/api/auth/forgot-password/request`, 
-                { email }
-            );
-            
-            setSuccess(response.data.message || 'OTP sent successfully! Please check your email.');
+            const response = await requestPasswordReset(email);
+            setSuccess(response.message || 'OTP sent successfully! Please check your email.');
             setCurrentStep('verifyOtp');
         } catch (err) {
-            console.error('Failed to request OTP:', err);
-            setError(
-                err.response?.data?.message || 
-                'Failed to send OTP. Please check your email and try again.'
-            );
-        } finally {
-            setLoading(false);
+            // Error is handled by the hook
+            console.error('Failed to request OTP');
         }
     };
 
     // Step 2: Handle OTP verification
     const handleVerifyOtp = async (event) => {
         event.preventDefault();
-        setError('');
         setSuccess('');
-        setLoading(true);
 
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/api/auth/forgot-password/verify-otp`, 
-                { email, otp }
-            );
-            
-            setSuccess(response.data.message || 'OTP verified successfully! Please set your new password.');
+            const response = await verifyPasswordResetOtp(email, otp);
+            setSuccess(response.message || 'OTP verified successfully! Please set your new password.');
             setCurrentStep('resetPassword');
         } catch (err) {
-            console.error('Failed to verify OTP:', err);
-            setError(
-                err.response?.data?.message || 
-                'Invalid or expired OTP. Please try again.'
-            );
-        } finally {
-            setLoading(false);
+            // Error is handled by the hook
+            console.error('Failed to verify OTP');
         }
     };
 
     // Step 3: Handle password reset
     const handleResetPassword = async (event) => {
         event.preventDefault();
-        setError('');
         setSuccess('');
         
-        // Validate passwords match
+        // Client-side validation
         if (newPassword !== confirmPassword) {
-            setError('Passwords do not match.');
+            // We'll handle this validation locally since it's a UI concern
+            alert('Passwords do not match.');
             return;
         }
         
-        // Validate password length
         if (newPassword.length < 8) {
-            setError('Password must be at least 8 characters long.');
+            alert('Password must be at least 8 characters long.');
             return;
         }
         
-        setLoading(true);
-
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/api/auth/forgot-password/reset`, 
-                { email, otp, newPassword }
-            );
-            
-            setSuccess(response.data.message || 'Password reset successful!');
+            const response = await resetPassword(email, otp, newPassword);
+            setSuccess(response.message || 'Password reset successful!');
             // Short delay before redirecting to login
             setTimeout(() => {
                 navigate('/login');
             }, 3000);
         } catch (err) {
-            console.error('Failed to reset password:', err);
-            setError(
-                err.response?.data?.message || 
-                'Failed to reset password. Please try again.'
-            );
-        } finally {
-            setLoading(false);
+            // Error is handled by the hook
+            console.error('Failed to reset password');
         }
     };
 
@@ -120,7 +86,6 @@ const ForgotPassword = () => {
         } else if (currentStep === 'resetPassword') {
             setCurrentStep('verifyOtp');
         }
-        setError('');
         setSuccess('');
     };
 
@@ -211,7 +176,6 @@ const ForgotPassword = () => {
                                 <button onClick={handleGoBack} className="link-button-style">
                                     go back
                                 </button>
-                                {/* Add Resend OTP logic here if needed */}
                             </p>
                         </>
                     )}
