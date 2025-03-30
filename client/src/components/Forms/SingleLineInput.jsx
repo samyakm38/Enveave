@@ -18,6 +18,7 @@ const SingleLineInput = ({
       onChange={onChange}
       placeholder={placeholder}
       required={required}
+      style={{ width: "100%", padding: "10px", fontSize: "14px" }}
     />
   );
 };

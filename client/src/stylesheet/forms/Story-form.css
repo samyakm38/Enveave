@@ -29,6 +29,10 @@ label {
     margin-bottom: 25px;
 }
 
+.story-form-progress-indicator img {
+    width: 150px; /* Default size */
+    height: auto;
+}
 
 .story-form-tagline {
     margin-top: 35px;
@@ -41,15 +45,39 @@ label {
 
 @media (max-width: 768px) {
 
-
     .story-form {
         width: 90%;
         padding: 20px;
     }
 
-
     .story-form-tagline {
         font-size: 1.3rem;
+    }
+
+    .story-form-progress-indicator img {
+        width: 120px; /* Smaller size for tablets */
+    }
+
+    .story-form-form-container {
+        padding: 20px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .story-form-progress-indicator img {
+        width: 100px; /* Smaller size for mobile screens */
+    }
+
+    .story-form-form-container {
+        padding: 10px;
+    }
+
+    label {
+        font-size: 12px;
     }
 }
 

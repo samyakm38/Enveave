@@ -31,6 +31,10 @@
   margin-bottom: 25px;
 }
 
+.opportunity-form-4-progress-indicator img {
+  width: 150px; /* Default size */
+  height: auto;
+}
 
 .opportunity-form-4-tagline{
   margin-top: 35px;
@@ -50,7 +54,31 @@
     font-size: 1.3rem;
   }
 
+  .opportunity-form-4-progress-indicator img {
+    width: 120px; /* Smaller size for tablets */
+  }
 
+  .opportunity-form-4-form-container {
+    padding: 20px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .opportunity-form-4-progress-indicator img {
+    width: 100px; /* Smaller size for mobile screens */
+  }
+
+  .opportunity-form-4-form-container {
+    padding: 10px;
+  }
+
+  label {
+    font-size: 12px;
+  }
 }
 
 .opportunity-form-4-tc-link{

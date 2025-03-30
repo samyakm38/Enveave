@@ -31,7 +31,6 @@
   margin-bottom: 25px;
 }
 
-
 .ngo-form-1-tagline{
   margin-top: 35px;
 }
@@ -50,5 +49,57 @@
     font-size: 1.3rem;
   }
 
+  .ngo-form-1-form-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .ngo-form-1-input,
+  .form-textarea-input,
+  .form-select-input {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .ngo-form-1-progress-indicator img {
+    width: 120px; /* Smaller size for tablets */
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ngo-form-1 {
+    padding: 10px;
+  }
+
+  .ngo-form-1-tagline {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .ngo-form-1-input,
+  .form-textarea-input,
+  .form-select-input {
+    font-size: 12px;
+  }
+
+  .ngo-form-1-progress-indicator img {
+    width: 100px; /* Smaller size for mobile screens */
+  }
+
+  label {
+    font-size: 12px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
 }
 

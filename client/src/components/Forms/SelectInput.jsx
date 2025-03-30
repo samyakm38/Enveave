@@ -1,5 +1,5 @@
 import React from "react";
-import "./stylesheets/SelectInput.css"; // Assuming you have a CSS file for styling
+import "./stylesheets/SelectInput.css";
 
 const SelectInput = ({
   name,
@@ -16,6 +16,7 @@ const SelectInput = ({
       value={value}
       onChange={onChange}
       required={required}
+      style={{ width: "100%", padding: "10px", fontSize: "14px" }}
     >
       <option value="">{placeholder}</option>
       {options.map((option) => (

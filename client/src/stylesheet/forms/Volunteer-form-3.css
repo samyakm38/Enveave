@@ -31,6 +31,7 @@
   margin-bottom: 25px;
 }
 
+
 .volunteer-form-3-tagline{
   margin-top: 35px;
 }
@@ -47,6 +48,32 @@
 
   .volunteer-form-3-tagline {
     font-size: 1.3rem;
+  }
+
+  .volunteer-form-3-progress-indicator img {
+    width: 120px; /* Smaller size for tablets */
+  }
+
+  .volunteer-form-3-form-container {
+    padding: 20px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .volunteer-form-3-progress-indicator img {
+    width: 100px; /* Smaller size for mobile screens */
+  }
+
+  .volunteer-form-3-form-container {
+    padding: 10px;
+  }
+
+  label {
+    font-size: 12px;
   }
 }
 
