@@ -12,6 +12,8 @@ import SignUpVolunteer from "./pages/Sign-up-Volunteer.jsx";
 import SignUpNgo from "./pages/Sign-up-NGO.jsx";
 import Login from "./pages/Login.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
+import VolunteerDashboard from "./pages/Volunteer-Dashboard.jsx";
+import NGODashboard from "./pages/NGO-Dashboard.jsx";
 
 const App = () => {
   return (
@@ -28,6 +30,8 @@ const App = () => {
         <Route path="/sign-up/ngo" element={<SignUpNgo />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path='/volunteer/dashboard' element={<VolunteerDashboard />}/>
+        <Route path='/organization/dashboard' element={<NGODashboard />}/>
       </Routes>
     </BrowserRouter>
   );

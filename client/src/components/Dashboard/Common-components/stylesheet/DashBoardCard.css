@@ -1,0 +1,44 @@
+/* Container for multiple cards (optional, but useful for layout) */
+.DashBoardCard--container {
+    display: flex; /* Arrange cards in a row */
+    gap: 20px; /* Space between cards */
+    padding: 20px; /* Padding around the group of cards */
+    flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+    justify-content: center; /* Center cards if they wrap or don't fill space */
+    font-family: sans-serif; /* Basic font */
+}
+
+/* Individual Card Styling */
+.DashBoardCard--item {
+    background-color: #fff;
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px 20px 15px 15px; /* Padding inside the card (less on left because of border) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-left: 6px solid; /* The colored border - color is set via inline style */
+    /*min-width: 200px; !* Minimum width for each card *!*/
+    flex: 1; /* Allow cards to grow and share space */
+    max-width: 28.125rem; /* Optional: maximum width */
+    box-sizing: border-box;
+}
+
+/* Content wrapper inside the card (optional, useful for specific content styling) */
+.DashBoardCard--content {
+    /* Add styles here if needed, e.g., text alignment */
+}
+
+/* Card Title Styling */
+.DashBoardCard--title {
+    font-size: 0.95em; /* Slightly smaller than default */
+    color: #444; /* Dark grey text */
+    margin: 0 0 8px 0; /* Margin below the title */
+    font-weight: 500;
+}
+
+/* Card Count Styling */
+.DashBoardCard--count {
+    font-size: 2.2em; /* Large font size for the number */
+    font-weight: bold; /* Bold number */
+    color: #111; /* Very dark text */
+    margin: 0; /* Remove default paragraph margin */
+    line-height: 1.1; /* Adjust line height for large font */
+}
