@@ -1,0 +1,53 @@
+.opportunity-form-2-form-container {
+    width: 75%;
+    margin: auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+    border: 2px solid #D9D9D9;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);
+    
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .opportunity-form-2-form-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-top: 10px;
+  }
+  
+
+.opportunity-form-2-progress-indicator{
+  justify-content: center;
+  display: flex;
+  margin-bottom: 25px;
+}
+
+
+.opportunity-form-2-tagline{
+  margin-top: 35px;
+}
+
+.opportunity-form-2{
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .opportunity-form-2 {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .opportunity-form-2-tagline {
+    font-size: 1.3rem;
+  }
+
+}
+
