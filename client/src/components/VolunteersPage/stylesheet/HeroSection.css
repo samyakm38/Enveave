@@ -1,91 +1,94 @@
+/* --- Base Styles (Desktop First) --- */
 .volunteer-hero-section-container {
     display: flex;
     flex-direction: column;
-    padding-top: 7rem;
-    padding-left: 5rem;
+    align-items: flex-start; /* Aligns items (like the text container) to the start (left) */
+    justify-content: center; /* Centers content vertically if container has height */
+    width: 100%;
+    /* Consider using min-height instead of height for more flexibility */
+    height: 100%; /* Make sure the parent has a defined height for this to work */
     gap: 3rem;
+    padding-left: 5rem; /* Use padding instead of margin for better box model control */
+    padding-right: 1.5rem; /* Add some right padding too */
+    box-sizing: border-box; /* Include padding in the element's total width/height */
+    /* Removed margin-left */
 }
 
 .volunteer-hero-section-text-container {
     display: flex;
     flex-direction: column;
-    justify-content: left;
-    text-align: left;
     gap: 1rem;
+    max-width: 100%; /* Ensure text container doesn't overflow */
 }
 
 .volunteer-hero-section-text-container h3 {
     color: #FFF;
     font-family: Montserrat, sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* 24px */
     font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+    font-weight: 600;
+    line-height: normal; /* Or consider 1.4 */
 }
 
 .volunteer-hero-section-text-container h1 {
-    width: 40.1875rem;
     color: #FFF;
     font-family: Montserrat, sans-serif;
-    font-size: 4rem;
+    font-size: 4rem; /* 64px */
     font-style: normal;
     font-weight: 700;
-    line-height: normal;
+    line-height: normal; /* Or consider 1.2 */
+    word-wrap: break-word; /* Prevent long words from overflowing */
 }
 
-/* Media Query for mobile devices */
-@media screen and (max-width: 768px) {
+
+/* --- Mobile Responsiveness --- */
+/* Target screens typically considered 'mobile' and 'tablet portrait' */
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+
     .volunteer-hero-section-container {
-        display: flex;
-        flex-direction: column;
-        padding-top: 7rem;
-        padding-left: 5rem;
-        gap: 3rem;
+        /* Center content and reduce padding for smaller screens */
+        align-items: center; /* Center content horizontally */
+        text-align: center;  /* Center align text within the container */
+        padding-left: 1.5rem;  /* Reduce horizontal padding */
+        padding-right: 1.5rem; /* Ensure consistent padding */
+        padding-top: 3rem;     /* Add some vertical padding */
+        padding-bottom: 3rem;
+        gap: 2rem;             /* Reduce gap between elements */
+        height: auto;          /* Allow height to adjust to content */
+        min-height: 70vh;      /* Example: ensure it still takes up significant height */
+        /* justify-content: center; is often still desired */
     }
 
     .volunteer-hero-section-text-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        /*align-items: center;*/
-        margin-top: 10rem;
-        text-align: left;
-        gap: 1rem;
-        /* Reduced gap */
+        /* Text container alignment is handled by parent's align-items: center */
+        gap: 0.75rem; /* Slightly reduce gap between h3 and h1 */
     }
 
     .volunteer-hero-section-text-container h3 {
-        font-size: 1.25rem; /* Reduced font size */
+        /* Reduce font size for readability */
+        font-size: 1.25rem; /* ~20px */
     }
 
     .volunteer-hero-section-text-container h1 {
-        width: 100%; /* Full width instead of fixed */
-        font-size: 2.5rem; /* Reduced font size */
+        /* Significantly reduce font size for smaller screens */
+        font-size: 2.5rem; /* ~40px */
+        line-height: 1.2; /* Improve readability for large text on small screens */
     }
 }
 
-/* Additional breakpoint for very small screens */
-@media screen and (max-width: 480px) {
+/* Optional: Further adjustments for very small screens */
+@media (max-width: 480px) {
     .volunteer-hero-section-container {
-        padding-top: 3rem;
-        padding-left: 1rem;
+        padding-left: 1rem;  /* Even less padding */
         padding-right: 1rem;
-        gap: 1.5rem;
-    }
-
-    .volunteer-hero-section-text-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: left;
-        text-align: left;
-        gap: 1rem;
-    }
-
-    .volunteer-hero-section-text-container h3 {
-        font-size: 1rem;
+        gap: 1.5rem;         /* Further reduce gap */
+        min-height: 60vh;
     }
 
     .volunteer-hero-section-text-container h1 {
-        font-size: 2rem;
+        font-size: 2rem; /* ~32px */
+    }
+    .volunteer-hero-section-text-container h3 {
+        font-size: 1.1rem; /* ~18px */
     }
 }

@@ -4,7 +4,7 @@ import './stylesheet/HeroSection.css'
 
 const HeroSection=() => {
     const volunteer_hero_section_background = {
-        backgroundImage: 'url("/Volunteer-page-hero-section.png")',
+        backgroundImage: 'url("/ngo-hero-section.png")',
         backgroundSize: 'cover',       // Ensures the image covers the entire div
         backgroundPosition: 'center',   // Centers the image within the div
         width: '100%',                 // Full width of the parent container
@@ -12,13 +12,12 @@ const HeroSection=() => {
     };
     return (
         <div style={volunteer_hero_section_background}>
-            <div className="volunteer-hero-section-container">
-                <div className="volunteer-hero-section-text-container">
-                    <h3>Lead. Initiate. Collaborate.</h3>
-                    <h1>Connecting <br/> Volunteers with <br/> NGOs</h1>
-                    <h3>Let a Million Environment Flowers Bloom</h3>
+            <div className="ngo-hero-section-container">
+                <div className="ngo-hero-section-text-container">
+                    <h1>Connect With<br/> Volunteers</h1>
+                    <h3>Work with Enveave to find the best<br/> volunteer based on your needs.</h3>
                 </div>
-                <ButtonOrange text="Join Enveave" link='/' className="volunteer-hero-section-button"/>
+                <ButtonOrange text="Join Enveave" link='/' className="ngo-hero-section-button"/>
             </div>
         </div>
     );
