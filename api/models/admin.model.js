@@ -22,6 +22,11 @@ const adminSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    profilePhoto: {
+        type: String, // URL to stored image
+        required: false,
+        default: "/dashboard-default-user-image.svg" // Default profile image
+    },
 }, {
     timestamps: true
 });
