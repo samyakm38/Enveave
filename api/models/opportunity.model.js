@@ -90,6 +90,10 @@ const opportunitySchema = new mongoose.Schema({
             type: String,
             required: true
         },
+        applicationDeadline: {
+            type: Date,
+            required: true
+        },
         startDate: {
             type: Date,
             required: true

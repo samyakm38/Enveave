@@ -7,7 +7,7 @@ const opportunityProviderSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    // Step 1: Organization Details
+        // Step 1: Organization Details
     organizationDetails: {
         description: {
             type: String,
@@ -106,6 +106,11 @@ const opportunityProviderSchema = new mongoose.Schema({
             type: Boolean,
             default: false
         }
+    },
+
+    totalVolunteers: {
+        type: Number,
+        default: 0
     },
 
     postedOpportunities: [{

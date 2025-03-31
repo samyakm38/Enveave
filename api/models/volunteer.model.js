@@ -8,6 +8,11 @@ const volunteerSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    profilePhoto: {
+      type: String, // URL to stored image
+      required: false,
+      default: "/dashboard-default-user-image.svg" // Default profile image
+    },
     // Step 1: Basic Details
     basicDetails: {
       phoneNumber: {
@@ -153,6 +158,14 @@ const volunteerSchema = new mongoose.Schema(
           type: String,
           enum: ["Pending", "Accepted", "Rejected"],
           default: "Pending",
+        },
+        isCompleted: {
+          type: Boolean,
+          default: false
+        },
+        completionDate: {
+          type: Date,
+          default: null
         },
         appliedAt: {
           type: Date,
