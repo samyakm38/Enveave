@@ -7,7 +7,7 @@ import HeroSection from "../components/VolunteersPage/HeroSection.jsx";
 import OpportunitySection from "../components/VolunteersPage/OpportunitySection.jsx";
 import ButtonOrange from "../components/main components/Button-Orange.jsx";
 import HowItWorks from "../components/VolunteersPage/HowItWorks.jsx";
-import CTASection from "../components/main components/CTASection.jsx";
+// import CTASection from "../components/main components/CTASection.jsx";
 // import ButtonOrange from "../components/main components/Button-Orange.jsx";
 
 const Volunteers=() => {

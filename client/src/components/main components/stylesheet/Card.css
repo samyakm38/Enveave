@@ -33,6 +33,12 @@
     line-height: 1.4; /* Improved readability */
     padding: 0.5rem 0; /* Vertical padding only */
     margin: 0; /* Remove default margins */
+
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Show 4 lines max */
+    line-clamp: 4; /* Standard property for compatibility */
+    -webkit-box-orient: vertical;
 }
 
 .card-button {

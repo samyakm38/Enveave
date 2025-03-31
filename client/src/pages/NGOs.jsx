@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
-import HeroSection from "../components/VolunteersPage/HeroSection.jsx";
+import HeroSection from "../components/NGOPage/HeroSection.jsx";
 import ButtonOrange from "../components/main components/Button-Orange.jsx";
 import '../stylesheet/NGOPage.css'
 import HowItWorks from "../components/NGOPage/HowItWorks.jsx";
