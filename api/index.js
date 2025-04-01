@@ -63,7 +63,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use('/api', authRoutes);
 app.use('/api', storyRoute);
 app.use('/api/opportunities', opportunityRoutes);
-app.use('/api/volunteer', volunteerRoutes);
+app.use('/api/volunteers', volunteerRoutes);
 app.use('/api/applications', applicationRoutes);
 
 
