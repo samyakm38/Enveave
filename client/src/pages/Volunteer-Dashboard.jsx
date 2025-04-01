@@ -7,6 +7,7 @@ import '../stylesheet/Volunteer-DashBoard.css'
 import {useMemo, useState, useEffect} from "react";
 import DashboardTable from "../components/Dashboard/Common-components/DashBoardTable.jsx";
 import { useAuth, useApplications, useOpportunities } from '../redux/hooks';
+import { useVolunteer } from '../redux/hooks/useVolunteer'; // Import the new hook
 import { format, parseISO } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,6 +31,8 @@ const VolunteerDashboard = () => {
     const { user, isAuthenticated } = useAuth();
     const { getUserApplications, userApplications, loading: applicationsLoading } = useApplications();
     const { getAllOpportunities, opportunities, loading: opportunitiesLoading } = useOpportunities();
+    // Use the new volunteer hook
+    const { fetchVolunteerProfile, volunteerProfile, loading: volunteerLoading, calculateProfileCompletion } = useVolunteer();
     
     const [activeTab, setActiveTab] = useState('Applied');
     const tabs = ['Applied', 'Completed'];
@@ -51,11 +54,16 @@ const VolunteerDashboard = () => {
             getAllOpportunities().catch(err => 
                 console.error("Error fetching opportunities:", err)
             );
+            
+            // Fetch the full volunteer profile for profile completion
+            fetchVolunteerProfile().catch(err =>
+                console.error("Error fetching volunteer profile:", err)
+            );
         } else {
             // Redirect to login if not authenticated
             navigate('/login');
         }
-    }, [isAuthenticated, navigate]); // Remove dependencies that cause re-fetching
+    }, [isAuthenticated, navigate]);
 
     // Calculate stats when applications or opportunities data changes
     useEffect(() => {
@@ -184,7 +192,7 @@ const VolunteerDashboard = () => {
     }
 
     // Loading state
-    if (applicationsLoading || opportunitiesLoading) {
+    if (applicationsLoading || opportunitiesLoading || volunteerLoading) {
         return (
             <div>
                 <Header/>
@@ -196,12 +204,12 @@ const VolunteerDashboard = () => {
         );
     }
 
-    // Display user data from auth state
+    // Display user data from auth state and volunteer profile
     const userData = {
-        ProfilePictureURL: user?.profilePhoto || '/dashboard-default-user-image.svg',
+        ProfilePictureURL: volunteerProfile?.profilePhoto || user?.profilePhoto || '/dashboard-default-user-image.svg',
         userName: user?.name || 'Volunteer',
-        status: user?.profileStatus || 'Active',
-        completionPercentage: calculateProfileCompletion(user),
+        status: volunteerProfile?.status || user?.profileStatus || 'Active',
+        completionPercentage: calculateProfileCompletion(volunteerProfile),
         formLink: '/Volunteer-form-1' // Link to complete profile
     };
 
@@ -246,15 +254,5 @@ const VolunteerDashboard = () => {
         </div>
     );
 };
-
-// Helper function to calculate profile completion percentage
-function calculateProfileCompletion(user) {
-    if (!user) return 0;
-    
-    const profileCompletion = user.profileCompletion || {};
-    const steps = ['step1', 'step2', 'step3'];
-    const completedSteps = steps.filter(step => profileCompletion[step]).length;
-    return Math.round((completedSteps / steps.length) * 100);
-}
 
 export default VolunteerDashboard;
