@@ -5,6 +5,7 @@ const initialState = {
   loading: false,
   error: null,
   userType: null, // 'volunteer', 'provider', or 'admin'
+  token: localStorage.getItem('auth_token') || null, // Initialize from localStorage
 };
 
 const authSlice = createSlice({
@@ -19,6 +20,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.currentUser = action.payload.user;
       state.userType = action.payload.userType;
+      state.token = action.payload.token; // Store token in Redux state
       state.error = null;
     },
     loginFailure: (state, action) => {
@@ -31,8 +33,11 @@ const authSlice = createSlice({
     logout: (state) => {
       state.currentUser = null;
       state.userType = null;
+      state.token = null; // Clear token on logout
       state.loading = false;
       state.error = null;
+      // Also remove from localStorage
+      localStorage.removeItem('auth_token');
     },
     updateUserProfile: (state, action) => {
       state.currentUser = {...state.currentUser, ...action.payload};
@@ -40,6 +45,15 @@ const authSlice = createSlice({
     registrationComplete: (state) => {
       state.loading = false;
       state.error = null;
+    },
+    setToken: (state, action) => {
+      state.token = action.payload;
+      // Also store in localStorage for persistence
+      if (action.payload) {
+        localStorage.setItem('auth_token', action.payload);
+      } else {
+        localStorage.removeItem('auth_token');
+      }
     }
   },
 });
@@ -51,7 +65,8 @@ export const {
   clearError,
   logout,
   updateUserProfile,
-  registrationComplete
+  registrationComplete,
+  setToken
 } = authSlice.actions;
 
 export default authSlice.reducer;

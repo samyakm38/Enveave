@@ -6,14 +6,15 @@ import {
   clearError,
   logout as logoutAction,
   updateUserProfile,
-  registrationComplete
+  registrationComplete,
+  setToken
 } from '../slices/authSlice';
 import { authService } from '../services/authService';
 
 // A custom hook for handling authentication-related state and actions
 export const useAuth = () => {
   const dispatch = useDispatch();
-  const { currentUser, loading, error, userType } = useSelector((state) => state.auth);
+  const { currentUser, loading, error, userType, token } = useSelector((state) => state.auth);
 
   // Clear error messages
   const clearErrorMessage = () => {
@@ -25,10 +26,31 @@ export const useAuth = () => {
     try {
       dispatch(loginStart());
       const data = await authService.login(email, password);
+      
+      // Determine user type based on response
+      let userRole = '';
+      let userData = null;
+      
+      if (data.volunteer) {
+        userRole = 'volunteer';
+        userData = data.volunteer;
+      } else if (data.provider) {
+        userRole = 'provider';
+        userData = data.provider;
+      } else if (data.admin) {
+        userRole = 'admin';
+        userData = data.admin;
+      } else if (data.user) {
+        userRole = data.user.role;
+        userData = data.user;
+      }
+      
       dispatch(loginSuccess({ 
-        user: data.user, 
-        userType: data.user.role // Assuming the API returns a role property
+        user: userData, 
+        userType: userRole, 
+        token: data.token
       }));
+      
       return data;
     } catch (error) {
       dispatch(loginFailure(error.response?.data?.message || 'Wrong email or password'));
@@ -73,10 +95,13 @@ export const useAuth = () => {
     try {
       dispatch(loginStart());
       const data = await authService.verifyVolunteerOtp(email, otp);
-      dispatch(loginSuccess({ 
-        user: data.user, 
-        userType: 'volunteer'
-      }));
+      if (data.token) {
+        dispatch(loginSuccess({ 
+          user: data.user || data.volunteer, 
+          userType: 'volunteer',
+          token: data.token
+        }));
+      }
       return data;
     } catch (error) {
       dispatch(loginFailure(error.response?.data?.message || 'OTP verification failed'));
@@ -89,10 +114,13 @@ export const useAuth = () => {
     try {
       dispatch(loginStart());
       const data = await authService.verifyProviderOtp(email, otp);
-      dispatch(loginSuccess({ 
-        user: data.user, 
-        userType: 'provider'
-      }));
+      if (data.token) {
+        dispatch(loginSuccess({ 
+          user: data.user || data.provider, 
+          userType: 'provider',
+          token: data.token
+        }));
+      }
       return data;
     } catch (error) {
       dispatch(loginFailure(error.response?.data?.message || 'OTP verification failed'));
@@ -135,8 +163,10 @@ export const useAuth = () => {
 
   return {
     currentUser,
+    user: currentUser, // Add alias for clarity
     userType,
-    isAuthenticated: !!currentUser,
+    token,
+    isAuthenticated: !!token,
     isVolunteer: userType === 'volunteer',
     isProvider: userType === 'provider',
     loading,

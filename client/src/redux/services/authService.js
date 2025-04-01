@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { store } from '../store';
+import { setToken } from '../slices/authSlice';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
@@ -13,29 +15,63 @@ const apiClient = axios.create({
 // Add interceptor to include auth token in requests
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token');
+    // Get token from Redux state instead of directly from localStorage
+    const token = store.getState().auth.token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Adding token to request:', config.url);
+    } else {
+      console.log('No auth token found for request:', config.url);
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
+// Add response interceptor for debugging
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    console.error('API Error:', error.config?.url, error.response?.status, error.response?.data);
+    return Promise.reject(error);
+  }
+);
+
 // Auth API
 export const authService = {
+  // Check if user is authenticated
+  isAuthenticated: () => {
+    return !!store.getState().auth.token;
+  },
+
+  // Get current token from Redux
+  getToken: () => {
+    return store.getState().auth.token;
+  },
+
+  // Set token in Redux (which also sets it in localStorage)
+  setToken: (token) => {
+    if (token) {
+      store.dispatch(setToken(token));
+      return true;
+    }
+    return false;
+  },
+
   // Login using the unified login endpoint
   login: async (email, password) => {
     const response = await apiClient.post('/auth/login', { email, password });
     if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
+      store.dispatch(setToken(response.data.token));
     }
     return response.data;
   },
   
   // Logout
   logout: () => {
-    localStorage.removeItem('auth_token');
+    store.dispatch(setToken(null));
   },
   
   // Volunteer signup
@@ -54,7 +90,7 @@ export const authService = {
   verifyVolunteerOtp: async (email, otp) => {
     const response = await apiClient.post('/auth/volunteer/verify-otp', { email, otp });
     if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
+      store.dispatch(setToken(response.data.token));
     }
     return response.data;
   },
@@ -63,7 +99,7 @@ export const authService = {
   verifyProviderOtp: async (email, otp) => {
     const response = await apiClient.post('/auth/opportunity-provider/verify-otp', { email, otp });
     if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
+      store.dispatch(setToken(response.data.token));
     }
     return response.data;
   },
