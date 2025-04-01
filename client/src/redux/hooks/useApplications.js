@@ -54,9 +54,14 @@ export const useApplications = () => {
   const getUserApplications = async () => {
     try {
       dispatch(fetchApplicationsStart());
-      const data = await applicationService.getUserApplications();
-      dispatch(fetchUserApplicationsSuccess(data));
-      return data;
+      const response = await applicationService.getUserApplications();
+      
+      // Extract the applications array from the response
+      // The API returns { message: string, data: array } format
+      const applications = response.data || [];
+      
+      dispatch(fetchUserApplicationsSuccess(applications));
+      return applications;
     } catch (error) {
       dispatch(fetchApplicationsFailure(error.response?.data?.message || 'Failed to fetch your applications'));
       throw error;

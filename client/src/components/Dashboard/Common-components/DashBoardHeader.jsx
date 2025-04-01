@@ -2,14 +2,14 @@ import React from 'react';
 import './stylesheet/DashBoardHeader.css';
 import {Link} from "react-router-dom"; // We'll create this CSS file next
 
-// Use object destructuring for props for clarity
+// Using default parameters instead of defaultProps
 const DashBoardHeader = ({
-                             ProfilePictureURL,
-                             userName,
-                             status,
-                             completionPercentage,
-                             formLink
-                         }) => {
+    ProfilePictureURL = 'https://via.placeholder.com/150',
+    userName = 'User',
+    status = 'Unknown',
+    completionPercentage = 0,
+    formLink = '#'
+}) => {
     return (
         <div className="DashBoardHeader__container">
             {/* Left Section: Profile Pic, Welcome, Status */}
@@ -63,15 +63,5 @@ const DashBoardHeader = ({
         </div>
     );
 };
-
-// Add default props for better component usage and error prevention
-DashBoardHeader.defaultProps = {
-    ProfilePictureURL: 'https://via.placeholder.com/150', // Default placeholder
-    userName: 'User',
-    status: 'Unknown',
-    completionPercentage: 0,
-    formLink: '#', // Default link to prevent errors
-};
-
 
 export default DashBoardHeader;

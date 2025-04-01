@@ -10,7 +10,7 @@ import applicationsReducer from './slices/applicationsSlice';
 const authPersistConfig = {
   key: 'auth',
   storage,
-  whitelist: ['currentUser', 'userType'], // only persist user data, not loading or error states
+  whitelist: ['currentUser', 'userType', 'token'], // Now also persisting token
 };
 
 // Root reducer with persistence

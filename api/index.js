@@ -10,6 +10,7 @@ import {env} from "./config/env.js";
 import {applySignupDelay} from "./helpers/securityHelper.js";
 import storyRoute from "./routes/story.route.js";
 import opportunityRoutes from "./routes/opportunity.route.js";
+import applicationRoutes from "./routes/application.route.js";
 import cors from 'cors';
 
 
@@ -26,18 +27,34 @@ const app = express();
 
 app.use(express.json());
 app.use(helmet());
-app.use(cors());
 
-// Rate Limiting for all /api endpoints (IP-based)
-const ipRateLimiter = rateLimit({
+// Configure CORS with specific options
+const corsOptions = {
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Add your frontend URLs
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+app.use(cors(corsOptions));
+
+// Rate Limiting for auth endpoints (very restrictive for security)
+const authRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // 5 attempts per IP
-  message: 'Too many signup attempts from this IP, please try again after 15 minutes',
+  message: 'Too many signup/login attempts from this IP, please try again after 15 minutes',
 });
 
-// Apply rate limiting and custom delay to all /api routes ONLY in non-test environments
+// More lenient rate limiting for general API endpoints
+const apiRateLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 50, // 50 requests per minute
+  message: 'Too many requests, please try again later',
+});
+
+// Apply rate limiting and custom delay to routes ONLY in non-test environments
 if (process.env.NODE_ENV !== 'test') {
-  app.use('/api/auth', ipRateLimiter, applySignupDelay);
+  app.use('/api/auth', authRateLimiter, applySignupDelay);
+  app.use('/api', apiRateLimiter); // Apply the more lenient limiter to all API routes
 } else {
   console.log('Test mode: Rate limiting disabled');
 }
@@ -47,6 +64,7 @@ app.use('/api', authRoutes);
 app.use('/api', storyRoute);
 app.use('/api/opportunities', opportunityRoutes);
 app.use('/api/volunteer', volunteerRoutes);
+app.use('/api/applications', applicationRoutes);
 
 
 // Start the server only if not in test mode
