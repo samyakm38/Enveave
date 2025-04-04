@@ -45,9 +45,32 @@ export const opportunityService = {
   
   // Get opportunities by provider ID (provider's own opportunities)
   getProviderOpportunities: async () => {
-    const response = await apiClient.get('/opportunities/provider');
+    try {
+      const response = await apiClient.get('/opportunities/provider');
+      return response.data;
+    } catch (error) {
+      // If error is 404 with provider profile not found message, return empty data
+      if (error.response && error.response.status === 404 && 
+          error.response.data.message === 'Opportunity provider profile not found') {
+        // Return empty data structure that matches the expected format
+        return { message: 'Provider profile not found', data: [] };
+      }
+      // Otherwise rethrow the error
+      throw error;
+    }
+  },
+  
+  // Mark an opportunity as completed
+  completeOpportunity: async (id, completionData) => {
+    const response = await apiClient.put(`/opportunities/${id}/complete`, completionData);
     return response.data;
   },
+  
+  // Cancel an opportunity
+  cancelOpportunity: async (id, reason) => {
+    const response = await apiClient.put(`/opportunities/${id}/cancel`, { reason });
+    return response.data;
+  }
 };
 
 export default opportunityService;

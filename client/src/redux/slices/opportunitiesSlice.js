@@ -45,6 +45,46 @@ const opportunitiesSlice = createSlice({
         }
       }
     },
+    completeOpportunity: (state, action) => {
+      const index = state.opportunities.findIndex(
+        (opp) => opp._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.opportunities[index] = {
+          ...state.opportunities[index],
+          ...action.payload,
+          status: 'Completed'
+        };
+        state.filteredOpportunities = state.opportunities;
+        if (state.currentOpportunity && state.currentOpportunity._id === action.payload._id) {
+          state.currentOpportunity = {
+            ...state.currentOpportunity,
+            ...action.payload,
+            status: 'Completed'
+          };
+        }
+      }
+    },
+    cancelOpportunity: (state, action) => {
+      const index = state.opportunities.findIndex(
+        (opp) => opp._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.opportunities[index] = {
+          ...state.opportunities[index],
+          ...action.payload,
+          status: 'Cancelled'
+        };
+        state.filteredOpportunities = state.opportunities;
+        if (state.currentOpportunity && state.currentOpportunity._id === action.payload._id) {
+          state.currentOpportunity = {
+            ...state.currentOpportunity,
+            ...action.payload,
+            status: 'Cancelled'
+          };
+        }
+      }
+    },
     deleteOpportunity: (state, action) => {
       state.opportunities = state.opportunities.filter(
         (opp) => opp._id !== action.payload
@@ -91,6 +131,8 @@ export const {
   setCurrentOpportunity,
   addOpportunity,
   updateOpportunity,
+  completeOpportunity,
+  cancelOpportunity,
   deleteOpportunity,
   filterOpportunities,
   clearFilters,

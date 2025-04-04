@@ -588,3 +588,175 @@ export const deleteOpportunity = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+/**
+ * Mark an opportunity as completed
+ * @route PUT /api/opportunities/:id/complete
+ * @access Private - Only the opportunity provider who created it
+ */
+export const completeOpportunity = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { completionDate, outcome } = req.body;
+        
+        // Validate MongoDB ID
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid opportunity ID' });
+        }
+        
+        // Check if user is authenticated and is an opportunity provider
+        if (!req.user || req.user.role !== 'provider') {
+            return res.status(403).json({ message: 'Only opportunity providers can complete opportunities' });
+        }
+        
+        // Validate required fields
+        if (!completionDate || !outcome) {
+            return res.status(400).json({ message: 'Completion date and outcome are required' });
+        }
+        
+        // Find the opportunity
+        const opportunity = await Opportunity.findById(id);
+        if (!opportunity) {
+            return res.status(404).json({ message: 'Opportunity not found' });
+        }
+        
+        // Find the provider profile using auth ID from token
+        const provider = await OpportunityProvider.findOne({ auth: req.user.id });
+        if (!provider) {
+            return res.status(404).json({ message: 'Opportunity provider profile not found' });
+        }
+        
+        // Check if this provider owns the opportunity
+        if (opportunity.provider.toString() !== provider._id.toString()) {
+            return res.status(403).json({ message: 'You are not authorized to complete this opportunity' });
+        }
+        
+        // Update the opportunity status, completion date, and outcome
+        opportunity.status = 'Completed';
+        opportunity.completionDate = new Date(completionDate);
+        opportunity.outcome = outcome;
+        
+        // Save the updated opportunity
+        const updatedOpportunity = await opportunity.save();
+        
+        res.status(200).json({
+            message: 'Opportunity marked as completed successfully',
+            data: updatedOpportunity
+        });
+    } catch (error) {
+        console.error('Error in completeOpportunity:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+/**
+ * Cancel an opportunity
+ * @route PUT /api/opportunities/:id/cancel
+ * @access Private - Only the opportunity provider who created it
+ */
+export const cancelOpportunity = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { reason } = req.body;
+        
+        // Validate MongoDB ID
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid opportunity ID' });
+        }
+        
+        // Check if user is authenticated and is an opportunity provider
+        if (!req.user || req.user.role !== 'provider') {
+            return res.status(403).json({ message: 'Only opportunity providers can cancel opportunities' });
+        }
+        
+        // Find the opportunity
+        const opportunity = await Opportunity.findById(id);
+        if (!opportunity) {
+            return res.status(404).json({ message: 'Opportunity not found' });
+        }
+        
+        // Find the provider profile using auth ID from token
+        const provider = await OpportunityProvider.findOne({ auth: req.user.id });
+        if (!provider) {
+            return res.status(404).json({ message: 'Opportunity provider profile not found' });
+        }
+        
+        // Check if this provider owns the opportunity
+        if (opportunity.provider.toString() !== provider._id.toString()) {
+            return res.status(403).json({ message: 'You are not authorized to cancel this opportunity' });
+        }
+        
+        // Update the opportunity status and add cancellation reason
+        opportunity.status = 'Cancelled';
+        opportunity.cancellationReason = reason || 'No reason provided';
+        
+        // Save the updated opportunity
+        const updatedOpportunity = await opportunity.save();
+        
+        res.status(200).json({
+            message: 'Opportunity cancelled successfully',
+            data: updatedOpportunity
+        });
+    } catch (error) {
+        console.error('Error in cancelOpportunity:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+/**
+ * Get opportunities created by the authenticated provider
+ * @route GET /api/opportunities/provider
+ * @access Private - Only authenticated opportunity providers
+ */
+export const getProviderOpportunities = async (req, res) => {
+    try {
+        // Check if user is authenticated and is an opportunity provider
+        if (!req.user || req.user.role !== 'provider') {
+            return res.status(403).json({ message: 'Only opportunity providers can access their opportunities' });
+        }
+        
+        // Find the provider using auth ID from token
+        const provider = await OpportunityProvider.findOne({ auth: req.user.id });
+        if (!provider) {
+            return res.status(404).json({ message: 'Opportunity provider profile not found' });
+        }
+        
+        // Get all opportunities created by this provider
+        const opportunities = await Opportunity.find({ provider: provider._id })
+            .sort({ createdAt: -1 })
+            .populate('applicants');
+        
+        // Process opportunities to categorize them as completed or ongoing
+        const currentDate = new Date();
+        const processedOpportunities = opportunities.map(opp => {
+            const oppObj = opp.toObject();
+            
+            // Determine if opportunity is completed based on end date
+            let isCompleted = false;
+            if (opp.schedule && opp.schedule.endDate) {
+                const endDate = new Date(opp.schedule.endDate);
+                isCompleted = endDate < currentDate;
+            }
+            
+            // Add category field
+            oppObj.category = isCompleted ? 'Completed' : 'Ongoing';
+            
+            // Count accepted volunteers
+            let volunteersCount = 0;
+            if (opp.applicants) {
+                volunteersCount = opp.applicants.filter(app => app.status === 'Accepted').length;
+            }
+            
+            oppObj.volunteersCount = volunteersCount;
+            return oppObj;
+        });
+        
+        res.status(200).json({
+            message: 'Provider opportunities retrieved successfully',
+            data: processedOpportunities
+        });
+    } catch (error) {
+        console.error('Error in getProviderOpportunities:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};

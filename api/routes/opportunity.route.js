@@ -5,7 +5,10 @@ import {
     getOpportunitiesFeed,
     createOpportunity,
     updateOpportunity,
-    deleteOpportunity
+    deleteOpportunity,
+    completeOpportunity,
+    cancelOpportunity,
+    getProviderOpportunities
 } from "../controllers/opportunity.controller.js";
 import { authenticateToken } from "../middleware/auth.middleware.js";
 import { upload } from "../helpers/imageUpload.js";
@@ -21,5 +24,8 @@ router.get('/feed', getOpportunitiesFeed);
 router.post('/', authenticateToken, upload.single('photo'), createOpportunity);
 router.put('/:id', authenticateToken, upload.single('photo'), updateOpportunity);
 router.delete('/:id', authenticateToken, deleteOpportunity);
+router.put('/:id/complete', authenticateToken, completeOpportunity);
+router.put('/:id/cancel', authenticateToken, cancelOpportunity);
+router.get('/provider', authenticateToken, getProviderOpportunities);
 
 export default router;

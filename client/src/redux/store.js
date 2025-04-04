@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import authReducer from './slices/authSlice';
 import opportunitiesReducer from './slices/opportunitiesSlice';
 import applicationsReducer from './slices/applicationsSlice';
+import providerProfileReducer from './slices/providerProfileSlice';
 
 // Configure persistence for auth slice (to keep user logged in)
 const authPersistConfig = {
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   opportunities: opportunitiesReducer,
   applications: applicationsReducer,
+  providerProfile: providerProfileReducer,
 });
 
 // Create store

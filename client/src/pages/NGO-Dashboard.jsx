@@ -1,87 +1,284 @@
-import React, { useState, useMemo } from 'react'; // Added useMemo
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from "../components/main components/Header.jsx";
-import Footer from "../components/main components/Footer.jsx"; // Added Footer import
+import Footer from "../components/main components/Footer.jsx";
 import DashBoardHeader from "../components/Dashboard/Common-components/DashBoardHeader.jsx";
 import DashBoardCard from "../components/Dashboard/Common-components/DashBoardCard.jsx";
-import DashboardTable from "../components/Dashboard/Common-components/DashBoardTable.jsx"; // Import the table component
+import DashboardTable from "../components/Dashboard/Common-components/DashBoardTable.jsx";
 import '../stylesheet/NGO-dashboard.css';
-// Optional: Import specific CSS for this table's theme if needed
-// import '../stylesheet/NgoOpportunitiesTable.css';
-// Assuming Flowbite Button is not needed here unless used inside the table via cellRenderer
-// import { Button } from "flowbite-react";
 import { Link } from "react-router-dom";
-
-// --- Constants (Keep as is) ---
-const userData = {
-    ProfilePictureURL: '/NGO-profile-pic.svg',
-    userName: 'EcoThreads',
-    status: 'Active',
-    completionPercentage: 75,
-    formLink: '/profile/edit'
-};
-
-const cardData = [
-    { title: 'Total Campaigns Running', count: 500, color: '#FD2828' },
-    { title: 'Total Volunteers', count: 10000, color: '#2C66E4' },
-    { title: 'Completed Projects', count: 700, color: '#236D4E' }
-];
-
-// --- Sample Data for NGO Opportunities ---
-const allNgoOpportunities = [
-    // Ongoing Entries (Matching the image structure + an ID for deletion)
-    { id: 101, category: 'Ongoing', name: 'Beach Cleanup Drive', organization: 'Ocean Guardians', location: 'Mumbai, India', volunteers: 50, duration: '3 Hours', deadline: 'April 10, 2025' },
-    { id: 102, category: 'Ongoing', name: 'Tree Plantation Campaign', organization: 'Green Earth Foundation', location: 'Bangalore, India', volunteers: 100, duration: '1 Day', deadline: 'May 5, 2025' },
-    { id: 103, category: 'Ongoing', name: 'Wildlife Conserve Workshop', organization: 'Save Our Species', location: 'Jaipur, India', volunteers: 30, duration: '2 Days', deadline: 'April 20, 2025' },
-    { id: 104, category: 'Ongoing', name: 'Community Recycling Drive', organization: 'Eco Warriors', location: 'Delhi, India', volunteers: 70, duration: '4 Hours', deadline: 'March 31, 2025' },
-    { id: 105, category: 'Ongoing', name: 'Air Pollution Awareness', organization: 'Clean Air Initiative', location: 'Hyderabad, India', volunteers: 20, duration: '1 Week', deadline: 'May 25, 2025' },
-    { id: 106, category: 'Ongoing', name: 'River Cleanup Expedition', organization: 'Blue Planet Initiative', location: 'Varanasi, India', volunteers: 60, duration: '5 Hours', deadline: 'May 15, 2025' },
-    { id: 107, category: 'Ongoing', name: 'Urban Gardening Project', organization: 'GrowGreen Community', location: 'Pune, India', volunteers: 40, duration: '3 Weeks', deadline: 'April 10, 2025' },
-    { id: 108, category: 'Ongoing', name: 'Sustainable Fashion', organization: 'EcoThreads', location: 'Chennai, India', volunteers: 25, duration: '2 Days', deadline: 'April 30, 2025' },
-
-    // Completed Entries (Example structure)
-    { id: 201, category: 'Completed', name: 'Winter Coat Drive 2024', organization: 'Helping Hands', location: 'Citywide', volunteersParticipated: 150, duration: '1 Month', completionDate: 'Jan 31, 2025', outcome: 'Distributed 500+ coats' },
-    { id: 202, category: 'Completed', name: 'Park Renovation Project', organization: 'City Parks Dept.', location: 'Central Park', volunteersParticipated: 85, duration: '3 Months', completionDate: 'Dec 15, 2024', outcome: 'New benches, cleaned pathways' },
-];
-
+import { useProviderProfile } from '../redux/hooks/useProviderProfile';
+import { useOpportunities } from '../redux/hooks/useOpportunities';
+import { useAuth } from '../redux/hooks/useAuth';
+import CompletionModal from "../components/Dashboard/NGO-components/CompletionModal.jsx";
 
 // --- NGO Dashboard Component ---
 const NgoDashboard = () => {
-    const [activeTab, setActiveTab] = useState('Ongoing'); // Default to Ongoing
+    const navigate = useNavigate();
+    const { currentUser, userType } = useAuth();
+    const { profile, stats, loading: profileLoading, getProviderOpportunitiesAndStats } = useProviderProfile();
+    const { 
+        opportunities, 
+        loading: opportunitiesLoading, 
+        getProviderOpportunities,
+        deleteOpportunity,
+        completeOpportunity
+    } = useOpportunities();
+    
+    const [activeTab, setActiveTab] = useState('Ongoing');
+    const [opportunitiesList, setOpportunitiesList] = useState([]);
+    const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
+    const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+    const [profileError, setProfileError] = useState(null);
     const tabs = ['Ongoing', 'Completed'];
 
-    // --- Delete Handler (Placeholder) ---
-    // In a real app, this would likely update state and call an API
-    const handleDeleteOpportunity = (opportunityId, opportunityName) => {
-        console.log(`Attempting to delete opportunity ID: ${opportunityId}, Name: ${opportunityName}`);
-        alert(`Delete action triggered for: ${opportunityName} (ID: ${opportunityId})\n(Implement actual deletion logic)`);
-        // Example: setData(currentData => currentData.filter(item => item.id !== opportunityId));
-        // Example: api.deleteOpportunity(opportunityId).then(...);
+    // Check if user is authenticated and is a provider
+    useEffect(() => {
+        console.log("Dashboard auth check - currentUser:", currentUser, "userType:", userType);
+        
+        // Only redirect if we know the user isn't a provider
+        // Allow access if token exists even if userType not loaded yet
+        if (!localStorage.getItem('auth_token')) {
+            navigate('/login');
+        }
+    }, [currentUser, userType, navigate]);
+
+    // Fetch provider profile and opportunities data
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Try to fetch provider data, but handle 404 errors gracefully
+                try {
+                    await getProviderOpportunitiesAndStats();
+                    setProfileError(null);
+                } catch (error) {
+                    // Check if the error is because the provider profile doesn't exist
+                    if (error.response && error.response.status === 404 && 
+                        error.response.data.message === 'Opportunity provider profile not found') {
+                        setProfileError('profile_not_found');
+                    } else {
+                        console.error('Error fetching provider profile data:', error);
+                    }
+                }
+                
+                // Only try to get opportunities if we didn't have a profile error
+                if (!profileError) {
+                    try {
+                        await getProviderOpportunities();
+                    } catch (error) {
+                        // If this fails with the same error, we already have our profile_not_found state set
+                        console.error('Error fetching provider opportunities:', error);
+                    }
+                }
+            } catch (error) {
+                console.error('Error in fetchData:', error);
+            }
+        };
+
+        // Only fetch data once when the component mounts
+        fetchData();
+        
+        // Empty dependency array means this effect runs once on mount
+    }, []);
+
+    // Transform opportunities data for the table
+    useEffect(() => {
+        if (opportunities) {
+            // Transform opportunities into the format expected by the table
+            const transformedOpportunities = opportunities.map(opp => {
+                const isCompleted = opp.status === 'Completed' || 
+                                   (opp.applicants && opp.applicants.some(app => app.isCompleted));
+                
+                // Format the deadline and completion dates
+                const formatDate = (dateString) => {
+                    if (!dateString) return 'N/A';
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                };
+                
+                // Count accepted volunteers
+                const acceptedVolunteers = opp.applicants ? 
+                    opp.applicants.filter(app => app.status === 'Accepted').length : 0;
+                
+                // Format duration based on opportunity type
+                const getDuration = (opp) => {
+                    if (opp.schedule && opp.schedule.startDate && opp.schedule.endDate) {
+                        const start = new Date(opp.schedule.startDate);
+                        const end = new Date(opp.schedule.endDate);
+                        const diffTime = Math.abs(end - start);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays === 0) return `${opp.schedule.timeCommitment}`;
+                        if (diffDays === 1) return '1 Day';
+                        if (diffDays < 7) return `${diffDays} Days`;
+                        if (diffDays < 30) return `${Math.ceil(diffDays/7)} Weeks`;
+                        if (diffDays < 365) return `${Math.ceil(diffDays/30)} Months`;
+                        return `${Math.ceil(diffDays/365)} Years`;
+                    }
+                    return opp.schedule?.timeCommitment || 'N/A';
+                };
+                
+                const baseOpportunity = {
+                    id: opp._id,
+                    name: opp.basicDetails?.title || 'Unnamed Opportunity',
+                    organization: currentUser?.organizationName || 'Your Organization',
+                    location: opp.schedule?.location || 'N/A',
+                    volunteers: acceptedVolunteers,
+                    duration: getDuration(opp),
+                    category: isCompleted ? 'Completed' : 'Ongoing',
+                    rawData: opp // Keep reference to original data
+                };
+                
+                if (isCompleted) {
+                    // Add completion-specific fields
+                    return {
+                        ...baseOpportunity,
+                        completionDate: formatDate(opp.completionDate || new Date()),
+                        volunteersParticipated: acceptedVolunteers,
+                        outcome: opp.outcome || 'Completed successfully'
+                    };
+                } else {
+                    // Add ongoing-specific fields
+                    return {
+                        ...baseOpportunity,
+                        deadline: formatDate(opp.schedule?.applicationDeadline)
+                    };
+                }
+            });
+            
+            setOpportunitiesList(transformedOpportunities);
+        }
+    }, [opportunities, currentUser]);
+
+    // Delete opportunity handler
+    const handleDeleteOpportunity = async (opportunityId, opportunityName) => {
+        if (window.confirm(`Are you sure you want to delete "${opportunityName}"?`)) {
+            try {
+                await deleteOpportunity(opportunityId);
+                // The opportunities list will be updated automatically via the Redux state
+            } catch (error) {
+                console.error('Error deleting opportunity:', error);
+                alert(`Failed to delete opportunity: ${error.message}`);
+            }
+        }
+    };
+    
+    // Handle marking an opportunity as completed
+    const handleCompleteOpportunity = (opportunityId, opportunityName) => {
+        // Find the opportunity in our list
+        const opportunity = opportunitiesList.find(opp => opp.id === opportunityId);
+        if (opportunity) {
+            setSelectedOpportunity(opportunity);
+            setIsCompletionModalOpen(true);
+        }
+    };
+    
+    // Handle completion submission
+    const handleCompletionSubmit = async (completionData) => {
+        try {
+            if (selectedOpportunity) {
+                await completeOpportunity(selectedOpportunity.id, completionData);
+                setIsCompletionModalOpen(false);
+                setSelectedOpportunity(null);
+                
+                // Refresh the data
+                await getProviderOpportunitiesAndStats();
+                await getProviderOpportunities();
+            }
+        } catch (error) {
+            console.error('Error completing opportunity:', error);
+            alert(`Failed to complete opportunity: ${error.message}`);
+        }
     };
 
-    // --- Column Definitions ---
+    // Render the "Complete Your Profile" section when no profile exists
+    const renderProfileSetupPrompt = () => {
+        return (
+            <div className="profile-setup-container" style={{ 
+                textAlign: 'center', 
+                padding: '50px', 
+                margin: '40px auto',
+                maxWidth: '800px',
+                backgroundColor: '#f8f9fa',
+                borderRadius: '8px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+            }}>
+                <h2 style={{ color: '#236D4E', marginBottom: '20px' }}>Complete Your Organization Profile</h2>
+                <p style={{ fontSize: '18px', lineHeight: '1.6', marginBottom: '30px' }}>
+                    Welcome to Enveave! Before you can create and manage opportunities, 
+                    you need to complete your organization profile. This helps volunteers 
+                    understand your mission and the work you do.
+                </p>
+                <Link to="/provider/profile/edit">
+                    <button style={{
+                        backgroundColor: '#236D4E',
+                        color: 'white',
+                        border: 'none',
+                        padding: '12px 30px',
+                        borderRadius: '4px',
+                        fontSize: '16px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold'
+                    }}>
+                        Complete Profile Now
+                    </button>
+                </Link>
+            </div>
+        );
+    };
+
+    // Prepare card data with real stats
+    const realCardData = [
+        { title: 'Total Campaigns Running', count: stats?.totalOpportunities || 0, color: '#FD2828' },
+        { title: 'Total Volunteers', count: stats?.totalVolunteers || 0, color: '#2C66E4' },
+        { title: 'Completed Projects', count: stats?.completedProjects || 0, color: '#236D4E' }
+    ];
+
+    // Prepare user data with real profile info
+    const realUserData = {
+        ProfilePictureURL: profile?.organizationDetails?.logo || '/NGO-profile-pic.svg',
+        userName: currentUser?.organizationName || 'Organization',
+        status: 'Active',
+        completionPercentage: profile?.profileCompletion?.step1 && profile?.profileCompletion?.step2 ? 100 : 50,
+        formLink: '/provider/profile/edit'
+    };
+
+    // Column definitions
     const ongoingColumns = [
         { header: 'Opportunity name', accessor: 'name', cellClassName: 'ngo-cell-name' },
-        { header: 'Organization', accessor: 'organization' }, // Or maybe 'Lead Contact'?
+        { header: 'Organization', accessor: 'organization' },
         { header: 'Location', accessor: 'location' },
         { header: 'Total volunteers', accessor: 'volunteers', cellClassName: 'ngo-cell-number' },
         { header: 'Duration', accessor: 'duration' },
         { header: 'Application Deadline', accessor: 'deadline' },
         {
             header: 'Action',
-            accessor: 'id', // Need an accessor, ID is good for actions
-            cellClassName: 'ngo-cell-action', // Specific class for styling
-            cellRenderer: (id, row) => ( // Use cellRenderer to create the button
-                <button
-                    onClick={() => handleDeleteOpportunity(id, row.name)}
-                    className="ngo-delete-button" // Add a class for styling
-                    title={`Delete ${row.name}`} // Tooltip for accessibility
-                    aria-label={`Delete ${row.name}`}
-                >
-                    {/* Simple SVG Trash Icon (replace with library icon if preferred) */}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
-                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                    </svg>
-                </button>
+            accessor: 'id',
+            cellClassName: 'ngo-cell-action',
+            cellRenderer: (id, row) => (
+                <div className="ngo-action-buttons">
+                    <button
+                        onClick={() => handleCompleteOpportunity(id, row.name)}
+                        className="ngo-complete-button"
+                        title={`Mark ${row.name} as completed`}
+                        aria-label={`Complete ${row.name}`}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="m10.97 4.97-.02.022-3.473 4.425-2.025-2.025a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                        </svg>
+                    </button>
+                    <button
+                        onClick={() => handleDeleteOpportunity(id, row.name)}
+                        className="ngo-delete-button"
+                        title={`Delete ${row.name}`}
+                        aria-label={`Delete ${row.name}`}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                        </svg>
+                    </button>
+                </div>
             )
         },
     ];
@@ -92,32 +289,56 @@ const NgoDashboard = () => {
         { header: 'Duration', accessor: 'duration' },
         { header: 'Completion Date', accessor: 'completionDate'},
         { header: 'Volunteers Participated', accessor: 'volunteersParticipated', cellClassName: 'ngo-cell-number' },
-        { header: 'Outcome / Impact', accessor: 'outcome', cellClassName: 'ngo-cell-outcome'}, // Example specific class
+        { header: 'Outcome / Impact', accessor: 'outcome', cellClassName: 'ngo-cell-outcome'},
     ];
 
-    // --- Dynamic Selection ---
+    // Dynamic selections based on active tab
     const activeColumns = useMemo(() => {
         return activeTab === 'Completed' ? completedColumns : ongoingColumns;
     }, [activeTab]);
 
     const filteredData = useMemo(() => {
-        return allNgoOpportunities.filter(opp => opp.category === activeTab);
-    }, [activeTab]);
+        return opportunitiesList.filter(opp => opp.category === activeTab);
+    }, [activeTab, opportunitiesList]);
+
+    // Show profile setup prompt if profile doesn't exist
+    if (profileError === 'profile_not_found') {
+        return (
+            <div>
+                <Header />
+                {renderProfileSetupPrompt()}
+                <Footer />
+            </div>
+        );
+    }
+
+    // Loading state
+    if (profileLoading || opportunitiesLoading) {
+        return (
+            <div>
+                <Header />
+                <div className="loading-container" style={{ textAlign: 'center', padding: '50px' }}>
+                    <h2>Loading dashboard data...</h2>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
 
     return (
         <div>
             <Header />
             <DashBoardHeader
-                ProfilePictureURL={userData.ProfilePictureURL}
-                userName={userData.userName}
-                status={userData.status}
-                completionPercentage={userData.completionPercentage}
-                formLink={userData.formLink}
+                ProfilePictureURL={realUserData.ProfilePictureURL}
+                userName={realUserData.userName}
+                status={realUserData.status}
+                completionPercentage={realUserData.completionPercentage}
+                formLink={realUserData.formLink}
             />
 
             {/* Cards Section */}
             <div className="NGO-dashboard-card-container">
-                {cardData.map((card, index) => (
+                {realCardData.map((card, index) => (
                     <DashBoardCard
                         key={index}
                         title={card.title}
@@ -130,9 +351,9 @@ const NgoDashboard = () => {
             {/* Heading and Add Button Section */}
             <div className='NGO-dashboard-heading-container'>
                 <h1>
-                    My Opportunities {/* Changed from "Opportunities" */}
+                    My Opportunities
                 </h1>
-                <Link to='/create-opportunity'> {/* Changed link to be more specific */}
+                <Link to='/create-opportunity'>
                     <div className='NGO-dashboard-button-container'>
                         <p>
                             + Add Opportunity
@@ -150,12 +371,24 @@ const NgoDashboard = () => {
                     activeTab={activeTab}
                     onTabChange={setActiveTab}
                     emptyMessage={`No ${activeTab.toLowerCase()} opportunities found.`}
-                    // Add specific theme class for CSS targeting
                     className="dashboard-table-ngo-theme"
                 />
             </div>
+            
+            {/* Completion Modal */}
+            {isCompletionModalOpen && selectedOpportunity && (
+                <CompletionModal
+                    isOpen={isCompletionModalOpen}
+                    onClose={() => {
+                        setIsCompletionModalOpen(false);
+                        setSelectedOpportunity(null);
+                    }}
+                    onSubmit={handleCompletionSubmit}
+                    opportunityName={selectedOpportunity.name}
+                />
+            )}
 
-            <Footer /> {/* Added Footer */}
+            <Footer />
         </div>
     );
 };
