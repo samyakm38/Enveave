@@ -5,7 +5,8 @@ import {
     updateBasicDetails,
     updateInterests,
     updateEngagement,
-    uploadProfilePhoto
+    uploadProfilePhoto,
+    updateProfileStatus
 } from '../controllers/volunteer.controller.js';
 import { authenticateToken, requireVolunteer } from '../middleware/auth.middleware.js';
 
@@ -20,5 +21,6 @@ router.put('/profile/basic', authenticateToken, requireVolunteer, updateBasicDet
 router.put('/profile/interests', authenticateToken, requireVolunteer, updateInterests);
 router.put('/profile/engagement', authenticateToken, requireVolunteer, updateEngagement);
 router.post('/profile/photo', authenticateToken, requireVolunteer, uploadProfilePhoto);
+router.put('/profile/status', authenticateToken, requireVolunteer, updateProfileStatus);
 
 export default router;

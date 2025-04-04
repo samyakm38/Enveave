@@ -51,11 +51,22 @@ export const updateBasicDetails = async (req, res) => {
         // Find the volunteer
         let volunteer = await Volunteer.findOne({ auth: authId });
         
+        // Extract the basicDetails from the request body
+        const { basicDetails } = req.body;
+        
+        // Validate that basicDetails exists and has required fields
+        if (!basicDetails || !basicDetails.phoneNumber || !basicDetails.dateOfBirth || 
+            !basicDetails.gender || !basicDetails.location) {
+            return res.status(400).json({ 
+                message: 'Missing required basic details fields' 
+            });
+        }
+        
         // If volunteer profile doesn't exist yet, create one
         if (!volunteer) {
             volunteer = new Volunteer({
                 auth: authId,
-                basicDetails: req.body,
+                basicDetails: basicDetails,
                 profileCompletion: {
                     step1: true,
                     step2: false,
@@ -64,12 +75,18 @@ export const updateBasicDetails = async (req, res) => {
             });
         } else {
             // Update existing profile
-            volunteer.basicDetails = req.body;
+            volunteer.basicDetails = basicDetails;
             volunteer.profileCompletion.step1 = true;
         }
         
         // Save the volunteer profile
         await volunteer.save();
+        
+        // Update auth volunteer profile status
+        await AuthVolunteer.findByIdAndUpdate(
+            authId,
+            { profileStatus: 'STEP_1' }
+        );
         
         res.status(200).json({
             message: 'Basic details updated successfully',
@@ -98,12 +115,27 @@ export const updateInterests = async (req, res) => {
             return res.status(404).json({ message: 'Volunteer profile not found. Please complete step 1 first.' });
         }
         
+        // Extract the interests from the request body
+        const { interests } = req.body;
+        
+        if (!interests) {
+            return res.status(400).json({ 
+                message: 'Missing interests data' 
+            });
+        }
+        
         // Update interests
-        volunteer.interests = req.body;
+        volunteer.interests = interests;
         volunteer.profileCompletion.step2 = true;
         
         // Save the volunteer profile
         await volunteer.save();
+        
+        // Update auth volunteer profile status
+        await AuthVolunteer.findByIdAndUpdate(
+            authId,
+            { profileStatus: 'STEP_2' }
+        );
         
         res.status(200).json({
             message: 'Interests and skills updated successfully',
@@ -132,12 +164,28 @@ export const updateEngagement = async (req, res) => {
             return res.status(404).json({ message: 'Volunteer profile not found. Please complete previous steps first.' });
         }
         
-        // Update engagement
-        volunteer.engagement = req.body;
+        // Extract the engagement data from the request body
+        const { engagement } = req.body;
+        
+        if (!engagement || !engagement.availability || !engagement.motivations || 
+            engagement.hasPreviousExperience === undefined) {
+            return res.status(400).json({ 
+                message: 'Missing required engagement fields' 
+            });
+        }
+        
+        // Update engagement info
+        volunteer.engagement = engagement;
         volunteer.profileCompletion.step3 = true;
         
         // Save the volunteer profile
         await volunteer.save();
+        
+        // Update auth volunteer profile status to COMPLETED since this is the last step
+        await AuthVolunteer.findByIdAndUpdate(
+            authId,
+            { profileStatus: 'COMPLETED' }
+        );
         
         res.status(200).json({
             message: 'Engagement information updated successfully',
@@ -185,6 +233,45 @@ export const uploadProfilePhoto = async (req, res) => {
         });
     } catch (error) {
         console.error('Error in uploadProfilePhoto:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+/**
+ * Update volunteer's profile status
+ * @route PUT /api/volunteers/profile/status
+ * @access Private - Only for authenticated volunteers
+ */
+export const updateProfileStatus = async (req, res) => {
+    try {
+        // Get volunteer auth ID from authenticated user
+        const authId = req.user.id;
+        
+        // Validate input
+        const { profileStatus } = req.body;
+        if (!profileStatus || !['NOT_STARTED', 'STEP_1', 'STEP_2', 'STEP_3', 'COMPLETED'].includes(profileStatus)) {
+            return res.status(400).json({ 
+                message: 'Valid profileStatus required (NOT_STARTED, STEP_1, STEP_2, STEP_3, or COMPLETED)' 
+            });
+        }
+        
+        // Update the auth profile status
+        const authVolunteer = await AuthVolunteer.findByIdAndUpdate(
+            authId,
+            { profileStatus },
+            { new: true }
+        );
+        
+        if (!authVolunteer) {
+            return res.status(404).json({ message: 'Volunteer auth profile not found' });
+        }
+        
+        res.status(200).json({
+            message: 'Profile status updated successfully',
+            data: { profileStatus: authVolunteer.profileStatus }
+        });
+    } catch (error) {
+        console.error('Error in updateProfileStatus:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

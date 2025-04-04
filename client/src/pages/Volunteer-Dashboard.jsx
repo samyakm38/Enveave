@@ -4,7 +4,7 @@ import Footer from "../components/main components/Footer.jsx";
 import DashBoardHeader from "../components/Dashboard/Common-components/DashBoardHeader.jsx";
 import DashBoardCard from "../components/Dashboard/Common-components/DashBoardCard.jsx";
 import '../stylesheet/Volunteer-DashBoard.css'
-import {useMemo, useState, useEffect} from "react";
+import {useMemo, useState, useEffect, useRef} from "react";
 import DashboardTable from "../components/Dashboard/Common-components/DashBoardTable.jsx";
 import { useAuth, useApplications, useOpportunities } from '../redux/hooks';
 import { useVolunteer } from '../redux/hooks/useVolunteer'; // Import the new hook
@@ -41,29 +41,46 @@ const VolunteerDashboard = () => {
         appliedCount: 0,
         completedCount: 0
     });
+    
+    // Use a ref to prevent multiple fetch operations
+    const hasLoadedDataRef = useRef(false);
 
-    // Fetch data when component mounts
+    // Fetch data when component mounts (only once)
     useEffect(() => {
-        if (isAuthenticated) {
-            // Fetch user's applications
-            getUserApplications().catch(err => 
-                console.error("Error fetching applications:", err)
-            );
-            
-            // Fetch all opportunities to get total available count
-            getAllOpportunities().catch(err => 
-                console.error("Error fetching opportunities:", err)
-            );
-            
-            // Fetch the full volunteer profile for profile completion
-            fetchVolunteerProfile().catch(err =>
-                console.error("Error fetching volunteer profile:", err)
-            );
-        } else {
-            // Redirect to login if not authenticated
+        // If not authenticated, redirect to login
+        if (!isAuthenticated) {
             navigate('/login');
+            return;
         }
-    }, [isAuthenticated, navigate]);
+        
+        // Skip if already loaded to prevent excessive API calls
+        if (hasLoadedDataRef.current) return;
+        
+        // Set the ref to true to prevent subsequent loads
+        hasLoadedDataRef.current = true;
+        
+        // Create a single async function to load all data
+        const loadAllData = async () => {
+            try {
+                // Fetch applications and opportunities in parallel
+                await Promise.all([
+                    getUserApplications(),
+                    getAllOpportunities()
+                ]);
+                
+                // Only fetch profile if needed (and not in a NOT_STARTED state)
+                if (user?.profileStatus !== 'NOT_STARTED') {
+                    await fetchVolunteerProfile();
+                }
+            } catch (err) {
+                console.error("Error loading dashboard data:", err);
+            }
+        };
+        
+        // Execute the data loading
+        loadAllData();
+        
+    }, [isAuthenticated, navigate, getUserApplications, getAllOpportunities, fetchVolunteerProfile, user]);
 
     // Calculate stats when applications or opportunities data changes
     useEffect(() => {
@@ -191,7 +208,16 @@ const VolunteerDashboard = () => {
         }
     }
 
-    // Loading state
+    // Display user data from auth state and volunteer profile - MOVED BEFORE CONDITIONAL RETURN
+    const userData = useMemo(() => ({
+        ProfilePictureURL: volunteerProfile?.profilePhoto || user?.profilePhoto || '/dashboard-default-user-image.svg',
+        userName: user?.name || 'Volunteer',
+        status: volunteerProfile?.status || user?.profileStatus || 'Active',
+        completionPercentage: calculateProfileCompletion(volunteerProfile),
+        formLink: '/profile-completion' // Updated to use the new form
+    }), [volunteerProfile, user, calculateProfileCompletion]);
+
+    // Loading state - NOW AFTER ALL HOOKS HAVE BEEN CALLED
     if (applicationsLoading || opportunitiesLoading || volunteerLoading) {
         return (
             <div>
@@ -203,15 +229,6 @@ const VolunteerDashboard = () => {
             </div>
         );
     }
-
-    // Display user data from auth state and volunteer profile
-    const userData = {
-        ProfilePictureURL: volunteerProfile?.profilePhoto || user?.profilePhoto || '/dashboard-default-user-image.svg',
-        userName: user?.name || 'Volunteer',
-        status: volunteerProfile?.status || user?.profileStatus || 'Active',
-        completionPercentage: calculateProfileCompletion(volunteerProfile),
-        formLink: '/Volunteer-form-1' // Link to complete profile
-    };
 
     return (
         <div>
