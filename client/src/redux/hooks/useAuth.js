@@ -27,27 +27,12 @@ export const useAuth = () => {
       dispatch(loginStart());
       const data = await authService.login(email, password);
       
-      // Determine user type based on response
-      let userRole = '';
-      let userData = null;
-      
-      if (data.volunteer) {
-        userRole = 'volunteer';
-        userData = data.volunteer;
-      } else if (data.provider) {
-        userRole = 'provider';
-        userData = data.provider;
-      } else if (data.admin) {
-        userRole = 'admin';
-        userData = data.admin;
-      } else if (data.user) {
-        userRole = data.user.role;
-        userData = data.user;
-      }
+      // The API response already contains userType and user directly
+      console.log('Processing login data in hook:', data);
       
       dispatch(loginSuccess({ 
-        user: userData, 
-        userType: userRole, 
+        user: data.user, 
+        userType: data.userType, 
         token: data.token
       }));
       

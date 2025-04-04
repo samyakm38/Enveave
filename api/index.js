@@ -11,6 +11,7 @@ import {applySignupDelay} from "./helpers/securityHelper.js";
 import storyRoute from "./routes/story.route.js";
 import opportunityRoutes from "./routes/opportunity.route.js";
 import applicationRoutes from "./routes/application.route.js";
+import providerRoutes from "./routes/provider.route.js";
 import cors from 'cors';
 
 
@@ -65,6 +66,7 @@ app.use('/api', storyRoute);
 app.use('/api/opportunities', opportunityRoutes);
 app.use('/api/volunteers', volunteerRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/provider', providerRoutes);
 
 
 // Start the server only if not in test mode

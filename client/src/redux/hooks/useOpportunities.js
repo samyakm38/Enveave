@@ -6,7 +6,9 @@ import {
   setCurrentOpportunity,
   addOpportunity,
   updateOpportunity,
-  deleteOpportunity,
+  completeOpportunity as completeOpportunityAction,
+  cancelOpportunity as cancelOpportunityAction,
+  deleteOpportunity as deleteOpportunityAction,
   filterOpportunities,
   clearFilters
 } from '../slices/opportunitiesSlice';
@@ -136,11 +138,40 @@ export const useOpportunities = () => {
     }
   };
 
+  // Mark an opportunity as completed
+  const completeOpportunity = async (id, completionData) => {
+    try {
+      const response = await opportunityService.completeOpportunity(id, completionData);
+      const completedOpportunity = response.data || null;
+      if (completedOpportunity) {
+        dispatch(completeOpportunityAction(completedOpportunity));
+      }
+      return completedOpportunity;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // Cancel an opportunity
+  const cancelOpportunity = async (id, reason) => {
+    try {
+      const response = await opportunityService.cancelOpportunity(id, { reason });
+      const cancelledOpportunity = response.data || null;
+      if (cancelledOpportunity) {
+        dispatch(cancelOpportunityAction(cancelledOpportunity));
+      }
+      return cancelledOpportunity;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   // Delete an opportunity
-  const removeOpportunity = async (id) => {
+  const deleteOpportunity = async (id) => {
     try {
       await opportunityService.deleteOpportunity(id);
-      dispatch(deleteOpportunity(id));
+      dispatch(deleteOpportunityAction(id));
+      return true;
     } catch (error) {
       throw error;
     }
@@ -173,7 +204,9 @@ export const useOpportunities = () => {
     getProviderOpportunities,
     createOpportunity,
     editOpportunity,
-    removeOpportunity,
+    completeOpportunity,
+    cancelOpportunity,
+    deleteOpportunity,
     applyFilters,
     resetFilters,
     selectOpportunity

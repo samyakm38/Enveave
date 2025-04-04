@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
 import { useAuth } from '../redux/hooks';
@@ -11,7 +11,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     
     // Use our custom auth hook from Redux
-    const { login, loading, error, clearErrorMessage } = useAuth();
+    const { login, loading, error, clearErrorMessage, userType } = useAuth();
     const navigate = useNavigate();
 
     // Handle form submission
@@ -21,13 +21,18 @@ const Login = () => {
         try {
             // Use the login method from our auth hook
             const response = await login(email, password);
+            console.log('Login response:', response);
+            console.log('Current userType in Redux:', userType);
             
             // Redirect based on user type
             if (response.userType === 'admin') {
                 navigate('/admin/dashboard');
-            } else if (response.userType === 'provider') {
+            } else if (response.userType === 'provider' || 
+                      (response.provider && !response.volunteer && !response.admin)) {
+                console.log('Provider detected, navigating to dashboard');
                 navigate('/provider/dashboard');
-            } else if (response.userType === 'volunteer') {
+            } else if (response.userType === 'volunteer' || 
+                       (response.volunteer && !response.provider && !response.admin)) {
                 navigate('/volunteer/dashboard');
             } else {
                 navigate('/');

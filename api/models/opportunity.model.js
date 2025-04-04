@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const opportunitySchema = new mongoose.Schema({
-    // Reference to provider
+        // Reference to provider
     provider: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'OpportunityProvider',
