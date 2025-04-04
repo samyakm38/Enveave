@@ -13,9 +13,9 @@ import SignUpNgo from "./pages/Sign-up-NGO.jsx";
 import Login from "./pages/Login.jsx";
 import NgoForm1 from "./pages/forms/Ngo-form-1.jsx";
 import NgoForm2 from "./pages/forms/Ngo-form-2.jsx";
-import VolunteerForm1 from "./pages/forms/Volunteer-form-1.jsx";
-import VolunteerForm2 from "./pages/forms/Volunteer-form-2.jsx";
-import VolunteerForm3 from "./pages/forms/Volunteer-form-3.jsx";
+// import VolunteerForm1 from "./pages/forms/Volunteer-form-1.jsx";
+// import VolunteerForm2 from "./pages/forms/Volunteer-form-2.jsx";
+// import VolunteerForm3 from "./pages/forms/Volunteer-form-3.jsx";
 import OpportunityForm1 from "./pages/forms/Opportunity-form-1.jsx";
 import OpportunityForm2 from "./pages/forms/Opportunity-form-2.jsx";
 import OpportunityForm3 from "./pages/forms/Opportunity-form-3.jsx";
@@ -25,6 +25,7 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import { ToastProvider } from "./components/main components/ToastContext.jsx";
 import VolunteerDashboard from "./pages/Volunteer-Dashboard.jsx";
 import NGODashboard from "./pages/NGO-Dashboard.jsx";
+import VolunteerProfileCompletion from "./pages/Volunteer-Profile-Completion.jsx";
 
 const App = () => {
   return (
@@ -44,9 +45,9 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/Ngo-form-1" element={<NgoForm1 />} />
           <Route path="/Ngo-form-2" element={<NgoForm2 />} />
-          <Route path="/Volunteer-form-1" element={<VolunteerForm1 />} />
-          <Route path="/Volunteer-form-2" element={<VolunteerForm2 />} />
-          <Route path="/Volunteer-form-3" element={<VolunteerForm3 />} />
+          {/* <Route path="/Volunteer-form-1" element={<VolunteerForm1 />} /> */}
+          {/* <Route path="/Volunteer-form-2" element={<VolunteerForm2 />} /> */}
+          {/* <Route path="/Volunteer-form-3" element={<VolunteerForm3 />} /> */}
           <Route path="/Opportunity-form-1" element={<OpportunityForm1 />} />
           <Route path="/Opportunity-form-2" element={<OpportunityForm2 />} />
           <Route path="/Opportunity-form-3" element={<OpportunityForm3 />} />
@@ -54,6 +55,7 @@ const App = () => {
           <Route path="/Story-form" element={<StoryForm />} />
           <Route path='/volunteer/dashboard' element={<VolunteerDashboard />}/>
           <Route path='/provider/dashboard' element={<NGODashboard />}/>
+          <Route path="/profile-completion" element={<VolunteerProfileCompletion />} />
         </Routes>
       </BrowserRouter>
     </ToastProvider>
