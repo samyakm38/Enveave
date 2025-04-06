@@ -83,7 +83,7 @@ const ProfileCompletionForm = () => {
       case 3:
         return <EngagementForm 
                  volunteerData={volunteerProfile} 
-                 onSubmitSuccess={() => navigate('/volunteer/dashboard')} 
+                 onSubmitSuccess={() => navigate('/login')} 
                  onBack={prevStep} 
                />;
       default:

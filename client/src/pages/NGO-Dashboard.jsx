@@ -41,12 +41,19 @@ const NgoDashboard = () => {
         if (!localStorage.getItem('auth_token')) {
             navigate('/login');
         }
-    }, [currentUser, userType, navigate]);
+            }, [currentUser, userType, navigate]);
 
     // Fetch provider profile and opportunities data
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // Skip API calls if profile status is NOT_STARTED
+                if (currentUser?.profileStatus === 'NOT_STARTED') {
+                    console.log('Provider profile not created yet, showing setup prompt');
+                    // setProfileError('profile_not_found');
+                    return;
+                }
+                
                 // Try to fetch provider data, but handle 404 errors gracefully
                 try {
                     await getProviderOpportunitiesAndStats();
@@ -301,16 +308,16 @@ const NgoDashboard = () => {
         return opportunitiesList.filter(opp => opp.category === activeTab);
     }, [activeTab, opportunitiesList]);
 
-    // Show profile setup prompt if profile doesn't exist
-    if (profileError === 'profile_not_found') {
-        return (
-            <div>
-                <Header />
-                {renderProfileSetupPrompt()}
-                <Footer />
-            </div>
-        );
-    }
+    // // Show profile setup prompt if profile doesn't exist
+    // if (profileError === 'profile_not_found') {
+    //     return (
+    //         <div>
+    //             <Header />
+    //             {renderProfileSetupPrompt()}
+    //             <Footer />
+    //         </div>
+    //     );
+    // }
 
     // Loading state
     if (profileLoading || opportunitiesLoading) {

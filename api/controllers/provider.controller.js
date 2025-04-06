@@ -2,6 +2,7 @@ import OpportunityProvider from '../models/opportunityprovider.model.js';
 import AuthOpportunityProvider from '../models/auth.opportunityprovider.model.js';
 import Opportunity from '../models/opportunity.model.js';
 import cloudinary from '../config/cloudinary.js';
+import { uploadImageToCloudinary } from '../helpers/imageUpload.js';
 
 // Get the authenticated provider's profile
 export const getProviderProfile = async (req, res) => {
@@ -20,24 +21,26 @@ export const getProviderProfile = async (req, res) => {
         
         // Then get the detailed provider profile
         const providerProfile = await OpportunityProvider.findOne({ 
-            authProviderId: id 
+            auth: id 
         });
         
         // Combine data from both models for a complete profile
         const combinedProfile = {
             _id: authProvider._id,
-            email: authProvider.email,
-            phone: authProvider.phone,
+            email: authProvider.contactPerson?.email,
+            phone: authProvider.contactPerson?.phoneNumber,
             organizationName: authProvider.organizationName,
-            profileCompletion: authProvider.profileCompletion || { step1: false, step2: false },
+            profileStatus: authProvider.profileStatus,
             organizationDetails: providerProfile ? {
-                logo: providerProfile.logo || null,
-                description: providerProfile.description || '',
-                website: providerProfile.website || '',
-                socialMedia: providerProfile.socialMedia || {},
-                address: providerProfile.address || {},
-                contactInfo: providerProfile.contactInfo || {}
-            } : null
+                logo: providerProfile.organizationDetails?.logo || null,
+                description: providerProfile.organizationDetails?.description || '',
+                website: providerProfile.organizationDetails?.website || '',
+                location: providerProfile.organizationDetails?.location || {}
+            } : null,
+            profileCompletion: providerProfile ? providerProfile.profileCompletion : { 
+                step1: false, 
+                step2: false 
+            }
         };
         
         return res.status(200).json({
@@ -62,17 +65,16 @@ export const updateProviderProfile = async (req, res) => {
             organizationName, 
             description, 
             website, 
-            socialMedia,
-            address,
-            contactInfo
+            location,
+            logo
         } = req.body;
         
-        // Update auth provider model for basic info
+        // Update auth provider model for basic info and update profile status to STEP_1
         const updatedAuthProvider = await AuthOpportunityProvider.findByIdAndUpdate(
             id,
             { 
                 organizationName,
-                profileCompletion: { step1: true, step2: true }
+                profileStatus: 'STEP_1'
             },
             { new: true }
         );
@@ -85,29 +87,40 @@ export const updateProviderProfile = async (req, res) => {
         }
         
         // Find or create the detailed provider profile
-        let providerProfile = await OpportunityProvider.findOne({ authProviderId: id });
+        let providerProfile = await OpportunityProvider.findOne({ auth: id });
         
         if (!providerProfile) {
             // Create new provider profile if it doesn't exist
+            // Make sure all required fields are provided
             providerProfile = new OpportunityProvider({
-                authProviderId: id,
-                description,
-                website,
-                socialMedia,
-                address,
-                contactInfo
+                auth: id,
+                organizationDetails: {
+                    description,
+                    website,
+                    location,
+                    logo: logo || "/NGO-profile-pic.svg" // Use default if no logo provided
+                },
+                profileCompletion: {
+                    step1: true,
+                    step2: false
+                }
             });
             await providerProfile.save();
         } else {
             // Update existing provider profile
             providerProfile = await OpportunityProvider.findOneAndUpdate(
-                { authProviderId: id },
+                { auth: id },
                 {
-                    description,
-                    website,
-                    socialMedia,
-                    address,
-                    contactInfo
+                    organizationDetails: {
+                        description,
+                        website,
+                        location,
+                        logo: logo || providerProfile.organizationDetails?.logo || "/NGO-profile-pic.svg"
+                    },
+                    profileCompletion: {
+                        step1: true,
+                        step2: providerProfile.profileCompletion?.step2 || false
+                    }
                 },
                 { new: true }
             );
@@ -116,18 +129,16 @@ export const updateProviderProfile = async (req, res) => {
         // Combine updated data for response
         const updatedProfile = {
             _id: updatedAuthProvider._id,
-            email: updatedAuthProvider.email,
-            phone: updatedAuthProvider.phone,
             organizationName: updatedAuthProvider.organizationName,
-            profileCompletion: updatedAuthProvider.profileCompletion,
+            profileStatus: updatedAuthProvider.profileStatus,
+            contactPerson: updatedAuthProvider.contactPerson,
             organizationDetails: {
-                logo: providerProfile.logo || null,
-                description: providerProfile.description || '',
-                website: providerProfile.website || '',
-                socialMedia: providerProfile.socialMedia || {},
-                address: providerProfile.address || {},
-                contactInfo: providerProfile.contactInfo || {}
-            }
+                logo: providerProfile.organizationDetails?.logo,
+                description: providerProfile.organizationDetails?.description,
+                website: providerProfile.organizationDetails?.website,
+                location: providerProfile.organizationDetails?.location
+            },
+            profileCompletion: providerProfile.profileCompletion
         };
         
         return res.status(200).json({
@@ -156,22 +167,44 @@ export const uploadProviderLogo = async (req, res) => {
             });
         }
         
-        // Upload image to Cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'provider_logos'
-        });
+        // Use the helper function to upload image to Cloudinary
+        const logoUrl = await uploadImageToCloudinary(req.file.buffer, 'provider_logos');
         
-        // Update provider profile with new logo URL
-        const updatedProfile = await OpportunityProvider.findOneAndUpdate(
-            { authProviderId: id },
-            { logo: result.secure_url },
-            { new: true, upsert: true } // Create if it doesn't exist
-        );
+        // Get the provider profile first
+        let providerProfile = await OpportunityProvider.findOne({ auth: id });
+        
+        if (!providerProfile) {
+            // If profile doesn't exist yet, create a minimal one with just the logo
+            providerProfile = new OpportunityProvider({
+                auth: id,
+                organizationDetails: {
+                    logo: logoUrl,
+                    description: '',  // Required fields with defaults
+                    website: '',
+                    location: {
+                        address: '',
+                        city: '',
+                        state: '',
+                        pincode: ''
+                    }
+                }
+            });
+            await providerProfile.save();
+        } else {
+            // Update existing provider profile with new logo URL
+            providerProfile = await OpportunityProvider.findOneAndUpdate(
+                { auth: id },
+                { 
+                    'organizationDetails.logo': logoUrl 
+                },
+                { new: true }
+            );
+        }
         
         return res.status(200).json({
             success: true,
             data: {
-                logoUrl: result.secure_url
+                logoUrl: logoUrl
             }
         });
     } catch (error) {

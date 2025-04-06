@@ -86,6 +86,9 @@ export const useAuth = () => {
           userType: 'volunteer',
           token: data.token
         }));
+      } else {
+        // Add this else block to reset loading state when no token is returned
+        dispatch(registrationComplete());
       }
       return data;
     } catch (error) {
@@ -105,6 +108,9 @@ export const useAuth = () => {
           userType: 'provider',
           token: data.token
         }));
+      } else {
+        // Add this else block to reset loading state when no token is returned
+        dispatch(registrationComplete());
       }
       return data;
     } catch (error) {
