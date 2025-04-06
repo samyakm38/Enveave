@@ -1,0 +1,533 @@
+/* Original Styles */
+.individual-opportunity-main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding-left: 1rem; /* Add some padding for very small screens */
+    padding-right: 1rem; /* Add some padding for very small screens */
+    box-sizing: border-box; /* Include padding in width calculation */
+    width: 100%; /* Ensure it takes full available width */
+}
+
+.individual-opportunity-top-container,
+.individual-opportunity-bottom-container,
+.individual-opportunity-POC-section {
+    /* Use max-width instead of fixed width */
+    max-width: 70.25rem;
+    width: 100%; /* Occupy available width up to max-width */
+    margin-left: auto; /* Center the container */
+    margin-right: auto; /* Center the container */
+
+    border-radius: 0.5rem;
+    border: 1px solid #D9D9D9; /* Slightly thinner border can look cleaner */
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box; /* Include padding/border in width */
+}
+
+.individual-opportunity-top-container {
+    /* Remove fixed height, let content dictate height */
+    /* height: 37.5rem; */
+    padding: 2rem; /* Add padding for internal spacing */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Keep content centered vertically if needed */
+    gap: 1.5rem; /* Add gap between title bar and basic section */
+}
+
+.individual-opportunity-top-title-bar {
+    width: 90%; /* Use percentage width */
+    max-width: 100%; /* Ensure it doesn't exceed parent */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 1rem; /* Add gap for wrapping */
+}
+
+.individual-opportunity-top-title-bar h1 {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0; /* Remove default margin */
+}
+
+.individual-opportunity-top-title-toggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 8.4375rem;
+    height: 2.4rem;
+    border-radius: 1.25rem;
+    border: 2px solid #D9D9D9; /* Adjusted border thickness */
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
+    gap: 1rem;
+    flex-shrink: 0; /* Prevent toggle from shrinking too much */
+}
+
+.individual-opportunity-bottom-container {
+    /*height: auto; */ /* Height should be determined by content */
+    display: flex; /* Added flex to handle internal layout */
+    flex-direction: column; /* Stack sub-containers vertically */
+    align-items: center; /* Center content like sub-containers */
+    gap: 1.5rem; /* Add gap between elements inside */
+    padding: 1rem 0; /* Add some vertical padding */
+}
+
+.individual-opportunity-sub-title-bar {
+    margin-top: 0.5rem;
+    width: 90%; /* Use percentage width */
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 1rem; /* Add gap for wrapped items */
+}
+
+.individual-opportunity-tags-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap; /* Allow tags to wrap */
+    gap: 0.5rem; /* Add gap between tags */
+}
+
+.individual-opportunity-tags {
+    border-radius: 1.25rem;
+    border: 1px solid #B7B7B7;
+    backdrop-filter: blur(6px);
+    width: auto;
+    padding: 0.3rem 0.8rem; /* Adjusted padding */
+    font-size: 0.875rem; /* Slightly smaller tags */
+    white-space: nowrap; /* Prevent tags breaking mid-word */
+}
+
+.individual-opportunity-closes-in {
+    color: #FF6F6F;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    flex-shrink: 0; /* Prevent shrinking */
+    text-align: right; /* Align text to right if it wraps below tags */
+}
+
+.individual-opportunity-basic-section {
+    display: flex;
+    /* Default to row for larger screens */
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start; /* Align items to top */
+    margin-top: 1.5rem; /* Adjusted margin */
+    width: 90%; /* Use percentage width */
+    max-width: 100%;
+    gap: 2rem; /* Add gap between image and details */
+}
+
+.individual-opportunity-image {
+    /* Use percentages or max-width for responsiveness */
+    width: 50%; /* Take half the space initially */
+    max-width: 35.0625rem; /* Max width like original */
+    height: auto; /* Let height adjust proportionally */
+    aspect-ratio: 35.0625 / 21.5; /* Maintain aspect ratio */
+    border-radius: 1rem; /* Slightly smaller radius */
+    object-fit: cover; /* Ensure image covers the area well */
+    flex-shrink: 0; /* Prevent image from shrinking excessively */
+}
+
+.individual-opportunity-basic-section-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to top */
+    align-items: flex-start; /* Align content to left */
+    flex-grow: 1; /* Allow details section to take remaining space */
+    width: 50%; /* Initially take half the space */
+}
+
+.individual-opportunity-basic-section-upper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    width: 100%;
+}
+
+.individual-opportunity-basic-icons-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Vertically align icon and text */
+    gap: 0.75rem; /* Adjusted gap */
+}
+
+.individual-opportunity-basic-icons-details img { /* Assuming icons are images */
+    width: 1.25rem; /* Control icon size */
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+.individual-opportunity-basic-icons-details p {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.4; /* Improve readability */
+    margin: 0; /* Remove default margin */
+}
+
+.individual-opportunity-basic-section-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    margin-top: 1.5rem; /* Adjusted margin */
+    width: 100%;
+}
+
+.individual-opportunity-basic-lower-details {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.75rem; /* Adjusted gap */
+}
+
+.individual-opportunity-basic-lower-details h5 {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    flex-shrink: 0; /* Prevent title from shrinking */
+}
+
+.individual-opportunity-basic-lower-details p {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.4; /* Improve readability */
+    margin: 0;
+}
+
+.individual-opportunity-apply-button {
+    height: auto; /* Adjust height based on content/padding */
+    min-height: 3.625rem; /* Ensure minimum height */
+    padding: 0.8rem 1.75rem; /* Adjust padding slightly */
+    display: inline-flex; /* Use inline-flex for better alignment */
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    background: #E46C43;
+    color: #FFF;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.25rem; /* Slightly smaller font */
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 2rem;
+    border: none; /* Ensure no default border */
+    cursor: pointer;
+    text-align: center;
+    align-self: flex-start; /* Align button to the left */
+}
+
+/* POC Section Specific Styling */
+.individual-opportunity-POC-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.5rem; /* Adjusted gap */
+    padding: 2rem;
+    margin-top: 3rem; /* Add margin to separate from bottom container */
+}
+
+.individual-opportunity-POC-section h1 {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.75rem; /* Adjusted font size */
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+}
+
+.individual-opportunity-POC-content {
+    display: flex;
+    flex-direction: row; /* Keep row layout */
+    justify-content: flex-start;
+    align-items: baseline; /* Align text baseline */
+    gap: 0.5rem;
+    flex-wrap: wrap; /* Allow wrapping if content is long */
+}
+
+.individual-opportunity-POC-content h4 {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    margin: 0;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.individual-opportunity-POC-content p {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.4; /* Improve readability */
+}
+
+/* Bottom Sub-Containers (Description, Requirements etc.) */
+.individual-opportunity-bottom-sub-containers {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem; /* Adjust padding */
+    justify-content: flex-start;
+    gap: 1rem;
+    width: 100%; /* Take full width within parent */
+    box-sizing: border-box;
+}
+
+.individual-opportunity-bottom-sub-containers h1 {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1.75rem; /* Adjusted font size */
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0 0 0.5rem 0; /* Add bottom margin */
+}
+
+.individual-opportunity-bottom-sub-containers p,
+.individual-opportunity-bullet-content p /* Assuming similar styling */
+{
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500; /* Increased weight slightly for readability */
+    line-height: 1.6; /* Increase line height for paragraphs */
+    margin: 0 0 1rem 0; /* Add bottom margin to paragraphs */
+}
+
+.individual-opportunity-bullet-content {
+    /* This class seems mixed in usage, ensure it's used consistently */
+    /* If it contains ul/li, style those */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.individual-opportunity-bullet-content h4 {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    margin: 0; /* Reset margin */
+}
+
+/* List styling */
+.individual-opportunity-bullet-content ul,
+.individual-opportunity-bottom-sub-containers ul {
+    list-style-type: disc;
+    margin: 0 0 1rem 1.5rem; /* Adjust margin */
+    padding-left: 1rem; /* Add padding */
+}
+.individual-opportunity-bullet-content li,
+.individual-opportunity-bottom-sub-containers li {
+    margin-bottom: 0.5rem; /* Space between list items */
+    line-height: 1.6; /* Match paragraph line height */
+    font-size: 1rem; /* Ensure consistent font size */
+    font-family: Montserrat, sans-serif;
+    font-weight: 500;
+}
+
+
+/* --- Media Queries for Responsiveness --- */
+
+/* Medium Screens (Tablets, smaller laptops ~992px) */
+@media (max-width: 992px) {
+    .individual-opportunity-top-title-bar h1 {
+        font-size: 2rem; /* Reduce title size */
+    }
+
+    .individual-opportunity-basic-section {
+        flex-direction: column; /* Stack image and details */
+        align-items: center; /* Center items when stacked */
+        gap: 1.5rem;
+    }
+
+    .individual-opportunity-image {
+        width: 80%; /* Make image larger when stacked */
+        max-width: 30rem; /* Adjust max-width for tablet */
+        height: auto;
+    }
+
+    .individual-opportunity-basic-section-details {
+        width: 100%; /* Take full width when stacked */
+        align-items: center; /* Center details text */
+        text-align: center; /* Center text */
+    }
+
+    .individual-opportunity-basic-section-upper,
+    .individual-opportunity-basic-section-bottom {
+        align-items: center; /* Center content within details */
+        width: 90%; /* Constrain width slightly */
+    }
+
+    .individual-opportunity-basic-icons-details,
+    .individual-opportunity-basic-lower-details {
+        justify-content: center; /* Center icon/details rows */
+        text-align: left; /* Keep text left aligned inside the row */
+    }
+
+    .individual-opportunity-apply-button {
+        align-self: center; /* Center button */
+        font-size: 1.15rem; /* Adjust button font size */
+    }
+
+    .individual-opportunity-bottom-sub-containers h1,
+    .individual-opportunity-POC-section h1 {
+        font-size: 1.5rem; /* Reduce sub-section titles */
+    }
+    .individual-opportunity-bottom-sub-containers p,
+    .individual-opportunity-bullet-content p,
+    .individual-opportunity-POC-content p,
+    .individual-opportunity-basic-icons-details p,
+    .individual-opportunity-basic-lower-details p,
+    .individual-opportunity-bullet-content li,
+    .individual-opportunity-bottom-sub-containers li {
+        font-size: 0.95rem; /* Slightly reduce paragraph font size */
+    }
+}
+
+/* Small Screens (Mobile Phones ~768px) */
+@media (max-width: 767px) {
+    .individual-opportunity-main-container {
+        gap: 2rem; /* Reduce main gap */
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .individual-opportunity-top-container,
+    .individual-opportunity-bottom-container,
+    .individual-opportunity-POC-section {
+        border-left: none; /* Remove side borders */
+        border-right: none;
+        border-radius: 0; /* Remove border radius */
+        box-shadow: none; /* Optionally remove shadow */
+        border-top: 1px solid #D9D9D9;
+        border-bottom: 1px solid #D9D9D9;
+        padding-left: 1rem; /* Add padding inside container */
+        padding-right: 1rem;
+    }
+    .individual-opportunity-POC-section {
+        margin-top: 2rem;
+    }
+
+    .individual-opportunity-top-title-bar {
+        width: 100%; /* Use full width */
+        flex-direction: column; /* Stack title and toggle */
+        align-items: center; /* Center items */
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .individual-opportunity-top-title-bar h1 {
+        font-size: 1.75rem; /* Further reduce title */
+    }
+
+    .individual-opportunity-sub-title-bar {
+        width: 100%;
+        flex-direction: column; /* Stack tags and closes-in */
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .individual-opportunity-tags-container {
+        justify-content: center; /* Center tags */
+    }
+    .individual-opportunity-closes-in {
+        text-align: center;
+        font-size: 1rem;
+    }
+
+    .individual-opportunity-basic-section {
+        width: 100%; /* Use full width */
+        margin-top: 1rem;
+    }
+
+    .individual-opportunity-image {
+        width: 100%; /* Full width image */
+        max-width: none; /* Remove max-width constraint */
+        border-radius: 0.5rem; /* Smaller radius */
+    }
+
+    .individual-opportunity-basic-section-details {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+    .individual-opportunity-basic-section-upper,
+    .individual-opportunity-basic-section-bottom {
+        width: 100%;
+    }
+
+    .individual-opportunity-apply-button {
+        width: 90%; /* Make button wider */
+        max-width: 20rem; /* But not too wide */
+        padding: 0.9rem 1rem; /* Adjust padding */
+        font-size: 1.1rem;
+    }
+
+    .individual-opportunity-bottom-sub-containers h1,
+    .individual-opportunity-POC-section h1 {
+        font-size: 1.35rem;
+    }
+
+    .individual-opportunity-POC-content {
+        flex-direction: column; /* Stack POC details */
+        align-items: center;
+        text-align: center;
+        gap: 0.25rem;
+    }
+    .individual-opportunity-bottom-sub-containers,
+    .individual-opportunity-POC-section {
+        padding: 1.5rem 1rem; /* Adjust padding */
+    }
+
+    .individual-opportunity-bullet-content ul,
+    .individual-opportunity-bottom-sub-containers ul {
+        margin-left: 0.5rem;
+        padding-left: 1.2rem; /* Adjust list indentation */
+    }
+    .individual-opportunity-bottom-sub-containers p,
+    .individual-opportunity-bullet-content p,
+    .individual-opportunity-POC-content p,
+    .individual-opportunity-basic-icons-details p,
+    .individual-opportunity-basic-lower-details p,
+    .individual-opportunity-bullet-content li,
+    .individual-opportunity-bottom-sub-containers li {
+        font-size: 0.9rem; /* Further reduce paragraph font size */
+        line-height: 1.5;
+    }
+}
