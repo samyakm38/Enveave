@@ -11,8 +11,8 @@ import SignUpOption from "./pages/Sign-up-option.jsx";
 import SignUpVolunteer from "./pages/Sign-up-Volunteer.jsx";
 import SignUpNgo from "./pages/Sign-up-NGO.jsx";
 import Login from "./pages/Login.jsx";
-import NgoForm1 from "./pages/forms/Ngo-form-1.jsx";
-import NgoForm2 from "./pages/forms/Ngo-form-2.jsx";
+// import NgoForm1 from "./pages/forms/Ngo-form-1.jsx";
+// import NgoForm2 from "./pages/forms/Ngo-form-2.jsx";
 // import VolunteerForm1 from "./pages/forms/Volunteer-form-1.jsx";
 // import VolunteerForm2 from "./pages/forms/Volunteer-form-2.jsx";
 // import VolunteerForm3 from "./pages/forms/Volunteer-form-3.jsx";
@@ -27,6 +27,8 @@ import VolunteerDashboard from "./pages/Volunteer-Dashboard.jsx";
 import NGODashboard from "./pages/NGO-Dashboard.jsx";
 import VolunteerProfileCompletion from "./pages/Volunteer-Profile-Completion.jsx";
 import IndividualOpportunity from "./pages/Individual-Opportunity.jsx";
+import ProviderProfileCompletion from "./pages/Provider-Profile-Completion.jsx";
+
 
 const App = () => {
   return (
@@ -44,8 +46,8 @@ const App = () => {
           <Route path="/sign-up/ngo" element={<SignUpNgo />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/Ngo-form-1" element={<NgoForm1 />} />
-          <Route path="/Ngo-form-2" element={<NgoForm2 />} />
+          {/* <Route path="/Ngo-form-1" element={<NgoForm1 />} /> */}
+          {/* <Route path="/Ngo-form-2" element={<NgoForm2 />} /> */}
           {/* <Route path="/Volunteer-form-1" element={<VolunteerForm1 />} /> */}
           {/* <Route path="/Volunteer-form-2" element={<VolunteerForm2 />} /> */}
           {/* <Route path="/Volunteer-form-3" element={<VolunteerForm3 />} /> */}
@@ -58,6 +60,7 @@ const App = () => {
           <Route path='/provider/dashboard' element={<NGODashboard />}/>
           <Route path="/profile-completion" element={<VolunteerProfileCompletion />} />
           <Route path="/opportunities/:id" element={<IndividualOpportunity />} />
+          <Route path="/provider/profile/edit" element={<ProviderProfileCompletion />} />
         </Routes>
       </BrowserRouter>
     </ToastProvider>
