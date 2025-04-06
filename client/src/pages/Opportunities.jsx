@@ -5,6 +5,9 @@ import Footer from "../components/main components/Footer.jsx";
 import OpportunityCard from "../components/main components/OpportunityCard.jsx"; // Use the original Card
 import '../stylesheet/Opportunities.css'; // Import the CSS
 import { formatDistanceToNow } from 'date-fns'; // Import date formatting function
+import { useNavigate } from 'react-router-dom';
+
+
 
 // Debounce function
 const debounce = (func, delay) => {
@@ -41,6 +44,7 @@ const Opportunities = () => {
 
     const observer = useRef();
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL; // Ensure this env var is set
+    const navigate = useNavigate();
 
     const lastOpportunityElementRef = useCallback(node => {
         if (loading) return;
@@ -140,6 +144,15 @@ const Opportunities = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isInitialLoad, fetchOpportunities]); // Depend on isInitialLoad and the stable fetch function
 
+    const handleCardClick = (id) => {
+        if (id) {
+            navigate(`/opportunities/${id}`);
+        } else {
+            console.error("Cannot navigate: Opportunity ID is missing.");
+            // Optionally show an error to the user
+        }
+    };
+
 
     return (
         <>
@@ -178,11 +191,18 @@ const Opportunities = () => {
                         };
 
                         return (
-                            <OpportunityCard
-                                ref={isLastElement ? lastOpportunityElementRef : null}
-                                key={opp._id || index} // Use API's unique ID
-                                {...cardProps} // Spread the prepared props
-                            />
+                            <div
+                                key={opp._id || index} // IMPORTANT: Use opp._id
+                                onClick={() => handleCardClick(opp._id)} // Add onClick handler
+                                style={{cursor: 'pointer'}} // Add pointer cursor
+                                ref={isLastElement ? lastOpportunityElementRef : null} // Keep ref on the wrapper
+                            >
+                                <OpportunityCard
+                                    {...cardProps}
+                                    // Pass any other necessary props to OpportunityCard itself
+                                    // Note: The ref is now on the parent div, not the card directly
+                                />
+                            </div>
                         );
                     })}
                 </div>
@@ -197,7 +217,7 @@ const Opportunities = () => {
                     <p className="opportunities-loader">No opportunities found.</p>
                 )}
             </div>
-            <Footer />
+            <Footer/>
         </>
     );
 };

@@ -1,14 +1,14 @@
 import express from 'express';
-import { 
-    getAllOpportunities, 
-    getLatestOpportunities, 
+import {
+    getAllOpportunities,
+    getLatestOpportunities,
     getOpportunitiesFeed,
     createOpportunity,
     updateOpportunity,
     deleteOpportunity,
     completeOpportunity,
     cancelOpportunity,
-    getProviderOpportunities
+    getProviderOpportunities, getIndividualOpporunity
 } from "../controllers/opportunity.controller.js";
 import { authenticateToken } from "../middleware/auth.middleware.js";
 import { upload } from "../helpers/imageUpload.js";
@@ -19,6 +19,7 @@ const router = express.Router();
 router.get('/', getAllOpportunities);
 router.get('/latest', getLatestOpportunities);
 router.get('/feed', getOpportunitiesFeed);
+router.get('/:id', getIndividualOpporunity)
 
 // Protected routes (require authentication)
 router.post('/', authenticateToken, upload.single('photo'), createOpportunity);

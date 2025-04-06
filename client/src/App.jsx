@@ -26,6 +26,7 @@ import { ToastProvider } from "./components/main components/ToastContext.jsx";
 import VolunteerDashboard from "./pages/Volunteer-Dashboard.jsx";
 import NGODashboard from "./pages/NGO-Dashboard.jsx";
 import VolunteerProfileCompletion from "./pages/Volunteer-Profile-Completion.jsx";
+import IndividualOpportunity from "./pages/Individual-Opportunity.jsx";
 
 const App = () => {
   return (
@@ -56,6 +57,7 @@ const App = () => {
           <Route path='/volunteer/dashboard' element={<VolunteerDashboard />}/>
           <Route path='/provider/dashboard' element={<NGODashboard />}/>
           <Route path="/profile-completion" element={<VolunteerProfileCompletion />} />
+          <Route path="/opportunities/:id" element={<IndividualOpportunity />} />
         </Routes>
       </BrowserRouter>
     </ToastProvider>
