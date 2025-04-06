@@ -9,10 +9,12 @@ import {
 } from '../slices/providerProfileSlice';
 import providerService from '../services/providerService';
 import opportunityService from '../services/opportunityService';
+import { useAuth } from './useAuth'; // Import useAuth hook
 
 // Custom hook for handling provider profile state and actions
 export const useProviderProfile = () => {
   const dispatch = useDispatch();
+  const { currentUser } = useAuth(); // Get current user from auth state
   const { 
     profile, 
     stats, 
@@ -23,6 +25,12 @@ export const useProviderProfile = () => {
   // Fetch provider profile
   const getProviderProfile = async () => {
     try {
+      // Skip API call if profile status is NOT_STARTED
+      if (currentUser?.profileStatus === 'NOT_STARTED') {
+        console.log('Provider profile not created yet, skipping API call');
+        return null;
+      }
+      
       dispatch(fetchProviderStart());
       const response = await providerService.getProviderProfile();
       dispatch(fetchProviderSuccess(response.data));
@@ -36,6 +44,12 @@ export const useProviderProfile = () => {
   // Fetch provider statistics
   const getProviderStats = async () => {
     try {
+      // Skip API call if profile status is NOT_STARTED
+      if (currentUser?.profileStatus === 'NOT_STARTED') {
+        console.log('Provider profile not created yet, skipping stats API call');
+        return null;
+      }
+      
       dispatch(fetchProviderStart());
       const response = await providerService.getProviderStats();
       dispatch(fetchProviderStatsSuccess(response.data));
@@ -49,6 +63,22 @@ export const useProviderProfile = () => {
   // Fetch provider opportunities and calculate statistics
   const getProviderOpportunitiesAndStats = async () => {
     try {
+      // Skip API call if profile status is NOT_STARTED
+      if (currentUser?.profileStatus === 'NOT_STARTED') {
+        console.log('Provider profile not created yet, skipping API call');
+        
+        // Set stats to zeros when no profile exists
+        const emptyStats = {
+          totalOpportunities: 0,
+          totalVolunteers: 0,
+          completedProjects: 0
+        };
+        dispatch(fetchProviderStatsSuccess(emptyStats));
+        
+        // Return empty data to avoid errors
+        return { opportunities: [], stats: emptyStats };
+      }
+      
       dispatch(fetchProviderStart());
       
       // First, try to get the provider profile to access the totalVolunteers field
@@ -134,15 +164,25 @@ export const useProviderProfile = () => {
   const uploadLogo = async (formData) => {
     try {
       const response = await providerService.uploadProviderLogo(formData);
-      const logoUrl = response.data.logoUrl;
+      // Access logoUrl correctly from the response structure
+      const logoUrl = response.data.logoUrl; 
       
-      // Update profile with new logo URL
-      dispatch(updateProviderProfile({ 
-        organizationDetails: { 
-          ...profile.organizationDetails, 
-          logo: logoUrl 
-        } 
-      }));
+      // Update profile with new logo URL, only if profile exists
+      if (profile) {
+        dispatch(updateProviderProfile({ 
+          organizationDetails: { 
+            ...(profile.organizationDetails || {}), 
+            logo: logoUrl 
+          } 
+        }));
+      } else {
+        // If profile doesn't exist yet, just update with the logo URL
+        dispatch(updateProviderProfile({ 
+          organizationDetails: { 
+            logo: logoUrl 
+          } 
+        }));
+      }
       
       return logoUrl;
     } catch (error) {

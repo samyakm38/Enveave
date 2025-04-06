@@ -42,10 +42,7 @@ const VolunteerDashboard = () => {
         completedCount: 0
     });
     
-    // Use a ref to prevent multiple fetch operations
-    const hasLoadedDataRef = useRef(false);
-
-    // Fetch data when component mounts (only once)
+    // Fetch data when component mounts
     useEffect(() => {
         // If not authenticated, redirect to login
         if (!isAuthenticated) {
@@ -53,15 +50,11 @@ const VolunteerDashboard = () => {
             return;
         }
         
-        // Skip if already loaded to prevent excessive API calls
-        if (hasLoadedDataRef.current) return;
-        
-        // Set the ref to true to prevent subsequent loads
-        hasLoadedDataRef.current = true;
-        
         // Create a single async function to load all data
         const loadAllData = async () => {
             try {
+                console.log("Loading dashboard data...");
+                
                 // Fetch applications and opportunities in parallel
                 await Promise.all([
                     getUserApplications(),
@@ -80,7 +73,9 @@ const VolunteerDashboard = () => {
         // Execute the data loading
         loadAllData();
         
-    }, [isAuthenticated, navigate, getUserApplications, getAllOpportunities, fetchVolunteerProfile, user]);
+    // This effect should only run once when the component mounts, 
+    // when the user authenticates, or when any of these functions change
+    }, [isAuthenticated, navigate]);
 
     // Calculate stats when applications or opportunities data changes
     useEffect(() => {
