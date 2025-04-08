@@ -66,15 +66,33 @@ export const updateProviderProfile = async (req, res) => {
             description, 
             website, 
             location,
-            logo
+            logo,
+            workProfile,
+            profileCompletion
         } = req.body;
         
-        // Update auth provider model for basic info and update profile status to STEP_1
+        // Get current profile status to determine update
+        const currentProvider = await AuthOpportunityProvider.findById(id);
+        
+        // Determine new profile status based on what's being updated and current status
+        let newProfileStatus = currentProvider?.profileStatus || 'NOT_STARTED';
+        
+        // If organizationDetails is being updated, set at least to STEP_1
+        if (description || website || location || logo) {
+            newProfileStatus = newProfileStatus === 'NOT_STARTED' ? 'STEP_1' : newProfileStatus;
+        }
+        
+        // If workProfile is being updated, set to STEP_2 or COMPLETED
+        if (workProfile) {
+            newProfileStatus = 'COMPLETED';
+        }
+        
+        // Update auth provider model for basic info and profile status
         const updatedAuthProvider = await AuthOpportunityProvider.findByIdAndUpdate(
             id,
             { 
-                organizationName,
-                profileStatus: 'STEP_1'
+                ...(organizationName && { organizationName }),
+                profileStatus: newProfileStatus
             },
             { new: true }
         );
@@ -89,39 +107,67 @@ export const updateProviderProfile = async (req, res) => {
         // Find or create the detailed provider profile
         let providerProfile = await OpportunityProvider.findOne({ auth: id });
         
+        // Prepare update object based on what fields are provided
+        let updateObj = {};
+        let newProfileCompletion = {
+            step1: false,
+            step2: false
+        };
+        
+        // If provider profile exists, get current values
+        if (providerProfile) {
+            newProfileCompletion = {
+                ...providerProfile.profileCompletion
+            };
+        }
+        
+        // If profile completion status is explicitly provided, use it
+        if (profileCompletion) {
+            newProfileCompletion = {
+                ...newProfileCompletion,
+                ...profileCompletion
+            };
+        } else {
+            // Otherwise determine based on what fields are updated
+            if (description || website || location || logo) {
+                newProfileCompletion.step1 = true;
+            }
+            if (workProfile) {
+                newProfileCompletion.step2 = true;
+            }
+        }
+        
+        // Update organization details if provided
+        if (description || website || location || logo) {
+            updateObj.organizationDetails = {
+                ...(providerProfile?.organizationDetails || {}),
+                ...(description && { description }),
+                ...(website && { website }),
+                ...(location && { location }),
+                ...(logo && { logo })
+            };
+        }
+        
+        // Update work profile if provided
+        if (workProfile) {
+            updateObj.workProfile = workProfile;
+        }
+        
+        // Always update profile completion status
+        updateObj.profileCompletion = newProfileCompletion;
+        
         if (!providerProfile) {
             // Create new provider profile if it doesn't exist
-            // Make sure all required fields are provided
             providerProfile = new OpportunityProvider({
                 auth: id,
-                organizationDetails: {
-                    description,
-                    website,
-                    location,
-                    logo: logo || "/NGO-profile-pic.svg" // Use default if no logo provided
-                },
-                profileCompletion: {
-                    step1: true,
-                    step2: false
-                }
+                ...updateObj
             });
             await providerProfile.save();
         } else {
             // Update existing provider profile
             providerProfile = await OpportunityProvider.findOneAndUpdate(
                 { auth: id },
-                {
-                    organizationDetails: {
-                        description,
-                        website,
-                        location,
-                        logo: logo || providerProfile.organizationDetails?.logo || "/NGO-profile-pic.svg"
-                    },
-                    profileCompletion: {
-                        step1: true,
-                        step2: providerProfile.profileCompletion?.step2 || false
-                    }
-                },
+                { $set: updateObj },
                 { new: true }
             );
         }
@@ -132,12 +178,8 @@ export const updateProviderProfile = async (req, res) => {
             organizationName: updatedAuthProvider.organizationName,
             profileStatus: updatedAuthProvider.profileStatus,
             contactPerson: updatedAuthProvider.contactPerson,
-            organizationDetails: {
-                logo: providerProfile.organizationDetails?.logo,
-                description: providerProfile.organizationDetails?.description,
-                website: providerProfile.organizationDetails?.website,
-                location: providerProfile.organizationDetails?.location
-            },
+            organizationDetails: providerProfile.organizationDetails,
+            workProfile: providerProfile.workProfile,
             profileCompletion: providerProfile.profileCompletion
         };
         
@@ -174,22 +216,15 @@ export const uploadProviderLogo = async (req, res) => {
         let providerProfile = await OpportunityProvider.findOne({ auth: id });
         
         if (!providerProfile) {
-            // If profile doesn't exist yet, create a minimal one with just the logo
-            providerProfile = new OpportunityProvider({
-                auth: id,
-                organizationDetails: {
-                    logo: logoUrl,
-                    description: '',  // Required fields with defaults
-                    website: '',
-                    location: {
-                        address: '',
-                        city: '',
-                        state: '',
-                        pincode: ''
-                    }
+            // Instead of creating a new record with missing required fields,
+            // just return the logo URL and let the main profile update handle
+            // the provider profile creation with all required fields
+            return res.status(200).json({
+                success: true,
+                data: {
+                    logoUrl: logoUrl
                 }
             });
-            await providerProfile.save();
         } else {
             // Update existing provider profile with new logo URL
             providerProfile = await OpportunityProvider.findOneAndUpdate(
