@@ -292,8 +292,43 @@ export const createOpportunity = async (req, res) => {
         // Check if user is authenticated and is an opportunity provider
         if (!req.user || req.user.role !== 'provider') {
             return res.status(403).json({ message: 'Only opportunity providers can create opportunities' });
+        }        // Debug request body
+        console.log('Request body:', req.body);
+        if (req.file) console.log('Received file:', req.file.originalname);
+        
+        // Handle form data - multer puts file in req.file and other fields in req.body
+        let requestData = req.body;
+        
+        // For FormData, we need to parse the JSON strings back to objects
+        if (req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data')) {
+            try {
+                // Parse each field that should be an object
+                if (typeof req.body.basicDetails === 'string') {
+                    requestData.basicDetails = JSON.parse(req.body.basicDetails);
+                }
+                if (typeof req.body.schedule === 'string') {
+                    requestData.schedule = JSON.parse(req.body.schedule);
+                }
+                if (typeof req.body.evaluation === 'string') {
+                    requestData.evaluation = JSON.parse(req.body.evaluation);
+                }
+                if (typeof req.body.additionalInfo === 'string') {
+                    requestData.additionalInfo = JSON.parse(req.body.additionalInfo);
+                }
+                
+                // Or, if data was sent as a single JSON string
+                if (req.body.data && typeof req.body.data === 'string') {
+                    const parsedData = JSON.parse(req.body.data);
+                    requestData = parsedData; // Replace the whole requestData
+                }
+                
+                console.log('Parsed request data:', requestData);
+            } catch (parseError) {
+                console.error('Error parsing JSON from FormData:', parseError);
+                return res.status(400).json({ message: 'Invalid JSON in form data fields' });
+            }
         }
-
+        
         // Handle image upload if present
         let imageUrl = '';
         if (req.file) {
@@ -302,13 +337,12 @@ export const createOpportunity = async (req, res) => {
                     req.file.buffer,
                     'opportunities'
                 );
+                console.log('Image uploaded to:', imageUrl);
             } catch (uploadError) {
                 console.error('Image upload error:', uploadError);
                 return res.status(400).json({ message: 'Error uploading image', error: uploadError.message });
             }
-        }
-
-        // Validate the opportunity data
+        }        // Validate the opportunity data
         const opportunitySchema = Joi.object({
             basicDetails: Joi.object({
                 title: Joi.string().required().trim().max(200),
@@ -338,11 +372,11 @@ export const createOpportunity = async (req, res) => {
                     then: Joi.required(),
                     otherwise: Joi.optional()
                 })
-            }).required(),
-            schedule: Joi.object({
+            }).required(),            schedule: Joi.object({
                 location: Joi.string().required(),
                 startDate: Joi.date().required(),
                 endDate: Joi.date().required().greater(Joi.ref('startDate')),
+                applicationDeadline: Joi.date().optional(),
                 timeCommitment: Joi.string().required().valid(
                     'Few hours per week',
                     '1-2 days per week',
@@ -384,13 +418,14 @@ export const createOpportunity = async (req, res) => {
             }).required()
         });
 
-        const { error } = opportunitySchema.validate(req.body);
+        const { error } = opportunitySchema.validate(requestData);
         if (error) {
+            console.error('Validation error:', error.details);
             return res.status(400).json({ message: error.details[0].message });
         }
         
         // Sanitize input data
-        const sanitizedData = sanitizeNestedObject(req.body);
+        const sanitizedData = sanitizeNestedObject(requestData);
         
         // Add the image URL if an image was uploaded
         if (imageUrl) {
