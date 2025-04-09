@@ -24,10 +24,21 @@ export const opportunityService = {
     const response = await apiClient.get(`/opportunities/${id}`);
     return response.data;
   },
-  
-  // Create new opportunity (provider only)
+    // Create new opportunity (provider only)
   createOpportunity: async (opportunityData) => {
-    const response = await apiClient.post('/opportunities', opportunityData);
+    // Check if opportunityData is FormData
+    const isFormData = opportunityData instanceof FormData;
+    
+    // Set headers according to data type
+    const config = {};
+    if (isFormData) {
+      // Don't set Content-Type for FormData, axios will set it with boundary
+      config.headers = {
+        'Content-Type': 'multipart/form-data'
+      };
+    }
+    
+    const response = await apiClient.post('/opportunities', opportunityData, config);
     return response.data;
   },
   
