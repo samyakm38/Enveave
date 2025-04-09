@@ -16,7 +16,7 @@ const NGOs=() => {
                     <h1>Find the Right Volunteers</h1>
                     <p>Work with Enveave to find the best volunteer based on your needs.</p>
                 </div>
-                <ButtonOrange text='Connect >' link='/'/>
+                <ButtonOrange text='Connect >' link='/contact-us'/>
             </div>
             <div className='NGO-how-it-works'>
                 <h1 className='NGO-how-it-works-heading'>

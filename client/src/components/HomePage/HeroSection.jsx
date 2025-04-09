@@ -19,7 +19,7 @@ const HeroSection=() => {
                 <h1>Changing Lives For the Better</h1>
                 <h3>Enveave provides a one-stop platform for individuals, communities and organisations to come together, launch environmental initiatives and access support from volunteers, funders, and experts.</h3>
             </div>
-            <Link to='/'>
+            <Link to='/sign-up-option'>
                 <div className='home-hero-button'>
                     Join Enveave
                 </div>

@@ -14,7 +14,7 @@ const CtaSection=() => {
         <div style={home_background_CTA} className='home-CTA-section'>
             <h5>Lets start with the first step</h5>
             <h1>Lead. Initiate. Collaborate.<br/>Let a Million Environment Flowers Bloom.</h1>
-            <Link to='/'>
+            <Link to='/sign-up-option'>
                 <div className='home-CTA-button'>Join Enveave</div>
             </Link>
         </div>

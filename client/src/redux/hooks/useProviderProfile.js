@@ -108,13 +108,7 @@ export const useProviderProfile = () => {
         // We want to indicate this was a profile error, not a general error
         throw new Error('profile_not_found');
       }
-      
-      // Calculate statistics
-      const completedProjects = opportunities.filter(opp => {
-        // Logic to determine if an opportunity is completed
-        return opp.status === 'Completed' || 
-               (opp.applicants && opp.applicants.some(app => app.isCompleted));
-      }).length;
+
       
       // Get total volunteers - preferably from the provider profile
       let totalVolunteers = 0;
@@ -135,7 +129,6 @@ export const useProviderProfile = () => {
       const stats = {
         totalOpportunities: opportunities.length,
         totalVolunteers: totalVolunteers,
-        completedProjects: completedProjects
       };
       
       dispatch(fetchProviderStatsSuccess(stats));
