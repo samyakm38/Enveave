@@ -829,6 +829,7 @@ export const getProviderOpportunities = async (req, res) => {
             }
             
             oppObj.volunteersCount = volunteersCount;
+            console.log('Opportunity:', oppObj);
             return oppObj;
         });
         

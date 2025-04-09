@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: flex-start; /* Aligns items (like the text container) to the start (left) */
     justify-content: center; /* Centers content vertically if container has height */
-    width: 100%;
+    width: 80%;
     /* Consider using min-height instead of height for more flexibility */
     height: 100%; /* Make sure the parent has a defined height for this to work */
     gap: 3rem;

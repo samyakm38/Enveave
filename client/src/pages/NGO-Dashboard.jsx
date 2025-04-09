@@ -91,8 +91,9 @@ const NgoDashboard = () => {
     useEffect(() => {
         if (opportunities) {
             // Transform opportunities into the format expected by the table
+            console.log('Transforming opportunities data:', opportunities);
             const transformedOpportunities = opportunities.map(opp => {
-                const isCompleted = opp.status === 'Completed' || 
+                const isCompleted = opp.category === 'Completed' || 
                                    (opp.applicants && opp.applicants.some(app => app.isCompleted));
                 
                 // Format the deadline and completion dates
@@ -284,6 +285,8 @@ const NgoDashboard = () => {
     }, [activeTab]);
 
     const filteredData = useMemo(() => {
+        console.log('Filtering data for active tab:', activeTab);
+        console.log('Opportunities list:', opportunitiesList);
         return opportunitiesList.filter(opp => opp.category === activeTab);
     }, [activeTab, opportunitiesList]);
 
