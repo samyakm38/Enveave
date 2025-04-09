@@ -97,3 +97,92 @@ export const viewThreeStories = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+// Get All Published Stories
+export const getAllStories = async (req, res) => {
+    try {
+        // Parse pagination parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        
+        // Get total count of published stories
+        const totalCount = await Story.countDocuments({ published: true });
+        
+        // Find all published stories with pagination
+        const stories = await Story.find({ published: true })
+            .sort({ publishedAt: -1, createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .populate({
+                path: 'creator',
+                select: '-password -__v',
+                match: (doc) => {
+                    if (doc.creatorModel === 'Volunteer' || doc.creatorModel === 'OpportunityProvider' || 
+                        doc.creatorModel === 'AuthVolunteer' || doc.creatorModel === 'AuthOpportunityProvider') {
+                        return {}; // Valid model, proceed with population
+                    }
+                    return null; // Invalid model, don't populate
+                }
+            })
+            .lean();
+
+        if (!stories.length) return res.status(404).json({ message: 'No published stories found.' });
+
+        // Return stories with pagination metadata
+        res.status(200).json({ 
+            message: 'Stories retrieved successfully', 
+            stories,
+            pagination: {
+                totalStories: totalCount,
+                totalPages: Math.ceil(totalCount / limit),
+                currentPage: page,
+                hasNextPage: page < Math.ceil(totalCount / limit),
+                hasPrevPage: page > 1
+            }
+        });
+    } catch (error) {
+        console.error('Error in getAllStories:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// Get Individual Story By ID
+export const getStoryById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Validate that the ID is in the correct format
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({ message: 'Invalid story ID format.' });
+        }
+        
+        // Find the story by its ID and ensure it's published
+        const story = await Story.findOne({ _id: id, published: true })
+            .populate({
+                path: 'creator',
+                select: '-password -__v',
+                match: (doc) => {
+                    if (doc.creatorModel === 'Volunteer' || doc.creatorModel === 'OpportunityProvider' || 
+                        doc.creatorModel === 'AuthVolunteer' || doc.creatorModel === 'AuthOpportunityProvider') {
+                        return {}; // Valid model, proceed with population
+                    }
+                    return null; // Invalid model, don't populate
+                }
+            })
+            .lean();
+            
+        if (!story) {
+            return res.status(404).json({ message: 'Story not found or not published.' });
+        }
+        
+        // Return the story
+        res.status(200).json({ 
+            message: 'Story retrieved successfully', 
+            story
+        });
+    } catch (error) {
+        console.error('Error in getStoryById:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
