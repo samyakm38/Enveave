@@ -10,18 +10,22 @@
     max-width: 350px; /* Cap width to prevent stretching on larger mobile screens */
     box-sizing: border-box; /* Include padding in width/height calculations */
     margin: 0 auto; /* Center the card */
+    position: relative; /* For positioning child elements */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
 }
 
 .card-title-container {
     text-align: left;
     height: 20%; /* Relative height */
     min-height: 2rem; /* Ensure title is visible on small screens */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for title movement */
 }
 
 .card-description-container {
     height: 60%; /* Relative height */
     min-height: 8rem; /* Smaller minimum height for mobile */
     overflow: hidden; /* Prevent overflow on small screens */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for content movement */
 }
 
 .card-description-container p {
@@ -56,6 +60,9 @@
     cursor: pointer;
     box-sizing: border-box; /* Include padding in width */
     min-height: 44px; /* Ensure button meets minimum touch target size */
+    transform: translateY(20px); /* Initially positioned below */
+    opacity: 0; /* Initially hidden */
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Smooth transition */
 }
 
 .card-title-container h5 {
@@ -65,6 +72,27 @@
     font-style: normal;
     font-weight: 700;
     margin: 0; /* Remove default margins */
+}
+
+/* Card hover animation styles */
+.story-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.story-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.story-card:hover .card-title-container,
+.story-card:hover .card-description-container {
+    transform: translateY(-10px);
+}
+
+.story-card:hover .card-button {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 /* Media Query for Smaller Mobile Screens (max-width: 576px) */

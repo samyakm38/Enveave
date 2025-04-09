@@ -18,11 +18,12 @@ const StoriesSection = () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/get-stories`);
                 const formattedStories = response.data.stories.map((story) => ({
-                    // image: story.photo || './public/home-story-1.png', // Fallback image if no photo
-                    image: '/home-story-1.png',
+                    image: story.photo || '/home-story-1.png', // Use actual photo or fallback
                     title: story.title,
-                    description: story.content, // Map content to description
-                    link: '#', // Static link for now
+                    description: story.content.length > 150 
+                        ? `${story.content.substring(0, 150)}...` 
+                        : story.content,
+                    storyId: story._id, // Pass the story ID to the StoryCard
                 }));
                 setStories(formattedStories);
             } catch (err) {

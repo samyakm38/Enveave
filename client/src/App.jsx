@@ -20,6 +20,8 @@ import NGODashboard from "./pages/NGO-Dashboard.jsx";
 import VolunteerProfileCompletion from "./pages/Volunteer-Profile-Completion.jsx";
 import IndividualOpportunity from "./pages/Individual-Opportunity.jsx";
 import ProviderProfileCompletion from "./pages/Provider-Profile-Completion.jsx";
+import AllStories from "./pages/AllStories.jsx";
+import IndividualStory from "./pages/IndividualStory.jsx";
 
 
 const App = () => {
@@ -42,9 +44,9 @@ const App = () => {
           <Route path='/volunteer/dashboard' element={<VolunteerDashboard />}/>
           <Route path='/provider/dashboard' element={<NGODashboard />}/>
           <Route path='/create-opportunity' element={<CreateOpportunity />} />
-          <Route path="/profile-completion" element={<VolunteerProfileCompletion />} />
-          <Route path="/opportunities/:id" element={<IndividualOpportunity />} />
-          <Route path="/provider/profile/edit" element={<ProviderProfileCompletion />} />
+          <Route path="/profile-completion" element={<VolunteerProfileCompletion />} />          <Route path="/opportunities/:id" element={<IndividualOpportunity />} />          <Route path="/provider/profile/edit" element={<ProviderProfileCompletion />} />
+          <Route path="/stories" element={<AllStories />} />
+          <Route path="/stories/:id" element={<IndividualStory />} />
         </Routes>
       </BrowserRouter>
     </ToastProvider>

@@ -48,9 +48,8 @@ const Home = () => {
 
             {/* Stories section with background image */}
             <div style={home_background_story} className='home-story-section'>
-                <h1>Enveave Stories</h1>
-                <StoriesSection/>
-                <a href=''>
+                <h1>Enveave Stories</h1>                <StoriesSection/>
+                <a href='/stories'>
                     <div className='home-story-button-all-stories'>
                         <p>All Stories {">"}</p>
                     </div>
