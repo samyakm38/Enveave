@@ -1,12 +1,13 @@
-import React from 'react';
-// import { useSelector } from 'react-redux';
-import { Button, Navbar } from 'flowbite-react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Button, Navbar, Dropdown, Avatar } from 'flowbite-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../redux/hooks';
 
 const Header = () => {
-    // const { isLoggedIn, user } = useSelector((state) => state.auth);
-    // const location = useLocation();
-    const [activeLink, setActiveLink] = React.useState(location.pathname);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [activeLink, setActiveLink] = useState(location.pathname);
+    const { currentUser, isAuthenticated, userType, logout } = useAuth();
 
     // Base link styles
     const linkBaseStyle = {
@@ -54,54 +55,56 @@ const Header = () => {
                     >
                         ENVEAVE
                     </span>
-                </Navbar.Brand>
-
-                <div className="flex md:order-2">
-                    {/*{!isLoggedIn ? (*/}
-                    {/*    <Link to="/login">*/}
-                    {/*      <ButtonOrange color="gray">Login</ButtonOrange>*/}
-                    {/*    </Link>*/}
-                    {/*) : (*/}
-                    {/*    <>*/}
-                    {/*      {(() => {*/}
-                    {/*        if (user.isAdmin === 'true') {*/}
-                    {/*          // console.log('in if',user.isAdmin);*/}
-                    {/*          return (*/}
-                    {/*              <Link to="/admin/dashboard">*/}
-                    {/*                <img*/}
-                    {/*                    src={user.profilePic}*/}
-                    {/*                    alt="Profile"*/}
-                    {/*                    className="w-10 h-10 rounded-full object-cover"*/}
-                    {/*                    style={{ cursor: 'pointer' }}*/}
-                    {/*                />*/}
-                    {/*              </Link>*/}
-                    {/*          );*/}
-                    {/*        } else {*/}
-                    {/*          return (*/}
-                    {/*              <Link to="/user/dashboard">*/}
-                    {/*                <img*/}
-                    {/*                    src={user.profilePic}*/}
-                    {/*                    alt="Profile"*/}
-                    {/*                    className="w-10 h-10 rounded-full object-cover"*/}
-                    {/*                    style={{ cursor: 'pointer' }}*/}
-                    {/*                />*/}
-                    {/*              </Link>*/}
-                    {/*          );*/}
-                    {/*        }*/}
-                    {/*      })()}*/}
-                    {/*    </>*/}
-                    {/*)}*/}
-                    <Link to="/login">
-                        <Button
-                            style={{
-                                backgroundColor: '#113627',
-                                border: '2px solid #FFF',
-                                fontFamily: 'Montserrat',
-                            }}
-                        >
-                            Sign-in
-                        </Button>
-                    </Link>
+                </Navbar.Brand>                <div className="flex md:order-2">
+                    {!isAuthenticated ? (
+                        <Link to="/login">
+                            <Button
+                                style={{
+                                    backgroundColor: '#113627',
+                                    border: '2px solid #FFF',
+                                    fontFamily: 'Montserrat',
+                                }}
+                            >
+                                Sign-in
+                            </Button>
+                        </Link>
+                    ) : (
+                        <div className="flex items-center">
+                            <Dropdown
+                                arrowIcon={false}
+                                inline
+                                label={
+                                    <Avatar
+                                        alt="User profile"
+                                        img={currentUser?.profilePic || "/dashboard-default-user-image.svg"}
+                                        rounded
+                                        bordered
+                                        color="success"
+                                        className="w-10 h-10 cursor-pointer"
+                                    />
+                                }
+                            >
+                                <Dropdown.Header>
+                                    <span className="block text-sm font-medium truncate">
+                                        {currentUser?.name || 'User'}
+                                    </span>
+                                    <span className="block truncate text-sm">
+                                        {currentUser?.email || ''}
+                                    </span>
+                                </Dropdown.Header>
+                                <Dropdown.Item onClick={() => navigate(userType === 'volunteer' ? '/volunteer/dashboard' : '/provider/dashboard')}>
+                                    Dashboard
+                                </Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Item onClick={() => {
+                                    logout();
+                                    navigate('/');
+                                }}>
+                                    Sign out
+                                </Dropdown.Item>
+                            </Dropdown>
+                        </div>
+                    )}
                     <Navbar.Toggle />
                 </div>
 
