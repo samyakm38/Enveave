@@ -1,5 +1,6 @@
 import React from 'react';
 import {Carousel} from "flowbite-react";
+import {Link} from "react-router-dom";
 
 const CarouselSection=() => {
     const images=['/home-carousel-1.png', '/home-carousel-1.png', '/home-carousel-1.png', '/home-carousel-1.png',];
@@ -73,19 +74,22 @@ const CarouselSection=() => {
                     Enveave is actively implementing impactful projects that foster positive change, addressing key
                     environmental and societal challenges for a better future.
                 </p>
-                <button style={{
-                    borderRadius: '0.4rem',
-                    background: '#E46C43',
-                    color: '#FFF', // Added quotes around #FFF
-                    fontFamily: 'Montserrat', // Corrected to camelCase
-                    fontSize: '1.375rem',
-                    fontStyle: 'normal',
-                    fontWeight: 700,
-                    lineHeight: 'normal',
-                    padding: '0.75rem',
-                }}>
-                    Learn More
-                </button>
+                <Link to='/about-us'>
+                    <button style={{
+                        borderRadius: '0.4rem',
+                        background: '#E46C43',
+                        color: '#FFF', // Added quotes around #FFF
+                        fontFamily: 'Montserrat', // Corrected to camelCase
+                        fontSize: '1.375rem',
+                        fontStyle: 'normal',
+                        fontWeight: 700,
+                        lineHeight: 'normal',
+                        padding: '0.75rem',
+                    }}>
+                        Learn More
+                    </button>
+                </Link>
+
             </div>
         </>
 

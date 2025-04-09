@@ -138,19 +138,6 @@ export const useOpportunities = () => {
     }
   };
 
-  // Mark an opportunity as completed
-  const completeOpportunity = async (id, completionData) => {
-    try {
-      const response = await opportunityService.completeOpportunity(id, completionData);
-      const completedOpportunity = response.data || null;
-      if (completedOpportunity) {
-        dispatch(completeOpportunityAction(completedOpportunity));
-      }
-      return completedOpportunity;
-    } catch (error) {
-      throw error;
-    }
-  };
 
   // Cancel an opportunity
   const cancelOpportunity = async (id, reason) => {
@@ -204,7 +191,6 @@ export const useOpportunities = () => {
     getProviderOpportunities,
     createOpportunity,
     editOpportunity,
-    completeOpportunity,
     cancelOpportunity,
     deleteOpportunity,
     applyFilters,

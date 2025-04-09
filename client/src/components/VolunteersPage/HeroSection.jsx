@@ -18,7 +18,7 @@ const HeroSection=() => {
                     <h1>Connecting <br/> Volunteers with <br/> NGOs</h1>
                     <h3>Let a Million Environment Flowers Bloom</h3>
                 </div>
-                <ButtonOrange text="Join Enveave" link='/' className="volunteer-hero-section-button"/>
+                <ButtonOrange text="Join Enveave" link='/sign-up/volunteer' className="volunteer-hero-section-button"/>
             </div>
         </div>
     );

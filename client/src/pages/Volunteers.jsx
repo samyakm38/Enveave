@@ -19,7 +19,7 @@ const Volunteers=() => {
                 <div className='volunteer-opportunity-section'>
                     <h1>Explore Opportunities</h1>
                     <OpportunitySection/>
-                    <ButtonOrange text='View all' link='/'/>
+                    <ButtonOrange text='View all' link='/opportunities'/>
                 </div>
                 <div className='volunteer-how-it-works-section'>
                     <h1>How It Works</h1>

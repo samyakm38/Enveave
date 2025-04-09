@@ -22,7 +22,6 @@ const NgoDashboard = () => {
         loading: opportunitiesLoading, 
         getProviderOpportunities,
         deleteOpportunity,
-        completeOpportunity
     } = useOpportunities();
     
     const [activeTab, setActiveTab] = useState('Ongoing');
@@ -41,7 +40,7 @@ const NgoDashboard = () => {
         if (!localStorage.getItem('auth_token')) {
             navigate('/login');
         }
-            }, [currentUser, userType, navigate]);
+    }, [currentUser, userType, navigate]);
 
     // Fetch provider profile and opportunities data
     useEffect(() => {
@@ -169,16 +168,7 @@ const NgoDashboard = () => {
             }
         }
     };
-    
-    // Handle marking an opportunity as completed
-    const handleCompleteOpportunity = (opportunityId, opportunityName) => {
-        // Find the opportunity in our list
-        const opportunity = opportunitiesList.find(opp => opp.id === opportunityId);
-        if (opportunity) {
-            setSelectedOpportunity(opportunity);
-            setIsCompletionModalOpen(true);
-        }
-    };
+
     
     // Handle completion submission
     const handleCompletionSubmit = async (completionData) => {
@@ -265,17 +255,6 @@ const NgoDashboard = () => {
             cellRenderer: (id, row) => (
                 <div className="ngo-action-buttons">
                     <button
-                        onClick={() => handleCompleteOpportunity(id, row.name)}
-                        className="ngo-complete-button"
-                        title={`Mark ${row.name} as completed`}
-                        aria-label={`Complete ${row.name}`}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check-circle" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                            <path d="m10.97 4.97-.02.022-3.473 4.425-2.025-2.025a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
-                        </svg>
-                    </button>
-                    <button
                         onClick={() => handleDeleteOpportunity(id, row.name)}
                         className="ngo-delete-button"
                         title={`Delete ${row.name}`}
@@ -296,7 +275,7 @@ const NgoDashboard = () => {
         { header: 'Duration', accessor: 'duration' },
         { header: 'Completion Date', accessor: 'completionDate'},
         { header: 'Volunteers Participated', accessor: 'volunteersParticipated', cellClassName: 'ngo-cell-number' },
-        { header: 'Outcome / Impact', accessor: 'outcome', cellClassName: 'ngo-cell-outcome'},
+
     ];
 
     // Dynamic selections based on active tab

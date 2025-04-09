@@ -182,7 +182,7 @@ const Opportunities = () => {
 
                         // Prepare props for the original OpportunityCard
                         const cardProps = {
-                            imageSrc: opp.provider?.organizationDetails?.logo || '/images/default-opportunity.png', // Provide a default image path
+                            imageSrc: opp.basicDetails?.photo || '/images/default-opportunity.png', // Provide a default image path
                             title: opp.basicDetails?.title || 'Untitled Opportunity',
                             organization: opp.provider?.auth?.organizationName || 'Unknown Organization',
                             location: opp.schedule?.location || 'Location not specified',
