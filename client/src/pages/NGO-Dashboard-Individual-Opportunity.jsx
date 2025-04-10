@@ -1,35 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
 import DashboardTable from "../components/Dashboard/Common-components/DashBoardTable.jsx";
-import '../stylesheet/NGO-Dashboard-Individual-Opportunity.css'
-import {Link} from "react-router-dom";
-
-
-
-// --- Mock Data based on the image ---
-// Replace placeholder image URLs with actual paths or URLs
-const volunteerData = [
-    { id: 1, name: 'Emily Johnson', img: 'https://via.placeholder.com/30/FF7F7F/FFFFFF?text=EJ', gender: 'Female', contact: 'xyz@gmail.com\n99XXXXXXXX', skills: 'Event Coordination\nPublic Speaking', status: 'Pending' },
-    { id: 2, name: 'Michael Smith', img: 'https://via.placeholder.com/30/7F7FFF/FFFFFF?text=MS', gender: 'Male', contact: 'xyz@gmail.com\n87XXXXXXXX', skills: 'Fundraising\nSocial Media Management', status: 'Accepted' },
-    { id: 3, name: 'Jessica Brown', img: 'https://via.placeholder.com/30/FFBF7F/FFFFFF?text=JB', gender: 'Female', contact: 'xyz@gmail.com\n92XXXXXXXX', skills: 'Graphic Design\nCommunity Outreach', status: 'Rejected' },
-    { id: 4, name: 'David Miller', img: 'https://via.placeholder.com/30/7FFF7F/FFFFFF?text=DM', gender: 'Male', contact: 'xyz@gmail.com\n61XXXXXXXX', skills: 'Teaching\nEnvironmentalist', status: 'Pending' },
-    { id: 5, name: 'Sarah Wilson', img: 'https://via.placeholder.com/30/FF7FFF/FFFFFF?text=SW', gender: 'Female', contact: 'xyz@gmail.com\n85XXXXXXXX', skills: 'Data Analysis\nVolunteer Training', status: 'Accepted' },
-    { id: 6, name: 'James Anderson', img: 'https://via.placeholder.com/30/7FFFFF/FFFFFF?text=JA', gender: 'Male', contact: 'xyz@gmail.com\n72XXXXXXXX', skills: 'Project Management\nFirst Aid', status: 'Accepted' },
-    { id: 7, name: 'Olivia Martinez', img: 'https://via.placeholder.com/30/BF7FFF/FFFFFF?text=OM', gender: 'Female', contact: 'xyz@gmail.com\n85XXXXXXXX', skills: 'Content Writing\nPhotography', status: 'Rejected' }
-];
+import '../stylesheet/NGO-Dashboard-Individual-Opportunity.css';
+import { Link } from "react-router-dom";
+import { useOpportunities } from '../redux/hooks/useOpportunities.js';
+import { useAuth } from '../redux/hooks/useAuth';
+import { PageLoader } from '../components/ui/LoaderComponents.jsx';
 
 // --- Component Definition ---
 const NgoDashboardIndividualOpportunity = () => {
+    // Get the 'id' parameter from the URL
+    const { id } = useParams();
+    const { currentUser } = useAuth();
+    const { getOpportunityWithApplicants, currentOpportunity, loading, error } = useOpportunities();
+    
     // State to manage the active tab in the DashboardTable
     const [activeTab, setActiveTab] = useState('Applied');
+    // State to store formatted volunteer data
+    const [volunteerData, setVolunteerData] = useState([]);    // Fetch opportunity details with applicants when component mounts
+    useEffect(() => {
+        const fetchOpportunityDetails = async () => {
+            try {
+                await getOpportunityWithApplicants(id);
+            } catch (err) {
+                console.error("Error fetching opportunity details:", err);
+            }
+        };
+
+        if (id) {
+            fetchOpportunityDetails();
+        }
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]); // Only depend on id, not the function that might change on every render
+
+    // Process applicants data when currentOpportunity changes
+    useEffect(() => {
+        if (currentOpportunity?.applicants) {
+            const formattedData = currentOpportunity.applicants.map(app => {
+                // Format skills as a string with line breaks
+                const skillsString = Array.isArray(app.skills) 
+                    ? app.skills.slice(0, 2).join('\\n') + (app.skills.length > 2 ? '\\n...' : '')
+                    : 'Not specified';
+                
+                // Format contact information
+                const contactInfo = `${app.email || 'No email'}\\n${app.phoneNumber || 'No phone'}`;
+                
+                return {
+                    id: app.id,
+                    volunteerId: app.volunteerId,
+                    name: app.name,
+                    img: app.profilePhoto || `https://via.placeholder.com/30/7F7FFF/FFFFFF?text=${app.name.substring(0, 2).toUpperCase()}`,
+                    gender: app.gender || 'Not specified',
+                    contact: contactInfo,
+                    skills: skillsString,
+                    status: app.status,
+                    appliedAt: new Date(app.appliedAt).toLocaleDateString()
+                };
+            });
+            
+            setVolunteerData(formattedData);
+        }
+    }, [currentOpportunity]);
 
     // Handler for changing tabs
     const handleTabChange = (tabName) => {
         setActiveTab(tabName);
-        // In a real application, you might filter the data here based on the tab
-        // For now, we display the same data regardless of the tab, as shown in the image
-        console.log("Switched to tab:", tabName);
+    };
+
+    // Handler for updating volunteer status
+    const handleStatusUpdate = async (volunteerId, newStatus) => {
+        try {
+            // You can implement the status update logic here using the application API
+            console.log(`Updating volunteer ${volunteerId} status to ${newStatus}`);
+            // After updating, refresh the data
+            await getOpportunityWithApplicants(id);
+        } catch (err) {
+            console.error("Error updating volunteer status:", err);
+        }
     };
 
     // Define columns configuration for the DashboardTable
@@ -37,15 +87,13 @@ const NgoDashboardIndividualOpportunity = () => {
         {
             header: 'Volunteer name',
             accessor: 'name',
-            cellClassName: 'ngo-dashboard-individual-opp-col-volunteer-name', // Class for the TD element
-            // Custom renderer for the volunteer name cell (Image + Name)
+            cellClassName: 'ngo-dashboard-individual-opp-col-volunteer-name',
             cellRenderer: (name, row) => (
-                <Link to={`/provider/dashboard/volunteer/${row.id}`} title={`View details for ${name}`}>
+                <Link to={`/provider/dashboard/volunteer/${row.volunteerId}`} title={`View details for ${name}`}>
                     <div className="ngo-dashboard-individual-opp-volunteer-name-cell-content">
                         <img src={row.img} alt={name} className="ngo-dashboard-individual-opp-volunteer-img" />
                         <span className="ngo-dashboard-individual-opp-volunteer-text">{name}</span>
                     </div>
-                    {name}
                 </Link>
             ),
         },
@@ -58,7 +106,6 @@ const NgoDashboardIndividualOpportunity = () => {
             header: 'Contact',
             accessor: 'contact',
             cellClassName: 'ngo-dashboard-individual-opp-col-contact',
-            // Render contact info preserving line breaks
             cellRenderer: (contact) => (
                 <span style={{ whiteSpace: 'pre-wrap' }}>{contact}</span>
             ),
@@ -67,7 +114,6 @@ const NgoDashboardIndividualOpportunity = () => {
             header: 'Skills',
             accessor: 'skills',
             cellClassName: 'ngo-dashboard-individual-opp-col-skills',
-            // Render skills preserving line breaks
             cellRenderer: (skills) => (
                 <span style={{ whiteSpace: 'pre-wrap' }}>{skills}</span>
             ),
@@ -76,9 +122,7 @@ const NgoDashboardIndividualOpportunity = () => {
             header: 'Status',
             accessor: 'status',
             cellClassName: 'ngo-dashboard-individual-opp-col-status',
-            // Custom renderer for status badges
             cellRenderer: (status) => {
-                // Determine the class based on the status value
                 let statusClass = '';
                 switch (status?.toLowerCase()) {
                     case 'pending':
@@ -91,40 +135,51 @@ const NgoDashboardIndividualOpportunity = () => {
                         statusClass = 'ngo-dashboard-individual-opp-status-rejected';
                         break;
                     default:
-                        statusClass = 'ngo-dashboard-individual-opp-status-default'; // Fallback style
+                        statusClass = 'ngo-dashboard-individual-opp-status-default';
                 }
-                // Return a span with base badge class and specific status class
                 return <span className={`ngo-dashboard-individual-opp-status-badge ${statusClass}`}>{status}</span>;
             },
         },
         {
             header: 'Action',
-            accessor: 'action', // No specific data field, used for rendering buttons
+            accessor: 'action',
             cellClassName: 'ngo-dashboard-individual-opp-col-action',
-            // Custom renderer for action buttons based on the row's status
             cellRenderer: (value, row) => {
                 return (
                     <div className="ngo-dashboard-individual-opp-action-buttons">
-                        {/* Show Accept(✓) and Reject(✕) if status is Pending */}
                         {row.status === 'Pending' && (
                             <>
-                                <button className="ngo-dashboard-individual-opp-action-accept" title="Accept">
+                                <button 
+                                    className="ngo-dashboard-individual-opp-action-accept" 
+                                    title="Accept"
+                                    onClick={() => handleStatusUpdate(row.volunteerId, 'Accepted')}
+                                >
                                     ✓
                                 </button>
-                                <button className="ngo-dashboard-individual-opp-action-reject" title="Reject">
+                                <button 
+                                    className="ngo-dashboard-individual-opp-action-reject" 
+                                    title="Reject"
+                                    onClick={() => handleStatusUpdate(row.volunteerId, 'Rejected')}
+                                >
                                     ✕
                                 </button>
                             </>
                         )}
-                        {/* Show only Reject(✕) if status is Accepted */}
                         {row.status === 'Accepted' && (
-                            <button className="ngo-dashboard-individual-opp-action-reject" title="Reject">
+                            <button 
+                                className="ngo-dashboard-individual-opp-action-reject" 
+                                title="Reject"
+                                onClick={() => handleStatusUpdate(row.volunteerId, 'Rejected')}
+                            >
                                 ✕
                             </button>
                         )}
-                        {/* Show only Accept(✓) if status is Rejected */}
                         {row.status === 'Rejected' && (
-                            <button className="ngo-dashboard-individual-opp-action-accept" title="Accept">
+                            <button 
+                                className="ngo-dashboard-individual-opp-action-accept" 
+                                title="Accept"
+                                onClick={() => handleStatusUpdate(row.volunteerId, 'Accepted')}
+                            >
                                 ✓
                             </button>
                         )}
@@ -134,77 +189,127 @@ const NgoDashboardIndividualOpportunity = () => {
         }
     ];
 
-    // Data to be displayed in the table.
-    // Currently shows all data regardless of the active tab, mirroring the image.
-    // const displayedData = volunteerData;
-    // Example: If you wanted to filter based on tab/status:
+    // Filter data based on active tab
     const displayedData = activeTab === 'Applied'
-      ? volunteerData // Show all as per image
-      : volunteerData.filter(v =>
-          (activeTab === 'Shortlisted' && v.status === 'Accepted') ||
-          (activeTab === 'Rejected' && v.status === 'Rejected')
+        ? volunteerData
+        : volunteerData.filter(v =>
+            (activeTab === 'Shortlisted' && v.status === 'Accepted') ||
+            (activeTab === 'Rejected' && v.status === 'Rejected')
+        );    // Show loading state - only if we're loading AND don't have opportunity data yet
+    if (loading && !currentOpportunity) {
+        return (
+            <>
+                <Header />
+                <div className="ngo-dashboard-individual-opp-loading">
+                    <PageLoader />
+                    <p>Loading opportunity details...</p>
+                </div>
+                <Footer />
+            </>
         );
+    }
+
+    // Show error state
+    if (error) {
+        return (
+            <>
+                <Header />
+                <div className="ngo-dashboard-individual-opp-error">
+                    <h2>Error Loading Opportunity</h2>
+                    <p>{error}</p>
+                    <Link to="/provider/dashboard" className="ngo-dashboard-individual-opp-back-link">
+                        Return to Dashboard
+                    </Link>
+                </div>
+                <Footer />
+            </>
+        );
+    }
+
+    // Helper function to extract basic opportunity details
+    const getOpportunityDetails = () => {
+        if (!currentOpportunity) return { title: 'Opportunity', organization: 'Organization', location: 'Location', duration: 'N/A' };
+        
+        const basicDetails = currentOpportunity.basicDetails || {};
+        const schedule = currentOpportunity.schedule || {};
+        
+        // Calculate duration
+        let duration = schedule.timeCommitment || 'N/A';
+        if (schedule.startDate && schedule.endDate) {
+            const start = new Date(schedule.startDate);
+            const end = new Date(schedule.endDate);
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) duration = `${schedule.timeCommitment}`;
+            else if (diffDays === 1) duration = '1 Day';
+            else if (diffDays < 7) duration = `${diffDays} Days`;
+            else if (diffDays < 30) duration = `${Math.ceil(diffDays/7)} Weeks`;
+            else if (diffDays < 365) duration = `${Math.ceil(diffDays/30)} Months`;
+            else duration = `${Math.ceil(diffDays/365)} Years`;
+        }
+        
+        return {
+            title: basicDetails.title || 'Unnamed Opportunity',
+            organization: currentUser?.organizationName || 'Your Organization',
+            location: schedule.location || 'No location specified',
+            duration: duration
+        };
+    };
+
+    const opportunityDetails = getOpportunityDetails();
 
     return (
         <>
             <Header />
-            {/* Main container for the page content */}
             <div className="ngo-dashboard-individual-opp-page-container">
-
-                {/* Top section with Opportunity details */}
                 <div className="ngo-dashboard-individual-opp-header-section">
-                    {/* Campaign Image */}
                     <img
-                        src="https://via.placeholder.com/80x80/cccccc/FFFFFF?text=NGO" /* Placeholder */
-                        alt="Tree Plantation Campaign"
+                        src={currentOpportunity?.basicDetails?.photo || "https://via.placeholder.com/80x80/236D4E/FFFFFF?text=NGO"}
+                        alt={opportunityDetails.title}
                         className="ngo-dashboard-individual-opp-campaign-image"
                     />
-                    {/* Campaign Info Text */}
                     <div className="ngo-dashboard-individual-opp-header-info">
-                        <h1 className="ngo-dashboard-individual-opp-title">Tree Plantation Campaign</h1>
+                        <h1 className="ngo-dashboard-individual-opp-title">{opportunityDetails.title}</h1>
                         <div className="ngo-dashboard-individual-opp-sub-details">
-                            {/* Using spans with simple icons/emojis as placeholders */}
                             <span className="ngo-dashboard-individual-opp-detail-item">
                                 <span className='ngo-dashboard-individual-opp-icon'>
                                     <img src='/ngo-dashboard-individual-opp-building-icon.svg' alt='icon'/>
-                                </span> {/* Building icon */}
-                                Green Earth Foundation
+                                </span>
+                                {opportunityDetails.organization}
                             </span>
                             <span className="ngo-dashboard-individual-opp-detail-item">
                                 <span className='ngo-dashboard-individual-opp-icon'>
                                     <img src='/ngo-dashboard-individual-opp-location-icon.svg' alt='icon'/>
-                                </span> {/* Location icon */}
-                                Bangalore, India
+                                </span>
+                                {opportunityDetails.location}
                             </span>
                             <span className="ngo-dashboard-individual-opp-detail-item">
                                 <span className='ngo-dashboard-individual-opp-icon'>
                                     <img src='/ngo-dashboard-individual-opp-time-icon.svg' alt='icon'/>
-                                </span> {/* Clock icon */}
-                                1 Day
+                                </span>
+                                {opportunityDetails.duration}
                             </span>
                         </div>
                     </div>
-                    {/* View Opportunity Button */}
-                    <button className="ngo-dashboard-individual-opp-view-opportunity-btn">
+                    <Link to={`/opportunities/${id}`} className="ngo-dashboard-individual-opp-view-opportunity-btn">
                         View Opportunity
-                    </button>
+                    </Link>
                 </div>
 
-                {/* Volunteers section */}
                 <div className="ngo-dashboard-individual-opp-volunteers-section">
-                    {/* Header for the volunteers table */}
                     <div className="ngo-dashboard-individual-opp-volunteers-header">
-                        <h2 className="ngo-dashboard-individual-opp-volunteers-title">Volunteers</h2>
+                        <h2 className="ngo-dashboard-individual-opp-volunteers-title">
+                            Volunteers {volunteerData.length ? `(${volunteerData.length})` : ''}
+                        </h2>
                     </div>
 
-                    {/* The DashboardTable component */}
                     <DashboardTable
                         columns={tableColumns}
                         data={displayedData}
                         tabs={['Applied', 'Shortlisted', 'Rejected']}
                         activeTab={activeTab}
                         onTabChange={handleTabChange}
-                        // Add a specific class to the container div rendered by DashboardTable
                         className="ngo-dashboard-individual-opp-table-component"
                         emptyMessage="No volunteers match the current criteria."
                     />
