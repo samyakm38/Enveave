@@ -1,0 +1,408 @@
+/* --- NgoDashboardIndividualOpportunity.css --- */
+
+/* Base font and layout */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+
+.ngo-dashboard-individual-opp-page-container {
+    padding: 15px; /* Padding for smaller screens */
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px; /* Optional: Rounded corners for the main container */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+/* --- Header Section --- */
+.ngo-dashboard-individual-opp-header-section {
+    display: flex;
+    flex-direction: column; /* Stack vertically by default for mobile */
+    align-items: flex-start; /* Align items to the start */
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.ngo-dashboard-individual-opp-campaign-image {
+    width: 60px; /* Smaller image for mobile */
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.ngo-dashboard-individual-opp-header-info {
+    flex-grow: 1;
+    width: 100%; /* Take full width when stacked */
+}
+
+.ngo-dashboard-individual-opp-title {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.ngo-dashboard-individual-opp-sub-details {
+    display: flex;
+    flex-direction: column; /* Stack details vertically on mobile */
+    gap: 8px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.ngo-dashboard-individual-opp-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #717680;
+    font-family: Montserrat, sans-serif;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.ngo-dashboard-individual-opp-icon {
+    color: #868e96;
+    font-size: 16px; /* Adjust icon size if needed */
+    line-height: 1;
+}
+
+.ngo-dashboard-individual-opp-view-opportunity-btn {
+    padding: 8px 16px; /* Adjusted padding */
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0d6efd; /* Use a primary color */
+    border-color: #0d6efd;
+    white-space: nowrap;
+    align-self: flex-start; /* Align button to start on mobile */
+    margin-top: 10px; /* Add some space when stacked */
+}
+
+.ngo-dashboard-individual-opp-view-opportunity-btn:hover {
+    background-color: #e7f1ff; /* Light blue on hover */
+}
+
+
+/* --- Volunteers Section --- */
+.ngo-dashboard-individual-opp-volunteers-section {
+    margin-top: 25px;
+}
+
+.ngo-dashboard-individual-opp-volunteers-header {
+    display: flex;
+    flex-direction: column; /* Stack title and controls on mobile */
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.ngo-dashboard-individual-opp-volunteers-title {
+    color: #000;
+    font-family: Montserrat,sans-serif;
+    font-size: 1.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.ngo-dashboard-individual-opp-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.ngo-dashboard-individual-opp-filter-btn,
+.ngo-dashboard-individual-opp-sort-btn {
+    padding: 6px 12px;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.ngo-dashboard-individual-opp-filter-btn .ngo-dashboard-individual-opp-icon,
+.ngo-dashboard-individual-opp-sort-btn .ngo-dashboard-individual-opp-icon {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.ngo-dashboard-individual-opp-filter-btn:hover,
+.ngo-dashboard-individual-opp-sort-btn:hover {
+    background-color: #f8f9fa;
+}
+
+/* --- DashboardTable Specific Styles & Overrides --- */
+
+/* Apply specific class to the table component wrapper */
+.ngo-dashboard-individual-opp-table-component {
+    /* Add specific styles if needed */
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling for the table on small screens */
+}
+
+/* Style for the content within the volunteer name cell */
+.ngo-dashboard-individual-opp-volunteer-name-cell-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 150px; /* Prevent name from squishing too much */
+}
+
+.ngo-dashboard-individual-opp-volunteer-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0; /* Prevent image from shrinking */
+}
+
+.ngo-dashboard-individual-opp-volunteer-text {
+    font-weight: 500;
+    color: #343a40;
+    white-space: nowrap; /* Keep name on one line */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis if too long */
+}
+
+/* Style for status badges */
+.ngo-dashboard-individual-opp-status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+    min-width: 75px;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.ngo-dashboard-individual-opp-status-pending {
+    background-color: #fffbeb; /* Light Yellow */
+    color: #b45309; /* Darker Yellow */
+}
+
+.ngo-dashboard-individual-opp-status-accepted {
+    background-color: #f0fdf4; /* Light Green */
+    color: #16a34a; /* Darker Green */
+}
+
+.ngo-dashboard-individual-opp-status-rejected {
+    background-color: #fef2f2; /* Light Red */
+    color: #dc2626; /* Darker Red */
+}
+
+.ngo-dashboard-individual-opp-status-default {
+    background-color: #f8f9fa; /* Light Gray */
+    color: #6c757d; /* Dark Gray */
+}
+
+/* Style for action buttons container */
+.ngo-dashboard-individual-opp-action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Style for individual action buttons */
+.ngo-dashboard-individual-opp-action-accept,
+.ngo-dashboard-individual-opp-action-reject {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px; /* Slightly larger, more clickable */
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Make hover effect circular */
+    transition: background-color 0.2s ease;
+}
+
+.ngo-dashboard-individual-opp-action-accept {
+    color: #16a34a; /* Green for accept */
+}
+
+.ngo-dashboard-individual-opp-action-reject {
+    color: #dc2626; /* Red for reject */
+}
+
+.ngo-dashboard-individual-opp-action-accept:hover {
+    background-color: #d1fae5; /* Light green background on hover */
+}
+
+.ngo-dashboard-individual-opp-action-reject:hover {
+    background-color: #fee2e2; /* Light red background on hover */
+}
+
+/* Cell Content Styling */
+.ngo-dashboard-individual-opp-table-component .dashboard-table-cell {
+    padding: 12px 10px; /* Adjust padding */
+    vertical-align: middle;
+    font-size: 14px;
+    color: #495057;
+    line-height: 1.4;
+    white-space: normal; /* Allow wrapping by default */
+}
+
+/* Specific column adjustments */
+.ngo-dashboard-individual-opp-col-contact,
+.ngo-dashboard-individual-opp-col-skills {
+    white-space: pre-wrap; /* Preserve line breaks from data */
+    min-width: 180px; /* Give more space for skills/contact */
+}
+
+.ngo-dashboard-individual-opp-col-gender {
+    min-width: 80px;
+}
+
+.ngo-dashboard-individual-opp-col-status {
+    text-align: center; /* Center status badge */
+    min-width: 100px;
+}
+
+.ngo-dashboard-individual-opp-col-action {
+    text-align: center;
+    min-width: 80px;
+}
+
+/* Style overrides for DashboardTable tabs */
+.ngo-dashboard-individual-opp-table-component .dashboard-table-tabs {
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: -1px; /* Overlap border with table header */
+}
+
+.ngo-dashboard-individual-opp-table-component .dashboard-table-tab {
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px; /* Align border with container border */
+    color: #6c757d;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.ngo-dashboard-individual-opp-table-component .dashboard-table-tab:hover {
+    color: #495057;
+}
+
+.ngo-dashboard-individual-opp-table-component .dashboard-table-tab-active {
+    border-bottom-color: #22c55e; /* Match active status color - green */
+    color: #16a34a; /* Darker green */
+    font-weight: 600;
+}
+
+/* Header cells */
+.ngo-dashboard-individual-opp-table-component .dashboard-table-header-cell {
+    background-color: #f8f9fa; /* Light grey header */
+    padding: 12px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    text-align: left;
+    text-transform: capitalize; /* Nicer header text */
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* --- Responsiveness --- */
+
+/* Medium screens (Tablets, smaller desktops) */
+@media (min-width: 768px) {
+    .ngo-dashboard-individual-opp-page-container {
+        padding: 25px;
+    }
+
+    .ngo-dashboard-individual-opp-header-section {
+        flex-direction: row; /* Horizontal layout */
+        align-items: center; /* Center items vertically */
+        gap: 20px;
+    }
+
+    .ngo-dashboard-individual-opp-campaign-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    .ngo-dashboard-individual-opp-title {
+        font-size: 24px;
+    }
+
+    .ngo-dashboard-individual-opp-sub-details {
+        flex-direction: row; /* Horizontal details */
+        gap: 15px;
+    }
+
+    .ngo-dashboard-individual-opp-view-opportunity-btn {
+        padding: 10px 20px;
+        align-self: center; /* Align with other items */
+        margin-top: 0; /* Remove top margin */
+        margin-left: auto; /* Push button to the right */
+    }
+
+    .ngo-dashboard-individual-opp-volunteers-header {
+        flex-direction: row; /* Horizontal layout */
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ngo-dashboard-individual-opp-volunteers-title {
+        font-size: 20px;
+    }
+
+    .ngo-dashboard-individual-opp-filter-btn,
+    .ngo-dashboard-individual-opp-sort-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .ngo-dashboard-individual-opp-table-component .dashboard-table-cell {
+        padding: 14px 15px; /* More padding on larger screens */
+    }
+    .ngo-dashboard-individual-opp-table-component .dashboard-table-header-cell {
+        padding: 14px 15px;
+        font-size: 14px;
+    }
+}
+
+/* Optional: Very small screens adjustments if needed */
+@media (max-width: 480px) {
+    .ngo-dashboard-individual-opp-controls {
+        flex-wrap: wrap; /* Allow buttons to wrap if needed */
+    }
+
+    /* Make table cells potentially smaller on very small screens */
+    .ngo-dashboard-individual-opp-table-component .dashboard-table-cell {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
+    .ngo-dashboard-individual-opp-table-component .dashboard-table-header-cell {
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+
+    /* Adjust tab padding */
+    .ngo-dashboard-individual-opp-table-component .dashboard-table-tab {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}

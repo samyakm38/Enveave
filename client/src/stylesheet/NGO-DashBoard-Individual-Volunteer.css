@@ -1,0 +1,374 @@
+/* --- NgoDashboardIndividualVolunteer.css --- */
+
+/* Base styles (Mobile First) */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    background-color: #f8f9fa; /* Light background for the whole page */
+    color: #343a40; /* Default text color */
+    line-height: 1.5; /* Improve readability */
+}
+
+.ngo-dashboard-individual-volunteer-container {
+    max-width: 1100px; /* Max width for large screens */
+    margin: 20px auto; /* Centering with top/bottom margin */
+    padding: 15px; /* Padding for smaller screens */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.ngo-dashboard-individual-volunteer-back-link {
+    margin-bottom: 15px; /* Spacing below back link */
+}
+
+.ngo-dashboard-individual-volunteer-back-link a {
+    text-decoration: none;
+    color: #0d6efd; /* Primary blue color */
+    font-weight: 500;
+    display: inline-flex; /* Use flex for alignment */
+    align-items: center;
+    gap: 4px; /* Space between icon and text */
+}
+.ngo-dashboard-individual-volunteer-back-link a:hover {
+    text-decoration: underline;
+}
+
+/* Profile Header - Mobile */
+.ngo-dashboard-individual-volunteer-profile-header {
+    display: flex;
+    flex-direction: column; /* Stack image and info vertically */
+    align-items: flex-start; /* Align to the start */
+    gap: 15px; /* Space between image and info */
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.ngo-dashboard-individual-volunteer-profile-img {
+    width: 70px; /* Slightly smaller image for mobile */
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.ngo-dashboard-individual-volunteer-profile-info {
+    width: 100%; /* Take full width */
+}
+
+.ngo-dashboard-individual-volunteer-name {
+    color: #000;
+    font-family: Montserrat, sans-serif;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.ngo-dashboard-individual-volunteer-status-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.ngo-dashboard-individual-volunteer-status-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+    line-height: 1.4; /* Ensure text fits well */
+}
+
+.ngo-dashboard-individual-volunteer-status-available {
+    background-color: #e0f3ff; /* Lighter blue background */
+    color: #005eb3; /* Darker blue text */
+    border: 1px solid #a8d9ff; /* Soft blue border */
+}
+
+/* Section Styling */
+.ngo-dashboard-individual-volunteer-section {
+    background-color: #f8f9fa; /* Light grey background for sections */
+    padding: 15px; /* Section padding for mobile */
+    border-radius: 6px; /* Slightly smaller radius */
+    margin-bottom: 20px; /* Space between sections */
+}
+
+.ngo-dashboard-individual-volunteer-section-title {
+    text-align: left;
+    color: #000;
+    font-family: Montserrat,sans-serif;
+    font-size: 1.375rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #dee2e6; /* Slightly darker border */
+    padding-bottom: 8px;
+}
+
+/* About Section Grid - Mobile */
+.ngo-dashboard-individual-volunteer-about-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 12px; /* Space between items */
+}
+
+.ngo-dashboard-individual-volunteer-about-item {
+    display: flex;
+    gap: 2rem;
+    font-size: 14px;
+}
+
+.ngo-dashboard-individual-volunteer-about-label {
+    width: 5rem;
+    display: block;
+    color: #000;
+    font-family: Inter,sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 3px;
+
+}
+
+.ngo-dashboard-individual-volunteer-about-value {
+    color: #717680;
+    font-family: Inter,sans-serif;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+/* Skills & Interests Tags */
+.ngo-dashboard-individual-volunteer-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* Space between tags */
+
+}
+
+.ngo-dashboard-individual-volunteer-tag {
+    border-radius: 0.47638rem;
+    border: 0.953px solid #D9D9D9;
+    background: rgba(0, 0, 0, 0.00);
+
+
+    padding: 4px 10px; /* Tag padding */
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+/* Experience Section - Mobile */
+.ngo-dashboard-individual-volunteer-experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between experience items */
+}
+
+.ngo-dashboard-individual-volunteer-experience-item {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #dee2e6; /* Separator */
+}
+
+.ngo-dashboard-individual-volunteer-experience-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.ngo-dashboard-individual-volunteer-experience-header {
+    display: flex;
+    gap: 12px; /* Space between logo and details */
+    margin-bottom: 10px;
+    flex-wrap: wrap; /* Allow wrapping */
+    align-items: flex-start; /* Align items to top */
+}
+
+.ngo-dashboard-individual-volunteer-experience-logo {
+    width: 35px; /* Smaller logo */
+    height: 35px;
+    border-radius: 4px;
+    object-fit: contain;
+    flex-shrink: 0;
+    margin-top: 2px; /* Align slightly better with text */
+}
+
+.ngo-dashboard-individual-volunteer-experience-details {
+    flex-grow: 1; /* Take available space */
+    min-width: 180px; /* Prevent details from getting too narrow */
+}
+
+.ngo-dashboard-individual-volunteer-experience-org {
+    font-size: 15px; /* Adjusted font size */
+    font-weight: 600;
+    margin: 0 0 2px 0;
+}
+
+.ngo-dashboard-individual-volunteer-experience-title {
+    font-size: 14px;
+    color: #495057;
+    margin: 0 0 4px 0;
+}
+
+.ngo-dashboard-individual-volunteer-experience-meta {
+    font-size: 12px;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.ngo-dashboard-individual-volunteer-experience-dates {
+    font-size: 12px;
+    color: #6c757d;
+    text-align: left; /* Align left on mobile */
+    flex-basis: 100%; /* Take full width when wrapped */
+    padding-left: calc(35px + 12px); /* Indent dates below logo */
+    margin-top: 5px; /* Space when wrapped */
+}
+
+.ngo-dashboard-individual-volunteer-experience-date-range {
+    margin: 0 0 2px 0;
+    white-space: nowrap;
+}
+
+.ngo-dashboard-individual-volunteer-experience-duration {
+    margin: 0;
+    font-style: italic;
+}
+
+.ngo-dashboard-individual-volunteer-experience-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #495057;
+    padding-left: 0; /* No indent for description on mobile */
+    margin-top: 10px; /* Space above description */
+}
+
+/* Medium screens (Tablets, smaller desktops) - min-width: 768px */
+@media (min-width: 768px) {
+    .ngo-dashboard-individual-volunteer-container {
+        padding: 25px 30px; /* Increase padding */
+    }
+
+    .ngo-dashboard-individual-volunteer-back-link {
+        margin-bottom: 25px;
+    }
+
+    .ngo-dashboard-individual-volunteer-profile-header {
+        flex-direction: row; /* Horizontal layout */
+        align-items: center; /* Center items vertically */
+        gap: 25px; /* Increase gap */
+    }
+
+    .ngo-dashboard-individual-volunteer-profile-img {
+        width: 80px; /* Larger image */
+        height: 80px;
+    }
+
+    .ngo-dashboard-individual-volunteer-name {
+        font-size: 26px; /* Larger name */
+    }
+
+    .ngo-dashboard-individual-volunteer-section {
+        padding: 20px; /* Increase section padding */
+        margin-bottom: 25px;
+    }
+
+    .ngo-dashboard-individual-volunteer-section-title {
+        font-size: 18px; /* Larger section title */
+    }
+
+    .ngo-dashboard-individual-volunteer-about-grid {
+        /* Two columns layout */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px 30px; /* Adjust row and column gap */
+    }
+
+    .ngo-dashboard-individual-volunteer-tag {
+        color: #000;
+        text-align: center;
+        font-family: Inter,sans-serif;
+        font-size: 0.95275rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        padding: 5px 12px;
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-list {
+        gap: 25px; /* Increase gap between items */
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-item {
+        padding-bottom: 20px;
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-header {
+        flex-wrap: nowrap; /* Prevent wrapping */
+        gap: 15px; /* Increase gap */
+        align-items: flex-start; /* Align top */
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-logo {
+        width: 40px; /* Slightly larger logo */
+        height: 40px;
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-org {
+        font-size: 16px;
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-meta {
+        font-size: 13px;
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-dates {
+        text-align: right; /* Align dates to the right */
+        flex-basis: auto; /* Reset basis */
+        padding-left: 15px; /* Add some padding */
+        margin-left: auto; /* Push dates to the far right */
+        margin-top: 0; /* Reset margin */
+        font-size: 13px;
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-description {
+        padding-left: calc(40px + 15px); /* Indent description under logo */
+        margin-top: 8px; /* Adjust space */
+    }
+}
+
+/* Large screens (Desktops) - min-width: 992px */
+@media (min-width: 992px) {
+    .ngo-dashboard-individual-volunteer-container {
+        padding: 30px 40px; /* Even more padding */
+    }
+
+    .ngo-dashboard-individual-volunteer-name {
+        font-size: 28px; /* Larger name */
+    }
+
+    .ngo-dashboard-individual-volunteer-section {
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+
+    .ngo-dashboard-individual-volunteer-section-title {
+        font-size: 19px;
+    }
+
+    .ngo-dashboard-individual-volunteer-about-grid {
+        /* Could potentially go to 3 columns if content allows, but 2 is often good */
+        /* grid-template-columns: repeat(3, 1fr); */
+        gap: 20px 35px;
+    }
+
+    .ngo-dashboard-individual-volunteer-experience-description {
+        font-size: 14.5px; /* Slightly larger description text */
+    }
+}

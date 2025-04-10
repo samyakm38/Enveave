@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import { useProviderProfile } from '../redux/hooks/useProviderProfile';
 import { useOpportunities } from '../redux/hooks/useOpportunities';
 import { useAuth } from '../redux/hooks/useAuth';
-import CompletionModal from "../components/Dashboard/NGO-components/CompletionModal.jsx";
 // Import our custom loaders
 import { PageLoader, CardSkeleton, FormSkeleton, TableSkeleton } from '../components/ui/LoaderComponents.jsx';
 // Import Skeleton directly from react-loading-skeleton
@@ -30,8 +29,8 @@ const NgoDashboard = () => {
     
     const [activeTab, setActiveTab] = useState('Ongoing');
     const [opportunitiesList, setOpportunitiesList] = useState([]);
-    const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
-    const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+    // const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
+    // const [selectedOpportunity, setSelectedOpportunity] = useState(null);
     const [profileError, setProfileError] = useState(null);
     const tabs = ['Ongoing', 'Completed'];
 
@@ -176,58 +175,58 @@ const NgoDashboard = () => {
 
     
     // Handle completion submission
-    const handleCompletionSubmit = async (completionData) => {
-        try {
-            if (selectedOpportunity) {
-                await completeOpportunity(selectedOpportunity.id, completionData);
-                setIsCompletionModalOpen(false);
-                setSelectedOpportunity(null);
-                
-                // Refresh the data
-                await getProviderOpportunitiesAndStats();
-                await getProviderOpportunities();
-            }
-        } catch (error) {
-            console.error('Error completing opportunity:', error);
-            alert(`Failed to complete opportunity: ${error.message}`);
-        }
-    };
+    // const handleCompletionSubmit = async (completionData) => {
+    //     try {
+    //         if (selectedOpportunity) {
+    //             await completeOpportunity(selectedOpportunity.id, completionData);
+    //             setIsCompletionModalOpen(false);
+    //             setSelectedOpportunity(null);
+    //
+    //             // Refresh the data
+    //             await getProviderOpportunitiesAndStats();
+    //             await getProviderOpportunities();
+    //         }
+    //     } catch (error) {
+    //         console.error('Error completing opportunity:', error);
+    //         alert(`Failed to complete opportunity: ${error.message}`);
+    //     }
+    // };
 
     // Render the "Complete Your Profile" section when no profile exists
-    const renderProfileSetupPrompt = () => {
-        return (
-            <div className="profile-setup-container" style={{ 
-                textAlign: 'center', 
-                padding: '50px', 
-                margin: '40px auto',
-                maxWidth: '800px',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '8px',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-            }}>
-                <h2 style={{ color: '#236D4E', marginBottom: '20px' }}>Complete Your Organization Profile</h2>
-                <p style={{ fontSize: '18px', lineHeight: '1.6', marginBottom: '30px' }}>
-                    Welcome to Enveave! Before you can create and manage opportunities, 
-                    you need to complete your organization profile. This helps volunteers 
-                    understand your mission and the work you do.
-                </p>
-                <Link to="/provider/profile/edit">
-                    <button style={{
-                        backgroundColor: '#236D4E',
-                        color: 'white',
-                        border: 'none',
-                        padding: '12px 30px',
-                        borderRadius: '4px',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold'
-                    }}>
-                        Complete Profile Now
-                    </button>
-                </Link>
-            </div>
-        );
-    };
+    // const renderProfileSetupPrompt = () => {
+    //     return (
+    //         <div className="profile-setup-container" style={{
+    //             textAlign: 'center',
+    //             padding: '50px',
+    //             margin: '40px auto',
+    //             maxWidth: '800px',
+    //             backgroundColor: '#f8f9fa',
+    //             borderRadius: '8px',
+    //             boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+    //         }}>
+    //             <h2 style={{ color: '#236D4E', marginBottom: '20px' }}>Complete Your Organization Profile</h2>
+    //             <p style={{ fontSize: '18px', lineHeight: '1.6', marginBottom: '30px' }}>
+    //                 Welcome to Enveave! Before you can create and manage opportunities,
+    //                 you need to complete your organization profile. This helps volunteers
+    //                 understand your mission and the work you do.
+    //             </p>
+    //             <Link to="/provider/profile/edit">
+    //                 <button style={{
+    //                     backgroundColor: '#236D4E',
+    //                     color: 'white',
+    //                     border: 'none',
+    //                     padding: '12px 30px',
+    //                     borderRadius: '4px',
+    //                     fontSize: '16px',
+    //                     cursor: 'pointer',
+    //                     fontWeight: 'bold'
+    //                 }}>
+    //                     Complete Profile Now
+    //                 </button>
+    //             </Link>
+    //         </div>
+    //     );
+    // };
 
     // Prepare card data with real stats
     const realCardData = [
@@ -247,7 +246,13 @@ const NgoDashboard = () => {
 
     // Column definitions
     const ongoingColumns = [
-        { header: 'Opportunity name', accessor: 'name', cellClassName: 'ngo-cell-name' },
+        { header: 'Opportunity name', accessor: 'name', cellClassName: 'ngo-cell-name',
+            cellRenderer: (name, row) => ( // Render name as a Link
+                <Link to={`/provider/dashboard/opportunity/${row.id}`} title={`View details for ${name}`}>
+                    {name}
+                </Link>
+            )
+        },
         { header: 'Organization', accessor: 'organization' },
         { header: 'Location', accessor: 'location' },
         { header: 'Total volunteers', accessor: 'volunteers', cellClassName: 'ngo-cell-number' },
@@ -275,7 +280,13 @@ const NgoDashboard = () => {
     ];
 
     const completedColumns = [
-        { header: 'Opportunity name', accessor: 'name', cellClassName: 'ngo-cell-name' },
+        { header: 'Opportunity name', accessor: 'name', cellClassName: 'ngo-cell-name',
+            cellRenderer: (name, row) => ( // Render name as a Link
+                <Link to={`/provider/dashboard/opportunity/${row.id}`} title={`View details for ${name}`}>
+                    {name}
+                </Link>
+            )
+        },
         { header: 'Location', accessor: 'location' },
         { header: 'Duration', accessor: 'duration' },
         { header: 'Completion Date', accessor: 'completionDate'},
@@ -411,18 +422,18 @@ const NgoDashboard = () => {
                 />
             </div>
             
-            {/* Completion Modal */}
-            {isCompletionModalOpen && selectedOpportunity && (
-                <CompletionModal
-                    isOpen={isCompletionModalOpen}
-                    onClose={() => {
-                        setIsCompletionModalOpen(false);
-                        setSelectedOpportunity(null);
-                    }}
-                    onSubmit={handleCompletionSubmit}
-                    opportunityName={selectedOpportunity.name}
-                />
-            )}
+            {/*/!* Completion Modal *!/*/}
+            {/*{isCompletionModalOpen && selectedOpportunity && (*/}
+            {/*    <CompletionModal*/}
+            {/*        isOpen={isCompletionModalOpen}*/}
+            {/*        onClose={() => {*/}
+            {/*            setIsCompletionModalOpen(false);*/}
+            {/*            setSelectedOpportunity(null);*/}
+            {/*        }}*/}
+            {/*        onSubmit={handleCompletionSubmit}*/}
+            {/*        opportunityName={selectedOpportunity.name}*/}
+            {/*    />*/}
+            {/*)}*/}
 
             <Footer />
         </div>

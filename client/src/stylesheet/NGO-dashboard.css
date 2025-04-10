@@ -105,6 +105,12 @@
 
 /* --- Mobile Adjustments --- */
 @media (max-width: 768px) {
+    .NGO-dashboard-card-container{
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
     /* Ensure action button label/value aligns correctly in card view */
     .dashboard-table-ngo-theme .dashboard-table-cell[data-label="Action"] {
         text-align: right; /* Reset alignment if needed */
