@@ -22,6 +22,8 @@ import IndividualOpportunity from "./pages/Individual-Opportunity.jsx";
 import ProviderProfileCompletion from "./pages/Provider-Profile-Completion.jsx";
 import AllStories from "./pages/AllStories.jsx";
 import IndividualStory from "./pages/IndividualStory.jsx";
+import NGODashboardIndividualOpportunity from "./pages/NGO-Dashboard-Individual-Opportunity.jsx";
+import NGODashBoardIndividualVolunteer from "./pages/NGO-DashBoard-Individual-Volunteer.jsx";
 
 
 const App = () => {
@@ -44,9 +46,13 @@ const App = () => {
           <Route path='/volunteer/dashboard' element={<VolunteerDashboard />}/>
           <Route path='/provider/dashboard' element={<NGODashboard />}/>
           <Route path='/create-opportunity' element={<CreateOpportunity />} />
-          <Route path="/profile-completion" element={<VolunteerProfileCompletion />} />          <Route path="/opportunities/:id" element={<IndividualOpportunity />} />          <Route path="/provider/profile/edit" element={<ProviderProfileCompletion />} />
+          <Route path="/profile-completion" element={<VolunteerProfileCompletion />} />
+          <Route path="/opportunities/:id" element={<IndividualOpportunity />} />
+          <Route path="/provider/profile/edit" element={<ProviderProfileCompletion />} />
           <Route path="/stories" element={<AllStories />} />
           <Route path="/stories/:id" element={<IndividualStory />} />
+          <Route path='provider/dashboard/opportunity/:id' element={<NGODashboardIndividualOpportunity />} />
+          <Route path='provider/dashboard/volunteer/:id' element={<NGODashBoardIndividualVolunteer />} />
         </Routes>
       </BrowserRouter>
     </ToastProvider>
