@@ -1,4 +1,3 @@
-// Opportunities.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
@@ -6,6 +5,7 @@ import OpportunityCard from "../components/main components/OpportunityCard.jsx";
 import '../stylesheet/Opportunities.css'; // Import the CSS
 import { formatDistanceToNow } from 'date-fns'; // Import date formatting function
 import { useNavigate } from 'react-router-dom';
+import { CardSkeleton, HashSpinnerLoader } from '../components/ui/LoaderComponents.jsx';
 
 
 
@@ -56,10 +56,9 @@ const Opportunities = () => {
             }
         });
 
-        if (node) observer.current.observe(node);
     }, [loading, hasNextPage, nextCursor, searchTerm]);
 
-    const fetchOpportunities = useCallback(async (cursor = null, search = '') => {
+const fetchOpportunities = useCallback(async (cursor = null, search = '') => {
         // Prevent fetching if no more pages (unless it's a new search without cursor)
         if (!hasNextPage && cursor) return;
         // Prevent concurrent fetches during pagination
@@ -207,7 +206,19 @@ const Opportunities = () => {
                     })}
                 </div>
 
-                {loading && <p className="opportunities-loader">Loading...</p>}
+                {loading && opportunities.length === 0 && (
+                    <div className="opportunities-loader">
+                        <CardSkeleton count={6} />
+                    </div>
+                )}
+                
+                {loading && opportunities.length > 0 && (
+                    <div className="flex justify-center py-4">
+                        <div className="w-12 h-12">
+                            <HashSpinnerLoader />
+                        </div>
+                    </div>
+                )}
 
                 {!loading && !hasNextPage && opportunities.length > 0 && (
                     <p className="opportunities-end-message">You&#39;ve seen all opportunities!</p>
