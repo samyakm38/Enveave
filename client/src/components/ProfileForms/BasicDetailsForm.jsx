@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -36,6 +36,9 @@ const basicDetailsSchema = z.object({
 
 const BasicDetailsForm = ({ userData, volunteerData, onSubmitSuccess }) => {
   const { updateProfileStatus } = useVolunteer();
+  const [profileImage, setProfileImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(volunteerData?.profilePhoto || null);
   
   // Initialize form with React Hook Form
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
@@ -53,7 +56,6 @@ const BasicDetailsForm = ({ userData, volunteerData, onSubmitSuccess }) => {
       address: volunteerData?.basicDetails?.location?.address || ''
     }
   });
-
   // Handle form submission
   const onSubmit = async (data) => {
     try {
@@ -76,10 +78,24 @@ const BasicDetailsForm = ({ userData, volunteerData, onSubmitSuccess }) => {
         }
       };
 
-      console.log("Submitting data:", formattedData);
+      console.log("Submitting basic details data:", formattedData);
 
       // Submit data to the backend
       await volunteerService.updateBasicDetails(formattedData);
+      
+      // If a profile image was selected, upload it
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('profilePhoto', imageFile);
+        
+        try {
+          const imageResponse = await volunteerService.uploadProfilePhoto(formData);
+          console.log("Profile photo uploaded successfully:", imageResponse);
+        } catch (imageError) {
+          console.error("Error uploading profile photo:", imageError);
+          // Continue with form submission even if image upload fails
+        }
+      }
       
       // Update the profile status to indicate Step 1 is complete
       await updateProfileStatus('STEP_1');
@@ -90,6 +106,14 @@ const BasicDetailsForm = ({ userData, volunteerData, onSubmitSuccess }) => {
       console.error('Error saving basic details:', error);
       // You could add error state and display to user here
       alert(`Failed to save your information: ${error.response?.data?.message || 'Unknown error'}`);
+    }
+  };
+  // Handle profile image change
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -198,6 +222,20 @@ const BasicDetailsForm = ({ userData, volunteerData, onSubmitSuccess }) => {
             />
             {errors.address && <p className="error-message">{errors.address.message}</p>}
           </div>
+        </div>        <div className="form-field">
+          <label htmlFor="profileImage">Profile Image (Optional)</label>
+          <input 
+            id="profileImage"
+            type="file" 
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+          {imagePreview && (
+            <div className="profile-image-preview">
+              <img src={imagePreview} alt="Profile Preview" className="profile-preview" style={{maxWidth: '150px', marginTop: '10px'}} />
+            </div>
+          )}
+          <p className="field-hint">Upload a profile photo to personalize your volunteer profile (optional)</p>
         </div>
 
         <div className="form-actions">

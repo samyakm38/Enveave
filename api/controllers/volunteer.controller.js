@@ -202,6 +202,8 @@ export const updateEngagement = async (req, res) => {
  * @route POST /api/volunteers/profile/photo
  * @access Private - Only for authenticated volunteers
  */
+import { uploadImageToCloudinary } from '../helpers/imageUpload.js';
+
 export const uploadProfilePhoto = async (req, res) => {
     try {
         // Get volunteer ID from authenticated user
@@ -214,13 +216,16 @@ export const uploadProfilePhoto = async (req, res) => {
             return res.status(404).json({ message: 'Volunteer profile not found' });
         }
         
-        // Check if photo was uploaded (this would be handled by a middleware)
-        if (!req.file || !req.file.path) {
+        // Check if photo was uploaded (handled by multer middleware)
+        if (!req.file) {
             return res.status(400).json({ message: 'No photo uploaded' });
         }
         
-        // Update profile photo
-        volunteer.profilePhoto = req.file.path;
+        // Upload the photo to Cloudinary
+        const profilePhotoUrl = await uploadImageToCloudinary(req.file.buffer, 'volunteer_photos');
+        
+        // Update profile photo with Cloudinary URL
+        volunteer.profilePhoto = profilePhotoUrl;
         
         // Save the volunteer profile
         await volunteer.save();
@@ -228,7 +233,7 @@ export const uploadProfilePhoto = async (req, res) => {
         res.status(200).json({
             message: 'Profile photo updated successfully',
             data: {
-                profilePhoto: volunteer.profilePhoto
+                profilePhoto: profilePhotoUrl
             }
         });
     } catch (error) {
