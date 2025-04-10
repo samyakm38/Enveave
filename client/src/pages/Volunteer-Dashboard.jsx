@@ -10,6 +10,10 @@ import { useAuth, useApplications, useOpportunities } from '../redux/hooks';
 import { useVolunteer } from '../redux/hooks/useVolunteer'; // Import the new hook
 import { format, parseISO } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+// Import our custom loaders
+import { PageLoader, CardSkeleton, TableSkeleton } from '../components/ui/LoaderComponents.jsx';
+// Import Skeleton directly from react-loading-skeleton
+import Skeleton from 'react-loading-skeleton';
 
 const StatusBadge = ({ status }) => {
     let statusClass = 'dashboard-table-status-badge'; // Use base class for potential reuse
@@ -210,15 +214,53 @@ const VolunteerDashboard = () => {
         status: volunteerProfile?.status || user?.profileStatus || 'Active',
         completionPercentage: calculateProfileCompletion(volunteerProfile),
         formLink: '/profile-completion' // Updated to use the new form
-    }), [volunteerProfile, user, calculateProfileCompletion]);
-
-    // Loading state - NOW AFTER ALL HOOKS HAVE BEEN CALLED
+    }), [volunteerProfile, user, calculateProfileCompletion]);    // Loading state - NOW AFTER ALL HOOKS HAVE BEEN CALLED
     if (applicationsLoading || opportunitiesLoading || volunteerLoading) {
         return (
             <div>
                 <Header/>
-                <div style={{ padding: '50px', textAlign: 'center' }}>
-                    <h2>Loading your dashboard...</h2>
+                <div className="volunteer-dashboard-container">
+                    {/* Skeleton for dashboard header */}
+                    <div className="dashboard-header-skeleton p-6 bg-white rounded-lg shadow mb-6">
+                        <div className="flex items-center">
+                            <Skeleton circle width={80} height={80} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                            <div className="ml-4 flex-1">
+                                <Skeleton height={30} width="40%" baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                                <Skeleton height={20} width="20%" className="mt-2" baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                            </div>
+                            <div>
+                                <Skeleton height={40} width={120} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Skeleton for card section */}
+                    <div className="volunteer-dashboard-card-container mb-8">
+                        {[1, 2, 3].map((_, index) => (
+                            <div key={index} className="bg-white p-4 rounded-lg shadow">
+                                <Skeleton height={20} width="60%" baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                                <Skeleton height={40} width="30%" className="mt-4" baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Skeleton for table section */}
+                    <h1 className="volunteer-dashboard-heading">
+                        <Skeleton height={30} width={200} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                    </h1>
+                    <div className="volunteer-dashboard-table-container">
+                        <div className="mb-4">
+                            <div className="flex mb-4">
+                                {["Applied", "Completed"].map((_, index) => (
+                                    <div key={index} className="mr-4">
+                                        <Skeleton height={40} width={100} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        
+                        <TableSkeleton rows={5} />
+                    </div>
                 </div>
                 <Footer/>
             </div>

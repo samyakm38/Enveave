@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Button, Navbar, Dropdown, Avatar } from 'flowbite-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../redux/hooks';
+import { useProfileImage } from '../../redux/hooks/useProfileImage';
 
 const Header = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeLink, setActiveLink] = useState(location.pathname);
     const { currentUser, isAuthenticated, userType, logout } = useAuth();
+    const { profileImage } = useProfileImage(); // Add our new custom hook to get the profile image
 
     // Base link styles
     const linkBaseStyle = {
@@ -73,10 +75,9 @@ const Header = () => {
                             <Dropdown
                                 arrowIcon={false}
                                 inline
-                                label={
-                                    <Avatar
+                                label={                                <Avatar
                                         alt="User profile"
-                                        img={currentUser?.profilePic || "/dashboard-default-user-image.svg"}
+                                        img={profileImage || "/dashboard-default-user-image.svg"}
                                         rounded
                                         bordered
                                         color="success"
@@ -86,7 +87,8 @@ const Header = () => {
                             >
                                 <Dropdown.Header>
                                     <span className="block text-sm font-medium truncate">
-                                        {currentUser?.name || 'User'}
+                                        {userType === 'volunteer' ? (currentUser?.name || 'User') : 
+                                         userType === 'provider' ? (currentUser?.organizationName || 'Organization') : 'User'}
                                     </span>
                                     <span className="block truncate text-sm">
                                         {currentUser?.email || ''}
