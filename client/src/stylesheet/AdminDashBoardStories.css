@@ -1,0 +1,169 @@
+/* AdminDashBoardStories.css */
+
+.admin-dashboard-stories-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+}
+
+.admin-dashboard-stories-container {
+    flex-grow: 1;
+    padding: 2rem 3rem;
+    max-width: 1400px; /* Allow wider container for grid */
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --- Back Button Styles (Copied and Renamed) --- */
+.admin-dashboard-stories-back-button-container {
+    margin-bottom: 1rem;
+    width: fit-content;
+}
+
+.admin-dashboard-stories-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background-color: transparent;
+    color: #007bff; /* Or your theme's link color */
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.admin-dashboard-stories-back-button:hover {
+    color: #0056b3;
+}
+
+.admin-dashboard-stories-back-button svg {
+    font-size: 1em;
+}
+/* --- End Back Button Styles --- */
+
+
+.admin-dashboard-stories-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem; /* More space before grid */
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-dashboard-stories-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.admin-dashboard-stories-controls {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    gap: 0.8rem;
+}
+
+/* --- Control Button Styles (Copied and Renamed) --- */
+.admin-dashboard-stories-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #495057;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-dashboard-stories-button:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.admin-dashboard-stories-button svg {
+    font-size: 0.9em;
+}
+
+/* Specific style for Add Story button */
+.admin-dashboard-stories-button-add {
+    background-color: #007bff; /* Primary color */
+    border-color: #007bff;
+    color: #fff;
+}
+
+.admin-dashboard-stories-button-add:hover {
+    background-color: #0056b3; /* Darker primary on hover */
+    border-color: #0056b3;
+    color: #fff;
+}
+/* --- End Control Button Styles --- */
+
+
+/* --- Stories Grid Styles --- */
+.admin-dashboard-stories-grid {
+    display: grid;
+    /* Responsive grid: Auto-fit columns with a minimum width */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem; /* Space between cards */
+}
+
+.admin-dashboard-stories-no-data {
+    grid-column: 1 / -1; /* Span all columns */
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 3rem 1rem;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1200px) {
+    .admin-dashboard-stories-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .admin-dashboard-stories-container {
+        padding: 1.5rem 1rem;
+    }
+    .admin-dashboard-stories-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .admin-dashboard-stories-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .admin-dashboard-stories-controls {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .admin-dashboard-stories-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-dashboard-stories-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        width: 100%; /* Stack buttons */
+        justify-content: center;
+    }
+    .admin-dashboard-stories-grid {
+        /* Switch to single column on very small screens */
+        grid-template-columns: 1fr;
+    }
+}

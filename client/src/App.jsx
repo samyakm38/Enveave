@@ -24,6 +24,11 @@ import AllStories from "./pages/AllStories.jsx";
 import IndividualStory from "./pages/IndividualStory.jsx";
 import NGODashboardIndividualOpportunity from "./pages/NGO-Dashboard-Individual-Opportunity.jsx";
 import NGODashBoardIndividualVolunteer from "./pages/NGO-DashBoard-Individual-Volunteer.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import AdminDashBoardOrganisation from "./pages/AdminDashBoardOrganisation.jsx";
+import AdminDashBoardVolunteer from "./pages/AdminDashBoardVolunteer.jsx";
+import AdminDashBoardOpportunity from "./pages/AdminDashBoardOpportunity.jsx";
+import AdminDashBoardStories from "./pages/AdminDashBoardStories.jsx";
 
 
 const App = () => {
@@ -53,6 +58,11 @@ const App = () => {
           <Route path="/stories/:id" element={<IndividualStory />} />
           <Route path='provider/dashboard/opportunity/:id' element={<NGODashboardIndividualOpportunity />} />
           <Route path='provider/dashboard/volunteer/:id' element={<NGODashBoardIndividualVolunteer />} />
+          <Route path='/admin/dashboard' element={<AdminDashboard />} />
+          <Route path='/admin/dashboard/organizations' element={<AdminDashBoardOrganisation/>}/>
+          <Route path='/admin/dashboard/volunteers' element={<AdminDashBoardVolunteer/>}/>
+          <Route path='/admin/dashboard/opportunities' element={<AdminDashBoardOpportunity/>}/>
+          <Route path='/admin/dashboard/stories' element={<AdminDashBoardStories/>}/>
         </Routes>
       </BrowserRouter>
     </ToastProvider>

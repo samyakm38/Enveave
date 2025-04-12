@@ -1,0 +1,200 @@
+/* ========================================= */
+/* AdminDashboardStoryCardComponent.css      */
+/* ========================================= */
+
+.admin-dashboard-story-card-component {
+    background-color: #fff;
+    border-radius: 12px; /* Slightly more rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+    overflow: hidden; /* Ensure content respects border-radius */
+    display: flex;
+    flex-direction: column; /* Stack image, content, footer */
+    height: 100%; /* Make card fill grid cell height */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    position: relative; /* Needed for absolute positioning of dropdown */
+}
+
+.admin-dashboard-story-card-component:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Image Section --- */
+.admin-dashboard-story-card-component-image-wrapper {
+    position: relative; /* For positioning the menu button */
+    width: 100%;
+    /* Maintain aspect ratio, adjust as needed */
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    /* Or use fixed height: height: 200px; */
+    background-color: #eee; /* Placeholder bg while image loads */
+}
+
+.admin-dashboard-story-card-component-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the area, might crop */
+}
+
+/* --- Menu Button --- */
+.admin-dashboard-story-card-component-menu-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /*background-color: rgba(0, 0, 0, 0.5); !* Semi-transparent background *!*/
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    padding: 0;
+    line-height: 1;
+    z-index: 10; /* Ensure button is above image */
+}
+
+.admin-dashboard-story-card-component-menu-button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.admin-dashboard-story-card-component-menu-button svg {
+    font-size: 1rem;
+}
+
+/* --- Dropdown Menu Styles --- */
+.admin-dashboard-story-card-dropdown {
+    position: absolute;
+    top: 45px; /* Position below the button */
+    right: 10px; /* Align with the button's right edge */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+    padding: 0.5rem 0; /* Vertical padding */
+    min-width: 150px; /* Minimum width */
+    z-index: 100; /* Ensure dropdown is above other content */
+    overflow: hidden; /* Clip content to border-radius */
+    animation: fadeInDropdown 0.15s ease-out forwards; /* Add a subtle fade-in */
+}
+
+@keyframes fadeInDropdown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.admin-dashboard-story-card-dropdown-item {
+    display: block; /* Make items take full width */
+    width: 100%;
+    padding: 0.6rem 1.2rem; /* Padding for items */
+    font-size: 0.9rem;
+    color: #333;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.admin-dashboard-story-card-dropdown-item:hover {
+    background-color: #f5f5f5; /* Subtle hover effect */
+}
+
+/* Specific style for Delete item */
+.admin-dashboard-story-card-dropdown-item-delete {
+    color: #dc3545; /* Red color */
+    font-weight: 500; /* Slightly bolder */
+}
+
+.admin-dashboard-story-card-dropdown-item-delete:hover {
+    background-color: #f8d7da; /* Lighter red background on hover */
+    color: #721c24; /* Darker red text on hover */
+}
+/* --- End Dropdown Menu Styles --- */
+
+/* --- Content Section --- */
+.admin-dashboard-story-card-component-content {
+    padding: 1rem 1.25rem;
+    flex-grow: 1; /* Allows content to push footer down */
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-dashboard-story-card-component-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+    /* Optional: Limit title lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Show 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: calc(1.1rem * 1.3 * 2); /* Reserve space for 2 lines */
+}
+
+.admin-dashboard-story-card-component-description {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+    /* Optional: Limit description lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Show 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1; /* Take up available space before footer */
+    min-height: calc(0.9rem * 1.5 * 3); /* Reserve space for 3 lines */
+}
+
+/* --- Footer Section --- */
+.admin-dashboard-story-card-component-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* Space between author image and text */
+    padding: 0.75rem 1.25rem 1rem 1.25rem;
+    border-top: 1px solid #f0f0f0; /* Subtle separator */
+    margin-top: auto; /* Push footer to bottom */
+}
+
+.admin-dashboard-story-card-component-author-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.admin-dashboard-story-card-component-author-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.admin-dashboard-story-card-component-author-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-dashboard-story-card-component-date {
+    font-size: 0.75rem;
+    color: #777;
+}
