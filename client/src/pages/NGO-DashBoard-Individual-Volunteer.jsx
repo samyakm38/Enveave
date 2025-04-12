@@ -1,67 +1,98 @@
-import React from 'react';
-import Header from "../components/main components/Header.jsx"; // Assuming path is correct
-import Footer from "../components/main components/Footer.jsx"; // Assuming path is correct
-// import './NgoDashboardIndividualVolunteer.css'; // Import the CSS file
-import '../stylesheet/NGO-DashBoard-Individual-Volunteer.css'
-import {Link} from "react-router-dom";
-
-// Mock data based on the image
-const volunteerData = {
-    name: "James Anderson",
-    imageUrl: "https://via.placeholder.com/80/90EE90/FFFFFF?text=JA", // Placeholder image
-    currentStatus: "Available",
-    about: {
-        name: "James Anderson",
-        phone: "72XXXXXXXX",
-        email: "xyz@gmail.com",
-        gender: "Male",
-        dob: "12-03-02",
-        address: "56 Green Valley Apartment, MG Road",
-        state: "Karnataka",
-        city: "Bengaluru",
-        pincode: "560001",
-        status: "Available"
-    },
-    skills: [
-        "Project Management", "First Aid", "Risk Assessment", "Emergency Response", "Crisis Management",
-        "Task Coordination", "Resource Planning", "Team Leadership", "Incident Reporting", "Quick Decision-Making"
-    ],
-    interests: [
-        "Climate Action", "Community Health", "Sustainable Development", "Habitat Restoration", "Wildlife Protection",
-        "Eco-Friendly Technologies", "Energy Conservation", "Climate Resilience", "Volunteer Coordination", "Forest Conservation"
-    ],
-    experience: [
-        {
-            id: 1,
-            logoUrl: "https://via.placeholder.com/40/87CEFA/FFFFFF?text=EW", // Placeholder
-            organization: "Eco Warriors",
-            title: "Community Recycling Drive",
-            role: "Project Coordinator",
-            location: "Delhi, India",
-            hours: "100 Hours",
-            startDate: "March 2025",
-            endDate: "April 2025",
-            duration: "2 months",
-            description: "I managed a team of volunteers to organize and execute local recycling initiatives, where my responsibilities included overseeing logistics, coordinating volunteer schedules, and ensuring the smooth operation of the program. I led educational sessions to educate community members on waste segregation, recycling practices, and the environmental benefits of reducing waste. Additionally, I worked closely with local authorities to establish multiple collection points for recyclable materials, ensuring efficient sorting, collection, and distribution. Through these efforts, I helped foster community involvement, raised awareness about the importance of recycling, and contributed to the overall reduction of waste in the area."
-        },
-        {
-            id: 2,
-            logoUrl: "https://via.placeholder.com/40/FFD700/FFFFFF?text=SO", // Placeholder
-            organization: "Save Our Species",
-            title: "Wildlife Conservation Awareness Campaign",
-            role: "Campaign Leader",
-            location: "Ranthambore, Rajasthan",
-            hours: "75 Hours",
-            startDate: "June 2024",
-            endDate: "July 2024",
-            duration: "2 months",
-            description: "As the Campaign Leader for the Wildlife Conservation Awareness Campaign, I led a team of volunteers in educating local communities about the importance of wildlife protection and conservation. I organized and facilitated educational sessions that focused on endangered species and their habitats, helping participants understand the vital role they play in maintaining ecological balance. In addition to the educational component, I assisted in the monitoring and tracking of endangered species, ensuring accurate data collection for conservation efforts. I also played a key role in developing and executing social media campaigns to raise awareness about wildlife conservation, reaching a broader audience and engaging people to take action."
-        }
-    ]
-};
-
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import Header from "../components/main components/Header.jsx";
+import Footer from "../components/main components/Footer.jsx";
+import '../stylesheet/NGO-DashBoard-Individual-Volunteer.css';
+import { useProviderVolunteer } from '../redux/hooks/useProviderVolunteer';
+import { PageLoader } from '../components/ui/LoaderComponents.jsx';
 
 const NgoDashBoardIndividualVolunteer = () => {
+    const { id } = useParams(); // Get volunteer ID from URL params
+    const { getVolunteerById, volunteer, loading, error } = useProviderVolunteer();
+    const [volunteerData, setVolunteerData] = useState({
+        name: "",
+        imageUrl: "https://via.placeholder.com/80/90EE90/FFFFFF?text=V", // Default placeholder
+        about: {
+            name: "",
+            phone: "",
+            email: "",
+            gender: "",
+            dob: "",
+            address: "",
+            state: "",
+            city: "",
+            pincode: "",
+        },    skills: [],
+    interests: {
+        causes: [],
+        skills: []
+    }
+    });    // Fetch volunteer data when component mounts
+    useEffect(() => {
+        const fetchVolunteerData = async () => {
+            if (id) {
+                const data = await getVolunteerById(id);
+                if (data) {
+                    // Format the data for display
+                    const formattedData = {
+                        name: data.name || "Unknown Volunteer",
+                        imageUrl: data.profilePhoto || "https://via.placeholder.com/80/90EE90/FFFFFF?text=V",
+                        about: {
+                            name: data.name || "Unknown",
+                            phone: data.basicDetails?.phoneNumber || "Not provided",
+                            email: data.email || "Not provided",
+                            gender: data.basicDetails?.gender || "Not specified",
+                            dob: data.basicDetails?.dateOfBirth 
+                                ? new Date(data.basicDetails.dateOfBirth).toLocaleDateString() 
+                                : "Not provided",
+                            address: data.basicDetails?.location?.address || "Not provided",
+                            state: data.basicDetails?.location?.state || "Not provided",
+                            city: data.basicDetails?.location?.city || "Not provided",
+                            pincode: data.basicDetails?.location?.pincode || "Not provided"
+                        },
+                        skills: data.skills || [],
+                        interests: {
+                            causes: data.interests?.causes || [],
+                            skills: data.interests?.skills || []
+                        }
+                    };
+                    setVolunteerData(formattedData);
+                }
+            }
+        };
+
+        fetchVolunteerData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]); // Remove getVolunteerById from dependencies
+
+    // Show loading state
+    if (loading) {
+        return (
+            <>
+                <Header />
+                <div className="ngo-dashboard-individual-volunteer-loading">
+                    <PageLoader />
+                    <p>Loading volunteer details...</p>
+                </div>
+                <Footer />
+            </>
+        );
+    }
+
+    // Show error state
+    if (error) {
+        return (
+            <>
+                <Header />
+                <div className="ngo-dashboard-individual-volunteer-error">
+                    <h2>Error Loading Volunteer</h2>
+                    <p>{error}</p>
+                </div>
+                <Footer />
+            </>
+        );
+    }
+
     return (
         <>
             <Header />
@@ -124,72 +155,38 @@ const NgoDashBoardIndividualVolunteer = () => {
                             <span className="ngo-dashboard-individual-volunteer-about-label">DOB</span>
                             <span className="ngo-dashboard-individual-volunteer-about-value">{volunteerData.about.dob}</span>
                         </div>
-                        <div className="ngo-dashboard-individual-volunteer-about-item">
+                        {/* <div className="ngo-dashboard-individual-volunteer-about-item">
                             <span className="ngo-dashboard-individual-volunteer-about-label">Status</span>
                             <span className="ngo-dashboard-individual-volunteer-about-value">{volunteerData.about.status}</span>
-                        </div>
+                        </div> */}
                     </div>
-                </div>
-
-                {/* Skills Section */}
+                </div>                {/* Skills Section */}
                 <div className="ngo-dashboard-individual-volunteer-section ngo-dashboard-individual-volunteer-skills-section">
                     <h2 className="ngo-dashboard-individual-volunteer-section-title">Skills</h2>
                     <div className="ngo-dashboard-individual-volunteer-tags-container">
-                        {volunteerData.skills.map((skill, index) => (
+                        {volunteerData.interests.skills.map((skill, index) => (
                             <span key={index} className="ngo-dashboard-individual-volunteer-tag">
-                {skill}
-              </span>
+                                {skill}
+                            </span>
                         ))}
+                        {volunteerData.interests.skills.length === 0 && (
+                            <span className="ngo-dashboard-individual-volunteer-no-data">No skills specified</span>
+                        )}
                     </div>
-                </div>
-
-                {/* Interests Section */}
+                </div>                {/* Interests Section */}
                 <div className="ngo-dashboard-individual-volunteer-section ngo-dashboard-individual-volunteer-interests-section">
                     <h2 className="ngo-dashboard-individual-volunteer-section-title">Interests</h2>
                     <div className="ngo-dashboard-individual-volunteer-tags-container">
-                        {volunteerData.interests.map((interest, index) => (
+                        {volunteerData.interests.causes.map((cause, index) => (
                             <span key={index} className="ngo-dashboard-individual-volunteer-tag">
-                {interest}
-              </span>
+                                {cause}
+                            </span>
                         ))}
+                        {volunteerData.interests.causes.length === 0 && (
+                            <span className="ngo-dashboard-individual-volunteer-no-data">No interests specified</span>
+                        )}
                     </div>
                 </div>
-
-                {/* Experience Section */}
-                {/*<div className="ngo-dashboard-individual-volunteer-section ngo-dashboard-individual-volunteer-experience-section">*/}
-                {/*    <h2 className="ngo-dashboard-individual-volunteer-section-title">Experience</h2>*/}
-                {/*    <div className="ngo-dashboard-individual-volunteer-experience-list">*/}
-                {/*        {volunteerData.experience.map((exp) => (*/}
-                {/*            <div key={exp.id} className="ngo-dashboard-individual-volunteer-experience-item">*/}
-                {/*                <div className="ngo-dashboard-individual-volunteer-experience-header">*/}
-                {/*                    <img*/}
-                {/*                        src={exp.logoUrl}*/}
-                {/*                        alt={`${exp.organization} logo`}*/}
-                {/*                        className="ngo-dashboard-individual-volunteer-experience-logo"*/}
-                {/*                    />*/}
-                {/*                    <div className="ngo-dashboard-individual-volunteer-experience-details">*/}
-                {/*                        <h3 className="ngo-dashboard-individual-volunteer-experience-org">{exp.organization}</h3>*/}
-                {/*                        <p className="ngo-dashboard-individual-volunteer-experience-title">{exp.title}</p>*/}
-                {/*                        <p className="ngo-dashboard-individual-volunteer-experience-meta">*/}
-                {/*                            {exp.role} · {exp.location} · {exp.hours}*/}
-                {/*                        </p>*/}
-                {/*                    </div>*/}
-                {/*                    <div className="ngo-dashboard-individual-volunteer-experience-dates">*/}
-                {/*                        <p className="ngo-dashboard-individual-volunteer-experience-date-range">*/}
-                {/*                            {exp.startDate} – {exp.endDate}*/}
-                {/*                        </p>*/}
-                {/*                        <p className="ngo-dashboard-individual-volunteer-experience-duration">*/}
-                {/*                            {exp.duration}*/}
-                {/*                        </p>*/}
-                {/*                    </div>*/}
-                {/*                </div>*/}
-                {/*                <div className="ngo-dashboard-individual-volunteer-experience-description">*/}
-                {/*                    {exp.description}*/}
-                {/*                </div>*/}
-                {/*            </div>*/}
-                {/*        ))}*/}
-                {/*    </div>*/}
-                {/*</div>*/}
 
             </div>
 
