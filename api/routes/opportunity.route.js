@@ -9,7 +9,8 @@ import {
     completeOpportunity,
     cancelOpportunity,
     getProviderOpportunities, 
-    getIndividualOpporunity
+    getIndividualOpporunity,
+    getOpportunityWithApplicants
 } from "../controllers/opportunity.controller.js";
 import { authenticateToken } from "../middleware/auth.middleware.js";
 import { upload } from "../helpers/imageUpload.js";
@@ -26,6 +27,9 @@ router.post('/', authenticateToken, upload.single('photo'), createOpportunity);
 
 // IMPORTANT: Provider route must come BEFORE the /:id route to avoid conflict
 router.get('/provider', authenticateToken, getProviderOpportunities);
+
+// Route to get opportunity with applicants data
+router.get('/:id/applicants', authenticateToken, getOpportunityWithApplicants);
 
 // The wildcard route should come after all specific routes
 router.get('/:id', getIndividualOpporunity);

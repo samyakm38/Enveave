@@ -842,3 +842,82 @@ export const getProviderOpportunities = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+/**
+ * Get opportunity details with applicants
+ * @route GET /api/opportunities/:id/applicants
+ * @access Private - Provider who owns the opportunity
+ */
+export const getOpportunityWithApplicants = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Validate MongoDB ID
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid opportunity ID' });
+        }
+        
+        // Check if user is authenticated and is a provider
+        if (!req.user || req.user.role !== 'provider') {
+            return res.status(403).json({ message: 'Only opportunity providers can view detailed applicant information' });
+        }
+        
+        // Find the provider profile using auth ID from token
+        const provider = await OpportunityProvider.findOne({ auth: req.user.id });
+        if (!provider) {
+            return res.status(404).json({ message: 'Opportunity provider profile not found' });
+        }        // Find the opportunity with populated applicants
+        const opportunity = await Opportunity.findById(id)
+            .populate({
+                path: 'applicants.volunteer',
+                select: 'auth basicDetails interests',  // profilePhoto is optional, mongoose will include it if it exists
+                populate: {
+                    path: 'auth',
+                    select: 'name email'
+                }
+            });
+            
+        if (!opportunity) {
+            return res.status(404).json({ message: 'Opportunity not found' });
+        }
+        
+        // Check if this provider owns the opportunity
+        if (opportunity.provider.toString() !== provider._id.toString()) {
+            return res.status(403).json({ message: 'You are not authorized to view this opportunity' });
+        }        // Format applicants data
+        const applicants = opportunity.applicants.map(app => {
+            const volunteer = app.volunteer;
+            return {
+                id: app._id,
+                volunteerId: volunteer?._id || null,
+                name: volunteer?.auth?.name || 'Unknown',
+                email: volunteer?.auth?.email || 'N/A',
+                phoneNumber: volunteer?.basicDetails?.phoneNumber || 'N/A',
+                gender: volunteer?.basicDetails?.gender || 'Not specified',
+                profilePhoto: volunteer?.profilePhoto || null,
+                skills: volunteer?.interests?.skills || [],
+                status: app.status,
+                appliedAt: app.appliedAt
+            };
+        });
+        
+        // Create response object with opportunity details and formatted applicants
+        const response = {
+            _id: opportunity._id,
+            basicDetails: opportunity.basicDetails,
+            schedule: opportunity.schedule,
+            evaluation: opportunity.evaluation,
+            additionalInfo: opportunity.additionalInfo,
+            status: opportunity.status,
+            applicants: applicants
+        };
+        
+        res.status(200).json({
+            message: 'Opportunity with applicants retrieved successfully',
+            data: response
+        });
+    } catch (error) {
+        console.error('Error in getOpportunityWithApplicants:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};

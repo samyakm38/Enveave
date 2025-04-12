@@ -164,6 +164,25 @@ export const useOpportunities = () => {
     }
   };
 
+  // Get opportunity with applicants
+  const getOpportunityWithApplicants = async (id) => {
+    try {
+      dispatch(fetchOpportunitiesStart());
+      const response = await opportunityService.getOpportunityWithApplicants(id);
+      const opportunityWithApplicants = response.data || null;
+      
+      if (opportunityWithApplicants) {
+        // Store in the currentOpportunity for access in components
+        dispatch(setCurrentOpportunity(opportunityWithApplicants));
+      }
+      
+      return opportunityWithApplicants;
+    } catch (error) {
+      dispatch(fetchOpportunitiesFailure(error.response?.data?.message || 'Failed to fetch opportunity details'));
+      throw error;
+    }
+  };
+
   // Filter opportunities
   const applyFilters = (filterData) => {
     dispatch(filterOpportunities(filterData));
@@ -193,6 +212,7 @@ export const useOpportunities = () => {
     editOpportunity,
     cancelOpportunity,
     deleteOpportunity,
+    getOpportunityWithApplicants,
     applyFilters,
     resetFilters,
     selectOpportunity

@@ -81,6 +81,12 @@ export const opportunityService = {
   cancelOpportunity: async (id, reason) => {
     const response = await apiClient.put(`/opportunities/${id}/cancel`, { reason });
     return response.data;
+  },
+  
+  // Get opportunity with applicants details
+  getOpportunityWithApplicants: async (id) => {
+    const response = await apiClient.get(`/opportunities/${id}/applicants`);
+    return response.data;
   }
 };
 
