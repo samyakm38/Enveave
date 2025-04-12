@@ -1,0 +1,182 @@
+/* AdminDashBoardOrganisation.css */
+
+.admin-dashboard-organisation-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+}
+
+.admin-dashboard-organisation-container {
+    flex-grow: 1;
+    padding: 2rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --- Back Button Styles (Copied and Renamed) --- */
+.admin-dashboard-organisation-back-button-container {
+    margin-bottom: 1rem;
+    width: fit-content;
+}
+
+.admin-dashboard-organisation-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background-color: transparent;
+    color: #007bff; /* Or your theme's link color */
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.admin-dashboard-organisation-back-button:hover {
+    color: #0056b3;
+}
+
+.admin-dashboard-organisation-back-button svg {
+    font-size: 1em;
+}
+/* --- End Back Button Styles --- */
+
+
+.admin-dashboard-organisation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-dashboard-organisation-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.admin-dashboard-organisation-controls {
+    display: flex;
+    gap: 0.8rem;
+}
+
+/* --- Control Button Styles (Copied and Renamed) --- */
+.admin-dashboard-organisation-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #495057;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-dashboard-organisation-button:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.admin-dashboard-organisation-button svg {
+    font-size: 0.9em;
+}
+/* --- End Control Button Styles --- */
+
+
+/* --- Custom Cell Styles --- */
+.admin-dashboard-organisation-details-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Space between image and text */
+    min-width: 250px; /* Give it some minimum width */
+}
+
+.admin-dashboard-organisation-details-img {
+    width: 50px; /* Adjust size as needed */
+    height: 50px;
+    border-radius: 50%; /* Circular image */
+    object-fit: cover; /* Cover the area without distortion */
+    flex-shrink: 0; /* Prevent image from shrinking */
+}
+
+.admin-dashboard-organisation-details-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem; /* Small space between name and description */
+}
+
+.admin-dashboard-organisation-details-name {
+    font-weight: 600; /* Bold name */
+    color: #212529;
+    font-size: 0.95rem;
+}
+
+.admin-dashboard-organisation-details-desc {
+    font-size: 0.8rem; /* Smaller description */
+    color: #6c757d; /* Grey color for description */
+}
+
+.admin-dashboard-organisation-location-cell,
+.admin-dashboard-organisation-contact-cell {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.admin-dashboard-organisation-location-cell span:first-child,
+.admin-dashboard-organisation-contact-cell span:first-child {
+    color: #343a40;
+}
+
+.admin-dashboard-organisation-location-cell span:last-child,
+.admin-dashboard-organisation-contact-cell span:last-child {
+    color: #495057;
+    font-size: 0.85rem;
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .admin-dashboard-organisation-container {
+        padding: 1.5rem 1rem;
+    }
+    .admin-dashboard-organisation-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .admin-dashboard-organisation-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .admin-dashboard-organisation-controls {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .admin-dashboard-organisation-details-cell {
+        gap: 0.75rem;
+        min-width: 200px;
+    }
+    .admin-dashboard-organisation-details-img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-dashboard-organisation-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}

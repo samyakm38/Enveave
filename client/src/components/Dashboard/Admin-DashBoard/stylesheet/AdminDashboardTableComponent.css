@@ -1,0 +1,90 @@
+/* AdminDashboardTableComponent.css */
+.admin-dashboard-table-component-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Allows horizontal scrolling on small screens */
+    padding: 1px; /* Prevents margin collapse issues */
+    background-color: #fff; /* White background for the table area */
+    border-radius: 8px; /* Match the card style */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    margin-top: 1.5rem; /* Space above the table */
+}
+
+.admin-dashboard-table-component-table {
+    width: 100%;
+    border-collapse: collapse; /* Removes space between cell borders */
+    min-width: 600px; /* Ensure table doesn't get too squished */
+}
+
+.admin-dashboard-table-component-thead {
+    background-color: #f8f9fa; /* Light grey background for header */
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Style header cells (th) */
+.admin-dashboard-table-component-th {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    font-weight: 600; /* Bolder header text */
+    font-size: 0.9rem;
+    color: #495057; /* Dark grey text color */
+    text-transform: capitalize;
+    white-space: nowrap; /* Prevent headers from wrapping */
+}
+
+/* Style body rows (tr) */
+.admin-dashboard-table-component-tr-body {
+    border-bottom: 1px solid #e9ecef; /* Lighter border for rows */
+}
+
+.admin-dashboard-table-component-tr-body:last-child {
+    border-bottom: none; /* No border for the last row */
+}
+
+.admin-dashboard-table-component-tr-body:hover {
+    background-color: #f1f3f5; /* Slight hover effect */
+}
+
+/* Style data cells (td) */
+.admin-dashboard-table-component-td {
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+    color: #343a40; /* Slightly darker text for data */
+    vertical-align: middle; /* Align cell content vertically */
+}
+
+/* Style for the action button/icon */
+.admin-dashboard-table-component-action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #dc3545; /* Red color for delete */
+    font-size: 1.1rem; /* Adjust icon size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-dashboard-table-component-action-button:hover {
+    color: #a71d2a; /* Darker red on hover */
+}
+
+.admin-dashboard-table-component-no-data {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 2rem 1rem;
+}
+
+/* Basic responsive adjustments (optional, enhance as needed) */
+@media (max-width: 768px) {
+    /* You might implement card-style rows or just rely on horizontal scroll */
+    .admin-dashboard-table-component-th {
+        font-size: 0.85rem;
+        padding: 0.7rem 0.8rem;
+    }
+    .admin-dashboard-table-component-td {
+        font-size: 0.85rem;
+        padding: 0.7rem 0.8rem;
+    }
+}

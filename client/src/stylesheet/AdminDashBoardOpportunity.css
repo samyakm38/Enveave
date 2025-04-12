@@ -1,0 +1,232 @@
+/* ========================================= */
+/* AdminDashBoardOpportunity.css             */
+/* ========================================= */
+
+/* --- Page Layout --- */
+.admin-dashboard-opportunity-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f4f7f6; /* Light background for the whole page */
+}
+
+.admin-dashboard-opportunity-container {
+    flex-grow: 1; /* Allows container to fill space between header/footer */
+    padding: 2rem 3rem; /* Adjust padding as needed */
+    max-width: 1200px; /* Max width for content */
+    margin: 0 auto; /* Center the content area */
+    width: 100%;
+}
+
+/* --- Back Button Styles --- */
+.admin-dashboard-opportunity-back-button-container {
+    margin-bottom: 1rem; /* Space between back button and the title header */
+    width: fit-content; /* Make container only as wide as the button */
+}
+
+.admin-dashboard-opportunity-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem; /* Space between icon and text */
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background-color: transparent; /* Make it look like a link/text button */
+    color: #007bff; /* Use a standard link color or your theme's primary color */
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.admin-dashboard-opportunity-back-button:hover {
+    color: #0056b3; /* Darken color on hover */
+    /* Optional: Add a subtle background on hover */
+    /* background-color: #e9ecef; */
+}
+
+.admin-dashboard-opportunity-back-button svg {
+    font-size: 1em; /* Make icon same size as text */
+}
+
+/* --- Header Section --- */
+.admin-dashboard-opportunity-header {
+    display: flex;
+    justify-content: flex-start; /* Align title to the left */
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-dashboard-opportunity-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+/* --- Filter/Sort Controls (If added back) --- */
+.admin-dashboard-opportunity-controls {
+    display: flex;
+    gap: 0.8rem; /* Space between buttons */
+    margin-left: auto; /* Push controls to the right if header uses space-between */
+}
+
+.admin-dashboard-opportunity-button {
+    display: inline-flex; /* Align icon and text */
+    align-items: center;
+    gap: 0.4rem; /* Space between icon and text */
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 6px;
+    background-color: #fff; /* White background */
+    color: #495057; /* Dark grey text */
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-dashboard-opportunity-button:hover {
+    background-color: #f8f9fa; /* Slightly grey on hover */
+    border-color: #adb5bd;
+}
+
+.admin-dashboard-opportunity-button svg {
+    font-size: 0.9em; /* Adjust icon size relative to text */
+}
+
+
+/* ========================================= */
+/* Styles for AdminDashboardTableComponent   */
+/* (Included here for completeness, but    */
+/* ideally belong in their own CSS file)    */
+/* ========================================= */
+.admin-dashboard-table-component-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Allows horizontal scrolling on small screens */
+    padding: 1px; /* Prevents margin collapse issues */
+    background-color: #fff; /* White background for the table area */
+    border-radius: 8px; /* Match the card style */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    margin-top: 1.5rem; /* Space above the table */
+}
+
+.admin-dashboard-table-component-table {
+    width: 100%;
+    border-collapse: collapse; /* Removes space between cell borders */
+    min-width: 600px; /* Ensure table doesn't get too squished */
+}
+
+.admin-dashboard-table-component-thead {
+    background-color: #f8f9fa; /* Light grey background for header */
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Style header cells (th) */
+.admin-dashboard-table-component-th {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    font-weight: 600; /* Bolder header text */
+    font-size: 0.9rem;
+    color: #495057; /* Dark grey text color */
+    text-transform: capitalize;
+    white-space: nowrap; /* Prevent headers from wrapping */
+}
+
+/* Style body rows (tr) */
+.admin-dashboard-table-component-tr-body {
+    border-bottom: 1px solid #e9ecef; /* Lighter border for rows */
+}
+
+.admin-dashboard-table-component-tr-body:last-child {
+    border-bottom: none; /* No border for the last row */
+}
+
+.admin-dashboard-table-component-tr-body:hover {
+    background-color: #f1f3f5; /* Slight hover effect */
+}
+
+/* Style data cells (td) */
+.admin-dashboard-table-component-td {
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+    color: #343a40; /* Slightly darker text for data */
+    vertical-align: middle; /* Align cell content vertically */
+}
+
+/* Style for the action button/icon */
+.admin-dashboard-table-component-action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #dc3545; /* Red color for delete */
+    font-size: 1.1rem; /* Adjust icon size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* Prevent button taking extra height */
+}
+
+.admin-dashboard-table-component-action-button:hover {
+    color: #a71d2a; /* Darker red on hover */
+}
+
+.admin-dashboard-table-component-no-data {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 2rem 1rem;
+}
+
+
+/* ========================================= */
+/* Responsive Adjustments                    */
+/* ========================================= */
+@media (max-width: 768px) {
+    /* --- Page Adjustments --- */
+    .admin-dashboard-opportunity-container {
+        padding: 1.5rem 1rem;
+    }
+    .admin-dashboard-opportunity-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .admin-dashboard-opportunity-title {
+        font-size: 1.5rem;
+    }
+    .admin-dashboard-opportunity-back-button-container {
+        margin-bottom: 0.8rem; /* Adjust spacing on mobile */
+    }
+    .admin-dashboard-opportunity-controls { /* If added back */
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 1rem; /* Add space when stacked */
+    }
+
+    /* --- Table Adjustments --- */
+    /* Rely on horizontal scroll by default, but can adjust padding/font */
+    .admin-dashboard-table-component-th,
+    .admin-dashboard-table-component-td {
+        font-size: 0.85rem;
+        padding: 0.7rem 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-dashboard-opportunity-button { /* If added back */
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    /* Further reduce padding/font size for table on very small screens if needed */
+    .admin-dashboard-table-component-th,
+    .admin-dashboard-table-component-td {
+        padding: 0.6rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    .admin-dashboard-table-component-action-button {
+        font-size: 1rem;
+    }
+}

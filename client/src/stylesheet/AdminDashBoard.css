@@ -1,0 +1,74 @@
+.admin-dashboard-main-container {
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow items to wrap onto the next line */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    padding: 3rem 1rem; /* Add some padding around the container */
+    gap: 2rem; /* Add space between the boxes */
+    min-height: calc(80vh - 150px); /* Adjust 150px based on your Header/Footer height */
+    background-color: #f4f7f6; /* Optional: light background for the page */
+}
+
+.admin-dashboard-box {
+    background-color: #113627;
+    color: #FFF;
+    font-family: 'Montserrat', sans-serif; /* Specify Montserrat and a fallback */
+    width: 220px; /* Fixed width */
+    height: 220px; /* Fixed height */
+    border-radius: 10px; /* Slightly rounded corners */
+    padding: 1.5rem; /* Internal padding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
+    /* Flexbox for centering content inside the box */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    text-decoration: none; /* Remove underline from Link */
+    cursor: pointer;
+
+    /* Transition for hover effect */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Hover Animation */
+.admin-dashboard-box:hover {
+    transform: scale(1.05) translateY(-5px); /* Scale up and lift slightly */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+}
+
+.admin-dashboard-box svg {
+    width: 60px; /* Adjust SVG size as needed */
+    height: 60px;
+    margin-bottom: 1rem; /* Space between icon and text */
+    fill: currentColor; /* Make SVG use the text color (#FFF) */
+}
+
+.admin-dashboard-box span {
+    font-size: 1.2rem; /* Adjust text size */
+    font-weight: 500; /* Slightly bolder text */
+    text-transform: capitalize; /* Capitalize the first letter */
+}
+
+/* Responsive adjustments (optional) */
+@media (max-width: 550px) {
+    .admin-dashboard-main-container {
+        padding: 2rem 0.5rem;
+        gap: 1.5rem;
+    }
+    .admin-dashboard-box {
+        width: 180px;
+        height: 180px;
+        padding: 1rem;
+    }
+    .admin-dashboard-box svg {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 0.8rem;
+    }
+    .admin-dashboard-box span {
+        font-size: 1rem;
+    }
+}
