@@ -67,6 +67,8 @@ app.use('/api/opportunities', opportunityRoutes);
 app.use('/api/volunteers', volunteerRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/provider', providerRoutes);
+import providerVolunteerRoutes from "./routes/provider.volunteer.route.js";
+app.use('/api/provider', providerVolunteerRoutes);
 
 
 // Start the server only if not in test mode
