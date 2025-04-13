@@ -12,6 +12,7 @@ import storyRoute from "./routes/story.route.js";
 import opportunityRoutes from "./routes/opportunity.route.js";
 import applicationRoutes from "./routes/application.route.js";
 import providerRoutes from "./routes/provider.route.js";
+import chatbotRoutes from './routes/chatbot.route.js';
 import cors from 'cors';
 
 
@@ -69,7 +70,7 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/provider', providerRoutes);
 import providerVolunteerRoutes from "./routes/provider.volunteer.route.js";
 app.use('/api/provider', providerVolunteerRoutes);
-
+app.use('/api/chatbot', chatbotRoutes);
 
 // Start the server only if not in test mode
 if (process.env.NODE_ENV !== 'test') {

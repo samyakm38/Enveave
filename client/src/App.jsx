@@ -29,7 +29,7 @@ import AdminDashBoardOrganisation from "./pages/AdminDashBoardOrganisation.jsx";
 import AdminDashBoardVolunteer from "./pages/AdminDashBoardVolunteer.jsx";
 import AdminDashBoardOpportunity from "./pages/AdminDashBoardOpportunity.jsx";
 import AdminDashBoardStories from "./pages/AdminDashBoardStories.jsx";
-
+import ChatWidget from "./components/ChatBot/ChatWidget.jsx";
 
 const App = () => {
   return (
@@ -64,6 +64,7 @@ const App = () => {
           <Route path='/admin/dashboard/opportunities' element={<AdminDashBoardOpportunity/>}/>
           <Route path='/admin/dashboard/stories' element={<AdminDashBoardStories/>}/>
         </Routes>
+        <ChatWidget />
       </BrowserRouter>
     </ToastProvider>
   );
