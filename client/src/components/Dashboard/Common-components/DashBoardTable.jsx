@@ -60,13 +60,13 @@ const DashboardTable = ({
                     {displayedData.length > 0 ? (
                         displayedData.map((row, rowIndex) => (
                             <tr key={row.id || rowIndex} className="dashboard-table-row">
-                                {columns.map((col) => (
-                                    <td
+                                {columns.map((col) => (                                    <td
                                         key={`${col.accessor}-${rowIndex}`}
                                         // Base class + any specific class from column definition
-                                        className={`dashboard-table-cell ${col.cellClassName || ''}`}
+                                        className={`dashboard-table-cell ${col.cellClassName || ''} ${col.isClickable ? 'dashboard-table-cell-clickable' : ''}`}
                                         style={col.cellStyle || {}}
                                         data-label={col.header} // For mobile CSS
+                                        onClick={col.isClickable && row[col.accessor] ? () => col.onCellClick(row) : undefined}
                                     >
                                         {col.cellRenderer
                                             ? col.cellRenderer(row[col.accessor], row, col)
