@@ -4,6 +4,7 @@ import axios from 'axios'; // Library for making HTTP requests
 import { formatDistanceToNow, parseISO, startOfDay, isAfter } from 'date-fns'; // Functions for date formatting and comparison
 import Header from "../components/main components/Header.jsx"; // Import Header component
 import Footer from "../components/main components/Footer.jsx"; // Import Footer component
+import { useAuth } from '../redux/hooks/useAuth.js'; // Import useAuth hook for user type checking
 // Correct the CSS import path if needed based on your project structure
 import '../stylesheet/Individual-opporunity.css'; // Ensure this CSS file exists and is correctly named/pathed
 
@@ -73,6 +74,8 @@ const IndividualOpportunity = () => {
     const [error, setError] = useState(null);
     // Get the API base URL from environment variables (Vite specific)
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    // Get auth state including user type using custom hook
+    const { isAuthenticated, isVolunteer } = useAuth();
 
     // useEffect hook to fetch opportunity details when the component mounts or 'id'/'apiBaseUrl' changes
     useEffect(() => {
@@ -230,9 +233,8 @@ const IndividualOpportunity = () => {
 
                 {/* Top section containing title, status, basic details */}
                 <div className="individual-opportunity-top-container">
-                    {/* Title bar with organization name and active/closed status */}
-                    <div className="individual-opportunity-top-title-bar">
-                        <h1>{organizationName}</h1>
+                    {/* Title bar with organization name and active/closed status */}                <div className="individual-opportunity-top-title-bar">
+                        <h1>{basicDetails?.title || 'Opportunity Details'}</h1>
                         {/* Status indicator (Green=Active, Red=Closed) */}
                         <div className="individual-opportunity-top-title-toggle">
                             {isClosed ? (
@@ -304,13 +306,13 @@ const IndividualOpportunity = () => {
                                     <h5>Application Deadline:</h5>
                                     {/* Format application deadline date */}
                                     <p>{formatDateDisplay(schedule?.applicationDeadline)}</p>
-                                </span>
-                            </div>
-                            {/* Registration Button - conditionally disable or hide if closed? */}
-                            {/* Using Link for now, but onClick calls the handler */}
-                            <Link to="#" onClick={handleRegisterClick} className={`individual-opportunity-apply-button ${isClosed ? 'disabled' : ''}`}>
-                                {isClosed ? 'Registration Closed' : 'Register Now →'}
-                            </Link>
+                                </span>                            </div>
+                            {/* Registration Button - only show for volunteers and conditionally disable if closed */}
+                            {isAuthenticated && isVolunteer && (
+                                <Link to="#" onClick={handleRegisterClick} className={`individual-opportunity-apply-button ${isClosed ? 'disabled' : ''}`}>
+                                    {isClosed ? 'Registration Closed' : 'Register Now →'}
+                                </Link>
+                            )}
                             {/* Alternative: Use a button element if not navigating immediately */}
                             {/* <button
                                 className={`individual-opportunity-apply-button ${isClosed ? 'disabled' : ''}`}
