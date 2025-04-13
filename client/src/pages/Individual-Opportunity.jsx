@@ -66,8 +66,7 @@ const formatClosesIn = (dateString) => {
 
 const IndividualOpportunity = () => {
     // Get the 'id' parameter from the URL using React Router's useParams hook
-    const { id } = useParams();
-    // State to hold the fetched opportunity data
+    const { id } = useParams();    // State to hold the fetched opportunity data
     const [opportunity, setOpportunity] = useState(null);
     // State to manage the loading status
     const [loading, setLoading] = useState(true);
@@ -77,12 +76,14 @@ const IndividualOpportunity = () => {
     const [error, setError] = useState(null);
     // State to store registration errors/messages
     const [registrationMessage, setRegistrationMessage] = useState(null);
+    // State to track if the volunteer has already applied
+    const [hasApplied, setHasApplied] = useState(false);
     // Get the API base URL from environment variables (Vite specific)
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
     // Get auth state including user type using custom hook
     const { isAuthenticated, isVolunteer } = useAuth();
     // Get applications hook for registration function
-    const { registerForOpportunity } = useApplications();
+    const { registerForOpportunity, getUserApplications } = useApplications();
     // Navigation hook for redirecting after registration
     const navigate = useNavigate();
 
@@ -133,7 +134,35 @@ const IndividualOpportunity = () => {
             setError("No Opportunity ID provided in the URL."); // Set error if no ID
             setLoading(false); // Stop loading
         }
-    }, [id, apiBaseUrl]); // Dependencies: re-run effect if 'id' or 'apiBaseUrl' changes    // --- Handle Registration Button Click ---
+    }, [id, apiBaseUrl]); // Dependencies: re-run effect if 'id' or 'apiBaseUrl' changes
+      // Check if the volunteer has already applied for this opportunity
+    useEffect(() => {
+        const checkApplicationStatus = async () => {
+            // Only check if user is authenticated and is a volunteer
+            if (isAuthenticated && isVolunteer && id) {
+                try {
+                    // Fetch the volunteer's applications
+                    const applications = await getUserApplications();
+                    
+                    // Check if any application matches the current opportunity ID
+                    const alreadyApplied = applications.some(
+                        app => app.opportunity && app.opportunity._id === id
+                    );
+                    
+                    setHasApplied(alreadyApplied);
+                } catch (error) {
+                    console.error("Error checking application status:", error);
+                    // Default to not applied if there's an error
+                    setHasApplied(false);
+                }
+            }
+        };
+        
+        checkApplicationStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, isAuthenticated, isVolunteer]);
+    
+    // --- Handle Registration Button Click ---
     // Actual function to register for an opportunity
     const handleRegisterClick = async (e) => {
         e.preventDefault();
@@ -389,17 +418,25 @@ const IndividualOpportunity = () => {
                                     )}
                                 </div>
                             )}
-                            
-                            {/* Registration Button - only show for volunteers and conditionally disable if closed */}
+                              {/* Registration Button - only show for volunteers and conditionally disable if closed */}
                             {isAuthenticated && isVolunteer && (
-                                <button 
-                                    onClick={handleRegisterClick} 
-                                    className={`individual-opportunity-apply-button ${isClosed || registering ? 'disabled' : ''}`}
-                                    disabled={isClosed || registering}
-                                >
-                                    {isClosed ? 'Registration Closed' : 
-                                     registering ? 'Registering...' : 'Register Now →'}
-                                </button>
+                                hasApplied ? (
+                                    <button 
+                                        className="individual-opportunity-apply-button already-registered"
+                                        disabled
+                                    >
+                                        Already Registered
+                                    </button>
+                                ) : (
+                                    <button 
+                                        onClick={handleRegisterClick} 
+                                        className={`individual-opportunity-apply-button ${isClosed || registering ? 'disabled' : ''}`}
+                                        disabled={isClosed || registering}
+                                    >
+                                        {isClosed ? 'Registration Closed' : 
+                                         registering ? 'Registering...' : 'Register Now →'}
+                                    </button>
+                                )
                             )}
                             
                             {/* Login prompt for non-authenticated users */}
