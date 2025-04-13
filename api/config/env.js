@@ -19,4 +19,5 @@ export const env = {
     emailFrom: process.env.EMAIL_FROM,
 // Parse EMAIL_SECURE as boolean, default based on common ports
     emailSecure: process.env.EMAIL_SECURE,
+    geminiApiKey: process.env.GEMINI_API_KEY,
 };
