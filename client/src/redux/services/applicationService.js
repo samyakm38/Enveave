@@ -19,6 +19,12 @@ export const applicationService = {
     return response.data;
   },
   
+  // Register for an opportunity (volunteer only)
+  registerForOpportunity: async (opportunityId) => {
+    const response = await apiClient.post('/applications/register', { opportunityId });
+    return response.data;
+  },
+  
   // Get application by ID
   getApplicationById: async (id) => {
     const response = await apiClient.get(`/applications/${id}`);

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // React Router hooks for routing and linking
+import { useParams, Link, useNavigate } from 'react-router-dom'; // React Router hooks for routing and linking
 import axios from 'axios'; // Library for making HTTP requests
 import { formatDistanceToNow, parseISO, startOfDay, isAfter } from 'date-fns'; // Functions for date formatting and comparison
 import Header from "../components/main components/Header.jsx"; // Import Header component
 import Footer from "../components/main components/Footer.jsx"; // Import Footer component
+import { useAuth } from '../redux/hooks/useAuth.js'; // Import useAuth hook for user type checking
+import { useApplications } from '../redux/hooks/useApplications.js'; // Import useApplications hook for registration function
 // Correct the CSS import path if needed based on your project structure
 import '../stylesheet/Individual-opporunity.css'; // Ensure this CSS file exists and is correctly named/pathed
 
@@ -69,10 +71,20 @@ const IndividualOpportunity = () => {
     const [opportunity, setOpportunity] = useState(null);
     // State to manage the loading status
     const [loading, setLoading] = useState(true);
+    // State for registration loading
+    const [registering, setRegistering] = useState(false);
     // State to store any error messages during fetching
     const [error, setError] = useState(null);
+    // State to store registration errors/messages
+    const [registrationMessage, setRegistrationMessage] = useState(null);
     // Get the API base URL from environment variables (Vite specific)
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    // Get auth state including user type using custom hook
+    const { isAuthenticated, isVolunteer } = useAuth();
+    // Get applications hook for registration function
+    const { registerForOpportunity } = useApplications();
+    // Navigation hook for redirecting after registration
+    const navigate = useNavigate();
 
     // useEffect hook to fetch opportunity details when the component mounts or 'id'/'apiBaseUrl' changes
     useEffect(() => {
@@ -121,14 +133,77 @@ const IndividualOpportunity = () => {
             setError("No Opportunity ID provided in the URL."); // Set error if no ID
             setLoading(false); // Stop loading
         }
-    }, [id, apiBaseUrl]); // Dependencies: re-run effect if 'id' or 'apiBaseUrl' changes
-
-    // --- Handle Registration Button Click ---
-    // Placeholder function for registration logic
-    const handleRegisterClick = () => {
-        console.log("Register Now clicked for opportunity:", id);
-        // TODO: Implement actual registration logic (e.g., navigate to a form, open a modal, API call)
-        alert("Registration functionality placeholder. Implement navigation or API call here.");
+    }, [id, apiBaseUrl]); // Dependencies: re-run effect if 'id' or 'apiBaseUrl' changes    // --- Handle Registration Button Click ---
+    // Actual function to register for an opportunity
+    const handleRegisterClick = async (e) => {
+        e.preventDefault();
+        
+        // Clear any previous registration messages
+        setRegistrationMessage(null);
+        
+        if (!isAuthenticated) {
+            // Redirect to login if not authenticated
+            navigate('/login', { state: { redirectTo: `/opportunity/${id}` } });
+            return;
+        }
+        
+        if (!isVolunteer) {
+            setRegistrationMessage({ 
+                type: 'error', 
+                text: 'Only volunteers can register for opportunities' 
+            });
+            return;
+        }
+        
+        try {
+            // Set registering state to true to show loading indicator
+            setRegistering(true);
+            
+            // Call the registerForOpportunity function from our hook
+            const response = await registerForOpportunity(id);
+            
+            // Show success message
+            setRegistrationMessage({ 
+                type: 'success', 
+                text: 'Successfully registered for this opportunity!' 
+            });
+            
+            // Wait 1.5 seconds and then redirect to the user's applications page
+            setTimeout(() => {
+                navigate('/volunteer/dashboard');
+            }, 1500);
+            
+        } catch (error) {
+            console.error("Registration error:", error);
+            
+            // Extract the error message and code
+            const errorMessage = error.response?.data?.message || 'Failed to register for opportunity';
+            const errorCode = error.response?.data?.code;
+            
+            // Handle different error types with appropriate messages
+            if (errorCode === 'PROFILE_INCOMPLETE') {
+                setRegistrationMessage({ 
+                    type: 'error', 
+                    text: errorMessage,
+                    actionText: 'Complete Profile',
+                    actionPath: '/profile-completion'
+                });
+            } else if (errorCode === 'ALREADY_REGISTERED') {
+                setRegistrationMessage({ 
+                    type: 'error', 
+                    text: errorMessage,
+                    actionText: 'View Applications',
+                    actionPath: '/volunteer/dashboard'
+                });
+            } else {
+                setRegistrationMessage({ 
+                    type: 'error', 
+                    text: errorMessage 
+                });
+            }
+        } finally {
+            setRegistering(false);
+        }
     };
 
     // --- Conditional Rendering for Loading State ---
@@ -230,9 +305,8 @@ const IndividualOpportunity = () => {
 
                 {/* Top section containing title, status, basic details */}
                 <div className="individual-opportunity-top-container">
-                    {/* Title bar with organization name and active/closed status */}
-                    <div className="individual-opportunity-top-title-bar">
-                        <h1>{organizationName}</h1>
+                    {/* Title bar with organization name and active/closed status */}                <div className="individual-opportunity-top-title-bar">
+                        <h1>{basicDetails?.title || 'Opportunity Details'}</h1>
                         {/* Status indicator (Green=Active, Red=Closed) */}
                         <div className="individual-opportunity-top-title-toggle">
                             {isClosed ? (
@@ -304,21 +378,40 @@ const IndividualOpportunity = () => {
                                     <h5>Application Deadline:</h5>
                                     {/* Format application deadline date */}
                                     <p>{formatDateDisplay(schedule?.applicationDeadline)}</p>
-                                </span>
-                            </div>
-                            {/* Registration Button - conditionally disable or hide if closed? */}
-                            {/* Using Link for now, but onClick calls the handler */}
-                            <Link to="#" onClick={handleRegisterClick} className={`individual-opportunity-apply-button ${isClosed ? 'disabled' : ''}`}>
-                                {isClosed ? 'Registration Closed' : 'Register Now →'}
-                            </Link>
-                            {/* Alternative: Use a button element if not navigating immediately */}
-                            {/* <button
-                                className={`individual-opportunity-apply-button ${isClosed ? 'disabled' : ''}`}
-                                onClick={handleRegisterClick}
-                                disabled={isClosed} // Disable button if closed
-                            >
-                                {isClosed ? 'Registration Closed' : 'Register Now →'}
-                            </button> */}
+                                </span>                            </div>                            {/* Registration Message/Alert */}
+                            {registrationMessage && (
+                                <div className={`individual-opportunity-message ${registrationMessage.type}`}>
+                                    <p>{registrationMessage.text}</p>
+                                    {registrationMessage.actionText && registrationMessage.actionPath && (
+                                        <Link to={registrationMessage.actionPath} className="message-action-link">
+                                            {registrationMessage.actionText}
+                                        </Link>
+                                    )}
+                                </div>
+                            )}
+                            
+                            {/* Registration Button - only show for volunteers and conditionally disable if closed */}
+                            {isAuthenticated && isVolunteer && (
+                                <button 
+                                    onClick={handleRegisterClick} 
+                                    className={`individual-opportunity-apply-button ${isClosed || registering ? 'disabled' : ''}`}
+                                    disabled={isClosed || registering}
+                                >
+                                    {isClosed ? 'Registration Closed' : 
+                                     registering ? 'Registering...' : 'Register Now →'}
+                                </button>
+                            )}
+                            
+                            {/* Login prompt for non-authenticated users */}
+                            {!isAuthenticated && !isClosed && (
+                                <div className="individual-opportunity-login-prompt">
+                                    <Link to={`/login?redirect=/opportunity/${id}`} className="individual-opportunity-login-link">
+                                        Login
+                                    </Link> or <Link to="/register/volunteer" className="individual-opportunity-register-link">
+                                        Create an account
+                                    </Link> to register for this opportunity
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
