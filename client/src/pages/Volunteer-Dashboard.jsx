@@ -115,9 +115,9 @@ const VolunteerDashboard = () => {
         return userApplications.map(app => {
             const opp = app.opportunity;
             if (!opp) return null;
-            
-            const baseData = {
+              const baseData = {
                 id: app._id,
+                opportunityId: opp._id, // Add opportunityId for navigation
                 name: opp.basicDetails?.title || 'Unknown Opportunity',
                 organization: opp.provider?.auth?.organizationName || 'Unknown Organization',
                 location: opp.schedule?.location || 'N/A',
@@ -145,10 +145,23 @@ const VolunteerDashboard = () => {
                 };
             }
         }).filter(Boolean); // Remove any null entries
-    }, [userApplications]);
+    }, [userApplications]);    // Handle navigation to the individual opportunity page
+    const handleOpportunityClick = (row) => {
+        // Extract opportunityId from the application data
+        const opportunityId = row.opportunityId;
+        if (opportunityId) {
+            navigate(`/opportunities/${opportunityId}`);
+        }
+    };
 
     const appliedColumns = [
-        { header: 'Opportunity name', accessor: 'name', cellClassName: 'opportunities-cell-name' },
+        { 
+            header: 'Opportunity name', 
+            accessor: 'name', 
+            cellClassName: 'opportunities-cell-name',
+            isClickable: true,
+            onCellClick: handleOpportunityClick
+        },
         { header: 'Organization', accessor: 'organization' },
         { header: 'Location', accessor: 'location' },
         { header: 'Total volunteers', accessor: 'volunteers', cellClassName: 'opportunities-cell-number' },
@@ -164,7 +177,13 @@ const VolunteerDashboard = () => {
 
     // Define Columns for the "Completed" Tab
     const completedColumns = [
-        { header: 'Opportunity name', accessor: 'name', cellClassName: 'opportunities-cell-name' },
+        { 
+            header: 'Opportunity name', 
+            accessor: 'name', 
+            cellClassName: 'opportunities-cell-name',
+            isClickable: true,
+            onCellClick: handleOpportunityClick
+        },
         { header: 'Organization', accessor: 'organization' },
         { header: 'Location', accessor: 'location' },
         { header: 'Role', accessor: 'role' },

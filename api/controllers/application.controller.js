@@ -404,27 +404,10 @@ export const updateApplicationStatus = async (req, res) => {
             return res.status(403).json({ message: 'Access denied. Provider access required.' });
         }
         
-        // Find the volunteer with this application
-        const volunteer = await Volunteer.findOne({ 'appliedOpportunities._id': mongoose.Types.ObjectId(id) });
-        if (!volunteer) {
-            return res.status(404).json({ message: 'Application not found' });
-        }
-        
-        // Find the application
-        const applicationIndex = volunteer.appliedOpportunities.findIndex(app => 
-            app._id.toString() === id
-        );
-        
-        if (applicationIndex === -1) {
-            return res.status(404).json({ message: 'Application not found' });
-        }
-        
-        const application = volunteer.appliedOpportunities[applicationIndex];
-        
-        // Find the opportunity
-        const opportunity = await Opportunity.findById(application.opportunity);
+        // Find the opportunity with this applicant ID
+        const opportunity = await Opportunity.findOne({ 'applicants._id': new mongoose.Types.ObjectId(id) });
         if (!opportunity) {
-            return res.status(404).json({ message: 'Opportunity not found' });
+            return res.status(404).json({ message: 'Application not found' });
         }
         
         // Find the provider
@@ -438,23 +421,43 @@ export const updateApplicationStatus = async (req, res) => {
             return res.status(403).json({ message: 'Access denied. You do not own this opportunity.' });
         }
         
+        // Find the applicant in the opportunity document
+        const applicantIndex = opportunity.applicants.findIndex(app => 
+            app._id.toString() === id
+        );
+        
+        if (applicantIndex === -1) {
+            return res.status(404).json({ message: 'Application not found in opportunity' });
+        }
+        
+        const applicant = opportunity.applicants[applicantIndex];
+        
+        // Find the volunteer using the volunteer ID from the applicant
+        const volunteer = await Volunteer.findById(applicant.volunteer);
+        if (!volunteer) {
+            return res.status(404).json({ message: 'Volunteer not found' });
+        }
+        
+        // Find the matching appliedOpportunity in the volunteer document
+        const volunteerApplicationIndex = volunteer.appliedOpportunities.findIndex(app => 
+            app.opportunity.toString() === opportunity._id.toString()
+        );
+        
+        if (volunteerApplicationIndex === -1) {
+            return res.status(404).json({ message: 'Volunteer application not found' });
+        }
+        
         // Update application status in volunteer record
-        volunteer.appliedOpportunities[applicationIndex].status = status;
+        volunteer.appliedOpportunities[volunteerApplicationIndex].status = status;
         if (feedbackNote) {
-            volunteer.appliedOpportunities[applicationIndex].feedbackNote = feedbackNote;
+            volunteer.appliedOpportunities[volunteerApplicationIndex].feedbackNote = feedbackNote;
         }
         
         await volunteer.save();
         
         // Update status in opportunity's applicants array
-        const applicantIndex = opportunity.applicants.findIndex(app => 
-            app.volunteer.toString() === volunteer._id.toString()
-        );
-        
-        if (applicantIndex !== -1) {
-            opportunity.applicants[applicantIndex].status = status;
-            await opportunity.save();
-        }
+        opportunity.applicants[applicantIndex].status = status;
+        await opportunity.save();
         
         // If accepted, increment provider's total volunteers count
         if (status === 'Accepted') {
@@ -466,7 +469,7 @@ export const updateApplicationStatus = async (req, res) => {
         
         res.status(200).json({
             message: 'Application status updated successfully',
-            data: volunteer.appliedOpportunities[applicationIndex]
+            data: volunteer.appliedOpportunities[volunteerApplicationIndex]
         });
     } catch (error) {
         console.error('Error in updateApplicationStatus:', error);

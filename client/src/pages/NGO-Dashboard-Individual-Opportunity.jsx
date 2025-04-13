@@ -7,6 +7,7 @@ import '../stylesheet/NGO-Dashboard-Individual-Opportunity.css';
 import { Link } from "react-router-dom";
 import { useOpportunities } from '../redux/hooks/useOpportunities.js';
 import { useAuth } from '../redux/hooks/useAuth';
+import { useApplications } from '../redux/hooks/useApplications';
 import { PageLoader } from '../components/ui/LoaderComponents.jsx';
 
 // --- Component Definition ---
@@ -15,6 +16,7 @@ const NgoDashboardIndividualOpportunity = () => {
     const { id } = useParams();
     const { currentUser } = useAuth();
     const { getOpportunityWithApplicants, currentOpportunity, loading, error } = useOpportunities();
+    const { updateApplicationStatus } = useApplications();
     
     // State to manage the active tab in the DashboardTable
     const [activeTab, setActiveTab] = useState('Applied');
@@ -68,17 +70,30 @@ const NgoDashboardIndividualOpportunity = () => {
     // Handler for changing tabs
     const handleTabChange = (tabName) => {
         setActiveTab(tabName);
-    };
-
-    // Handler for updating volunteer status
+    };    // Handler for updating volunteer status
     const handleStatusUpdate = async (volunteerId, newStatus) => {
         try {
-            // You can implement the status update logic here using the application API
-            console.log(`Updating volunteer ${volunteerId} status to ${newStatus}`);
-            // After updating, refresh the data
+            // We need to find the application ID from our data
+            // This is the ID from the appliedOpportunities array in the volunteer document
+            const applicant = volunteerData.find(v => v.volunteerId === volunteerId);
+            
+            if (!applicant) {
+                console.error("Could not find volunteer in data:", volunteerId);
+                return;
+            }
+            
+            // Call the API to update the application status
+            // The API expects the application ID, status, and optional feedback
+            await updateApplicationStatus(applicant.id, newStatus);
+            
+            console.log(`Updated volunteer ${volunteerId} status to ${newStatus}`);
+            
+            // After updating, refresh the opportunity data to see changes
             await getOpportunityWithApplicants(id);
         } catch (err) {
             console.error("Error updating volunteer status:", err);
+            // Display error notification to user
+            // You could implement a toast notification here
         }
     };
 
