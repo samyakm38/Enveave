@@ -8,7 +8,8 @@ import {
     submitApplication,
     updateApplicationStatus,
     updateCompletionStatus,
-    withdrawApplication
+    withdrawApplication,
+    registerForOpportunity
 } from '../controllers/application.controller.js';
 import { authenticateToken } from '../middleware/auth.middleware.js';
 
@@ -20,6 +21,7 @@ router.get('/opportunity/:opportunityId', authenticateToken, getOpportunityAppli
 router.get('/user', authenticateToken, getUserApplications);
 router.get('/:id', authenticateToken, getApplicationById);
 router.post('/', authenticateToken, submitApplication);
+router.post('/register', authenticateToken, registerForOpportunity);
 router.patch('/:id/status', authenticateToken, updateApplicationStatus);
 router.patch('/:id/complete', authenticateToken, updateCompletionStatus);
 router.delete('/:id', authenticateToken, withdrawApplication);

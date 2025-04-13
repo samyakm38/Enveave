@@ -78,12 +78,22 @@ export const useApplications = () => {
       throw error;
     }
   };
-
   // Submit new application (volunteer)
   const submitApplication = async (applicationData) => {
     try {
       const data = await applicationService.submitApplication(applicationData);
       dispatch(addApplication(data));
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  // Register for an opportunity (volunteer)
+  const registerForOpportunity = async (opportunityId) => {
+    try {
+      const data = await applicationService.registerForOpportunity(opportunityId);
+      dispatch(addApplication(data.data)); // The API returns { message, data } format
       return data;
     } catch (error) {
       throw error;
@@ -126,7 +136,6 @@ export const useApplications = () => {
   const selectApplication = (application) => {
     dispatch(setCurrentApplication(application));
   };
-
   return {
     applications,
     userApplications,
@@ -142,7 +151,8 @@ export const useApplications = () => {
     editApplication,
     updateApplicationStatus,
     withdrawApplication,
-    selectApplication
+    selectApplication,
+    registerForOpportunity
   };
 };
 

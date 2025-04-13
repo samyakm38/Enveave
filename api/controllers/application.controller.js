@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Opportunity from '../models/opportunity.model.js';
 import Volunteer from '../models/volunteer.model.js';
 import OpportunityProvider from '../models/opportunityprovider.model.js';
+import AuthVolunteer from '../models/auth.volunteer.model.js';
 import { sanitizeNestedObject } from '../helpers/securityHelper.js';
 
 /**
@@ -630,5 +631,149 @@ export const withdrawApplication = async (req, res) => {
     } catch (error) {
         console.error('Error in withdrawApplication:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+/**
+ * Register for an opportunity
+ * @route POST /api/applications/register
+ * @access Private - Only authenticated volunteers
+ */
+export const registerForOpportunity = async (req, res) => {
+    try {
+        const { opportunityId } = req.body;
+        
+        // Validate input
+        if (!opportunityId) {
+            return res.status(400).json({ message: 'Opportunity ID is required' });
+        }
+        
+        // Validate MongoDB ID
+        if (!mongoose.Types.ObjectId.isValid(opportunityId)) {
+            return res.status(400).json({ message: 'Invalid opportunity ID format' });
+        }
+        
+        // Check if user is authenticated and is a volunteer
+        if (!req.user || req.user.role !== 'volunteer') {
+            return res.status(403).json({ message: 'Access denied. Only volunteers can register for opportunities' });
+        }
+        
+        // Find opportunity first to validate it exists and is open
+        const opportunity = await Opportunity.findById(opportunityId);
+        if (!opportunity) {
+            return res.status(404).json({ message: 'Opportunity not found' });
+        }
+        
+        // Check if opportunity registration is open (not closed)
+        const currentDate = new Date();
+        if (opportunity.schedule.applicationDeadline && new Date(opportunity.schedule.applicationDeadline) < currentDate) {
+            return res.status(400).json({ message: 'Registration for this opportunity has closed' });
+        }
+        
+        // Find volunteer profile using auth user ID
+        const volunteer = await Volunteer.findOne({ auth: req.user.id });
+        if (!volunteer) {
+            // Try to get volunteer's name from auth record for better error messaging
+            const authVolunteer = await AuthVolunteer.findById(req.user.id);
+            const volunteerName = authVolunteer ? authVolunteer.name : 'Volunteer';
+            
+            return res.status(404).json({ 
+                message: `${volunteerName}'s profile not complete. Please complete your profile before registering.`,
+                code: 'PROFILE_INCOMPLETE'
+            });
+        }
+        
+        // Check if profile is complete
+        const { step1, step2, step3 } = volunteer.profileCompletion;
+        if (!step1 || !step2 || !step3) {
+            return res.status(400).json({ 
+                message: 'Your profile is incomplete. Please complete all profile steps before registering.',
+                code: 'PROFILE_INCOMPLETE',
+                completedSteps: { step1, step2, step3 }
+            });
+        }
+        
+        // Check if volunteer has already registered for this opportunity
+        const alreadyRegistered = volunteer.appliedOpportunities.some(application => 
+            application.opportunity.toString() === opportunityId
+        );
+        
+        if (alreadyRegistered) {
+            return res.status(400).json({ 
+                message: 'You have already registered for this opportunity',
+                code: 'ALREADY_REGISTERED'
+            });
+        }
+        
+        // Check if opportunity has reached maximum volunteer limit
+        if (opportunity.basicDetails.volunteersRequired) {
+            // Count accepted applicants
+            const acceptedApplicants = opportunity.applicants.filter(applicant => 
+                applicant.status === 'Accepted'
+            ).length;
+            
+            if (acceptedApplicants >= opportunity.basicDetails.volunteersRequired) {
+                return res.status(400).json({ 
+                    message: 'This opportunity has reached its maximum number of volunteers',
+                    code: 'MAX_VOLUNTEERS_REACHED'
+                });
+            }
+        }
+        
+        // Create a new registration/application entry
+        const newApplication = {
+            opportunity: opportunityId,
+            status: 'Pending',
+            isCompleted: false,
+            appliedAt: new Date()
+        };
+        
+        // Add application to volunteer record
+        volunteer.appliedOpportunities.push(newApplication);
+        await volunteer.save();
+        
+        // Get the saved application with its generated _id
+        const savedApplication = volunteer.appliedOpportunities.find(app => 
+            app.opportunity.toString() === opportunityId
+        );
+        
+        // Also add volunteer to opportunity's applicants list
+        opportunity.applicants.push({
+            volunteer: volunteer._id,
+            status: 'Pending',
+            appliedAt: new Date()
+        });
+        await opportunity.save();
+        
+        // Populate the application with opportunity details for better response
+        await Volunteer.populate(volunteer, {
+            path: 'appliedOpportunities.opportunity',
+            match: { _id: opportunityId },
+            select: 'basicDetails schedule provider',
+            populate: {
+                path: 'provider',
+                select: 'auth',
+                populate: {
+                    path: 'auth',
+                    select: 'organizationName'
+                }
+            }
+        });
+        
+        // Get the fully populated application
+        const populatedApplication = volunteer.appliedOpportunities.find(app => 
+            app._id.toString() === savedApplication._id.toString()
+        );
+        
+        res.status(201).json({
+            message: 'Successfully registered for the opportunity',
+            data: populatedApplication
+        });
+    } catch (error) {
+        console.error('Error in registerForOpportunity:', error);
+        res.status(500).json({ 
+            message: 'Server error while registering for opportunity', 
+            error: error.message 
+        });
     }
 };
