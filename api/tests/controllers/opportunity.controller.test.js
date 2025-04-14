@@ -5,6 +5,7 @@ import app from '../../index.js';
 import Opportunity from '../../models/opportunity.model.js';
 import OpportunityProvider from '../../models/opportunityprovider.model.js';
 import AuthOpportunityProvider from '../../models/auth.opportunityprovider.model.js';
+import Otp from '../../models/otp.model.js';
 import jwt from 'jsonwebtoken';
 
 // Generate valid MongoDB ObjectIds for testing
@@ -25,6 +26,7 @@ const mockOpportunity = {
     location: 'Test Location',
     startDate: new Date('2025-05-01'),
     endDate: new Date('2025-05-02'),
+    applicationDeadline: new Date('2025-04-25'), // Added the required field
     timeCommitment: 'Few hours per week',
     contactPerson: {
       name: 'Test Person',
@@ -51,14 +53,20 @@ jest.mock('jsonwebtoken', () => ({
   sign: jest.fn(() => 'mock-token')
 }));
 
-describe('Opportunity Controller Tests', () => {
-  // Set up test data before each test
+// Mock the otpHelper module
+jest.mock('../helpers/otpHelper', () => ({
+  generateOtp: jest.fn().mockReturnValue('123456'),
+  sendOtpEmail: jest.fn().mockResolvedValue(true)
+}));
+
+describe('Opportunity Controller Tests', () => {  // Set up test data before each test
   beforeEach(async () => {
     // Clear existing data
     await Opportunity.deleteMany({});
     await OpportunityProvider.deleteMany({});
     await AuthOpportunityProvider.deleteMany({});
-    
+    await Otp.deleteMany({});
+
     // Create test opportunity provider
     const authProvider = new AuthOpportunityProvider({
       _id: mockAuthProviderId,
@@ -71,7 +79,7 @@ describe('Opportunity Controller Tests', () => {
       password: 'hashedpassword'
     });
     await authProvider.save();
-    
+
     // Create test provider profile
     const provider = new OpportunityProvider({
       _id: mockProviderId,
@@ -99,24 +107,24 @@ describe('Opportunity Controller Tests', () => {
     });
     await provider.save();
   });
-  
   afterAll(async () => {
     // Clean up after all tests
     await Opportunity.deleteMany({});
     await OpportunityProvider.deleteMany({});
     await AuthOpportunityProvider.deleteMany({});
+    await Otp.deleteMany({});
   });
 
   // Test for getting all opportunities
   describe('GET /api/opportunities', () => {
     it('should return an empty array when no opportunities exist', async () => {
       const response = await request(app).get('/api/opportunities');
-      
+
       expect(response.status).toBe(200);
       expect(response.body.data.opportunities).toEqual([]);
       expect(response.body.data.pagination.totalCount).toBe(0);
     });
-    
+
     it('should return all opportunities when they exist', async () => {
       // Create test opportunity in the database
       const opportunity = new Opportunity({
@@ -124,17 +132,17 @@ describe('Opportunity Controller Tests', () => {
         provider: mockProviderId
       });
       await opportunity.save();
-      
+
       const response = await request(app).get('/api/opportunities');
-      
+
       expect(response.status).toBe(200);
       expect(response.body.data.opportunities.length).toBe(1);
       expect(response.body.data.opportunities[0].basicDetails.title).toBe('Test Opportunity');
     });
-    
+
     it('should filter opportunities based on query parameters', async () => {
       // Create test opportunities with different types
-      
+
       // Create one-time event opportunity
       const oneTimeEvent = new Opportunity({
         ...mockOpportunity,
@@ -145,7 +153,7 @@ describe('Opportunity Controller Tests', () => {
         }
       });
       await oneTimeEvent.save();
-      
+
       // Create long-term opportunity
       const longTerm = new Opportunity({
         ...mockOpportunity,
@@ -157,22 +165,22 @@ describe('Opportunity Controller Tests', () => {
         }
       });
       await longTerm.save();
-      
+
       // Test filtering by opportunity type
       const filterParam = encodeURIComponent(JSON.stringify({ opportunityType: 'One-time Event' }));
       const response = await request(app).get(`/api/opportunities?filter=${filterParam}`);
-      
+
       expect(response.status).toBe(200);
       expect(response.body.data.opportunities.length).toBe(1);
       expect(response.body.data.opportunities[0].basicDetails.opportunityType).toBe('One-time Event');
     });
   });
-  
+
   // Test for getting latest opportunities
   describe('GET /api/opportunities/latest', () => {
     it('should return the 3 most recent opportunities', async () => {
       // Create test opportunities with different dates
-      
+
       // Create opportunities with different creation dates
       for (let i = 0; i < 5; i++) {
         const opportunity = new Opportunity({
@@ -186,9 +194,9 @@ describe('Opportunity Controller Tests', () => {
         });
         await opportunity.save();
       }
-      
+
       const response = await request(app).get('/api/opportunities/latest');
-      
+
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(3);
       // The first opportunity should be the most recent one
@@ -204,31 +212,31 @@ describe('Opportunity Controller Tests', () => {
         _id: mockProviderId,
         auth: mockAuthProviderId
       });
-      
+
       // Mock the Opportunity.prototype.save method
       jest.spyOn(Opportunity.prototype, 'save').mockResolvedValueOnce({
         _id: new mongoose.Types.ObjectId(),
         provider: mockProviderId,
         ...mockOpportunity
       });
-      
+
       // Mock OpportunityProvider.findByIdAndUpdate
       jest.spyOn(OpportunityProvider, 'findByIdAndUpdate').mockResolvedValueOnce({});
-      
+
       const response = await request(app)
-        .post('/api/opportunities')
-        .set('Authorization', mockAuthHeader)
-        .send(mockOpportunity);
-      
+          .post('/api/opportunities')
+          .set('Authorization', mockAuthHeader)
+          .send(mockOpportunity);
+
       expect(response.status).toBe(201);
       expect(response.body.message).toBe('Opportunity created successfully');
     });
-    
+
     it('should return 401 when not authenticated', async () => {
       const response = await request(app)
-        .post('/api/opportunities')
-        .send(mockOpportunity);
-      
+          .post('/api/opportunities')
+          .send(mockOpportunity);
+
       expect(response.status).toBe(401);
     });
   });
@@ -238,7 +246,7 @@ describe('Opportunity Controller Tests', () => {
     it('should implement cursor-based pagination correctly', async () => {
       // Create multiple test opportunities
       const opportunities = [];
-      
+
       // Instead of using save() which is causing issues with the mock, let's insert directly
       for (let i = 0; i < 10; i++) {
         const opportunity = new Opportunity({
@@ -249,7 +257,7 @@ describe('Opportunity Controller Tests', () => {
             title: `Feed Opportunity ${i+1}`
           }
         });
-        
+
         // Use insertMany instead of save to avoid the Mongoose model issue
         if (i === 0) {
           await Opportunity.insertMany(Array(10).fill(0).map((_, j) => ({
@@ -264,30 +272,30 @@ describe('Opportunity Controller Tests', () => {
           break;
         }
       }
-      
+
       // First page (limit=5)
       const firstResponse = await request(app).get('/api/opportunities/feed?limit=5');
-      
+
       expect(firstResponse.status).toBe(200);
       expect(firstResponse.body.data.opportunities.length).toBeLessThanOrEqual(5);
-      
+
       if (firstResponse.body.data.opportunities.length === 5) {
         expect(firstResponse.body.data.pageInfo.hasNextPage).toBe(true);
-        
+
         // Get the next cursor
         const nextCursor = firstResponse.body.data.pageInfo.nextCursor;
-        
+
         // Second page using the cursor
         const secondResponse = await request(app).get(`/api/opportunities/feed?limit=5&cursor=${nextCursor}`);
-        
+
         expect(secondResponse.status).toBe(200);
         expect(secondResponse.body.data.opportunities.length).toBeLessThanOrEqual(5);
-        
+
         // Check that we got different opportunities in the second request if there are any
         if (secondResponse.body.data.opportunities.length > 0) {
           const firstPageIds = firstResponse.body.data.opportunities.map(o => o._id);
           const secondPageIds = secondResponse.body.data.opportunities.map(o => o._id);
-          
+
           // No opportunity should appear in both pages
           const overlap = firstPageIds.filter(id => secondPageIds.includes(id));
           expect(overlap.length).toBe(0);
