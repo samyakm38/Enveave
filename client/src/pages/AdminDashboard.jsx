@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Import Link for navigation
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
 import '../stylesheet/AdminDashBoard.css'
+import useAdmin from '../redux/hooks/useAdmin';
 
 // Placeholder SVGs - Replace with your actual SVGs or an icon library
 const OrganizationIcon = () => (
@@ -34,33 +35,71 @@ const OpportunityIcon = () => (
 
 
 const AdminDashboard=() => {
+    const { 
+        dashboardStats,
+        statsLoading,
+        loadDashboardStats
+    } = useAdmin();
+    
+    useEffect(() => {
+        // Load dashboard statistics when component mounts
+        loadDashboardStats();
+    }, [loadDashboardStats]);
+    console.log(dashboardStats)
     return (
         <>
             <Header/>
-            <div className='admin-dashboard-main-container'>
+            <div className="admin-dashboard-container">
+                <h1 className="admin-dashboard-title">Admin Dashboard</h1>
+                
+                {statsLoading ? (
+                    <div className="admin-dashboard-loading">
+                        <p>Loading statistics...</p>
+                    </div>
+                ) : (
+                    <div className="admin-dashboard-stats">
+                        <div className="admin-dashboard-stat-item">
+                            <h3>Total Organizations</h3>
+                            <p className="admin-dashboard-stat-number">{dashboardStats.totalOrganizations || 0}</p>
+                        </div>
+                        <div className="admin-dashboard-stat-item">
+                            <h3>Total Volunteers</h3>
+                            <p className="admin-dashboard-stat-number">{dashboardStats.totalVolunteers || 0}</p>
+                        </div>
+                        <div className="admin-dashboard-stat-item">
+                            <h3>Total Opportunities</h3>
+                            <p className="admin-dashboard-stat-number">{dashboardStats.totalOpportunities || 0}</p>
+                        </div>
+                        <div className="admin-dashboard-stat-item">
+                            <h3>Total Stories</h3>
+                            <p className="admin-dashboard-stat-number">{dashboardStats.totalStories || 0}</p>
+                        </div>
+                    </div>
+                )}
+                
+                <div className='admin-dashboard-main-container'>
 
-                <Link to="/admin/dashboard/organizations" className="admin-dashboard-box">
-                    <OrganizationIcon/>
-                    <span>organization</span>
-                </Link>
+                    <Link to="/admin/dashboard/organizations" className="admin-dashboard-box">
+                        <OrganizationIcon/>
+                        <span>organization</span>
+                    </Link>
 
-                <Link to="/admin/dashboard/volunteers" className="admin-dashboard-box">
-                    <VolunteerIcon/>
-                    <span>volunteer</span>
-                </Link>
+                    <Link to="/admin/dashboard/volunteers" className="admin-dashboard-box">
+                        <VolunteerIcon/>
+                        <span>volunteer</span>
+                    </Link>
 
-                <Link to="/admin/dashboard/opportunities" className="admin-dashboard-box">
-                    {/*<img src='/admin-dashboard-opp.svg' alt='story icon'*/}
-                    {/*     style={{width: '35%', marginBottom: '1.5rem'}}/>*/}
-                    <OpportunityIcon/>
-                    <span>opportunity</span>
-                </Link>
+                    <Link to="/admin/dashboard/opportunities" className="admin-dashboard-box">
+                        <OpportunityIcon/>
+                        <span>opportunity</span>
+                    </Link>
 
-                <Link to="/admin/dashboard/stories" className="admin-dashboard-box">
-                    <img src='/admin-dashboard-story-icon.svg' alt='story icon' style={{ width: '35%', marginBottom: '1.5rem' }} />
-                    <span>stories</span>
-                </Link>
+                    <Link to="/admin/dashboard/stories" className="admin-dashboard-box">
+                        <img src='/admin-dashboard-story-icon.svg' alt='story icon' style={{ width: '35%', marginBottom: '1.5rem' }} />
+                        <span>stories</span>
+                    </Link>
 
+                </div>
             </div>
             <Footer />
         </>

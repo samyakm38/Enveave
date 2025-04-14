@@ -180,3 +180,93 @@
         font-size: 0.85rem;
     }
 }
+
+/* --- Pagination Styles --- */
+.admin-dashboard-organisation-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.admin-dashboard-organisation-pagination-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-dashboard-organisation-pagination-button:hover:not(:disabled) {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.admin-dashboard-organisation-pagination-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.admin-dashboard-organisation-pagination-button.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+/* --- Loading and Error States --- */
+.admin-dashboard-organisation-loading,
+.admin-dashboard-organisation-error {
+    padding: 2rem;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin: 1.5rem 0;
+}
+
+.admin-dashboard-organisation-error {
+    color: #dc3545;
+}
+
+.admin-dashboard-organisation-retry-button {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background-color: #dc3545;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.admin-dashboard-organisation-retry-button:hover {
+    background-color: #c82333;
+}
+
+/* Adjust pagination for mobile */
+@media (max-width: 576px) {
+    .admin-dashboard-organisation-pagination {
+        justify-content: center;
+    }
+    
+    .admin-dashboard-organisation-pagination-button {
+        min-width: 2rem;
+        height: 2rem;
+        padding: 0 0.5rem;
+        font-size: 0.8rem;
+    }
+}

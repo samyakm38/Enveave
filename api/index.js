@@ -72,6 +72,10 @@ import providerVolunteerRoutes from "./routes/provider.volunteer.route.js";
 app.use('/api/provider', providerVolunteerRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 
+// Import and mount admin routes
+import adminRoutes from "./routes/admin.route.js";
+app.use('/api/admin', adminRoutes);
+
 // Start the server only if not in test mode
 if (process.env.NODE_ENV !== 'test') {
   const { port } = env;
