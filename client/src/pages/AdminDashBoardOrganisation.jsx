@@ -1,55 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
 // Corrected path assuming it's relative to the current file's directory structure
 import AdminDashboardTableComponent from "../components/Dashboard/Admin-DashBoard/AdminDashBoardTableComponent.jsx";
 import { FaTrashAlt, FaArrowLeft } from 'react-icons/fa';
+// For backend integration
+import useAdmin from '../redux/hooks/useAdmin';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 // Assuming your CSS is in a stylesheet directory
 import '../stylesheet/AdminDashBoardOrganization.css';
-// Placeholder image - replace with actual image paths or import images
-import placeholderImage from '/contact-us-image.png'; // Adjust this path
 
 const AdminDashBoardOrganisation = () => {
     const navigate = useNavigate();
-
-    // Sample data - replace with actual data fetched from your API
-    const [organisationsData, setOrganisationsData] = useState([
-        { id: 1, imageUrl: placeholderImage, name: 'Green Earth Foundation', description: 'Environmental conservation organization', city: 'Mumbai', country: 'India', email: 'xyz@gmail.com', phone: '99XXXXXXXXXX' },
-        { id: 2, imageUrl: placeholderImage, name: 'Ocean Savers', description: 'Marine life protection group', city: 'Chennai', country: 'India', email: 'info@oceans.org', phone: '98XXXXXXXXXX' },
-        { id: 3, imageUrl: placeholderImage, name: 'Helping Hands Community', description: 'Local outreach and support', city: 'Delhi', country: 'India', email: 'contact@helping.com', phone: '97XXXXXXXXXX' },
-        { id: 4, imageUrl: placeholderImage, name: 'Green Earth Foundation', description: 'Environmental conservation organization', city: 'Mumbai', country: 'India', email: 'xyz@gmail.com', phone: '99XXXXXXXXXX' },
-        { id: 5, imageUrl: placeholderImage, name: 'Green Earth Foundation', description: 'Environmental conservation organization', city: 'Mumbai', country: 'India', email: 'xyz@gmail.com', phone: '99XXXXXXXXXX' },
-        { id: 6, imageUrl: placeholderImage, name: 'Green Earth Foundation', description: 'Environmental conservation organization', city: 'Mumbai', country: 'India', email: 'xyz@gmail.com', phone: '99XXXXXXXXXX' },
-    ]);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    // Get organizations data and functions from the admin hook
+    const { 
+        organizations, 
+        organizationsLoading, 
+        organizationsError, 
+        organizationsPagination, 
+        loadOrganizations, 
+        deleteOrganization 
+    } = useAdmin();
+    
+    useEffect(() => {
+        // Load organizations when component mounts or page changes
+        loadOrganizations(currentPage);
+    }, [loadOrganizations, currentPage]);
+    
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+    
     // --- Action Handlers ---
     const handleDelete = (row) => {
-        console.log('Deleting organisation:', row.name, row.id);
-        // Implement actual delete logic here
-        // e.g., setOrganisationsData(prevData => prevData.filter(item => item.id !== row.id));
-        alert(`Delete action for "${row.name}" (ID: ${row.id}). Check console.`);
+        confirmAlert({
+            title: 'Confirm Deletion',
+            message: `Are you sure you want to delete "${row.name}"? This action cannot be undone.`,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: async () => {
+                        await deleteOrganization(row.id);
+                        // Reload organizations to reflect the changes
+                        loadOrganizations(currentPage);
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => {}
+                }
+            ]
+        });
     };
 
     const handleGoBack = () => {
-        navigate(-1); // Navigate back
+        navigate('/admin/dashboard'); // Navigate back to admin dashboard
     };
-
-    // --- Column Definitions ---
+      // --- Column Definitions ---
     const columns = [
         {
             header: 'NGO Details',
-            accessor: 'details', // Keep accessor simple
+            accessor: 'details',
             render: (row) => (
                 <div className="admin-dashboard-organisation-details-cell">
                     <img
-                        src={row.imageUrl || placeholderImage} // Use placeholder if no image URL
+                        src={row.imageUrl || '/dashboard-default-user-image.svg'}
                         alt={`${row.name} logo`}
                         className="admin-dashboard-organisation-details-img"
                     />
                     <div className="admin-dashboard-organisation-details-text">
                         <span className="admin-dashboard-organisation-details-name">{row.name}</span>
-                        <span className="admin-dashboard-organisation-details-desc">{row.description}</span>
+                        <span className="admin-dashboard-organisation-details-desc">
+                            {row.description?.length > 100 
+                                ? `${row.description.substring(0, 100)}...` 
+                                : row.description}
+                        </span>
                     </div>
                 </div>
             )
@@ -80,7 +109,7 @@ const AdminDashBoardOrganisation = () => {
             render: (row) => (
                 <button
                     onClick={() => handleDelete(row)}
-                    className="admin-dashboard-table-component-action-button" // Reuse same class for consistency
+                    className="admin-dashboard-table-component-action-button"
                     aria-label={`Delete ${row.name}`}
                 >
                     <FaTrashAlt />
@@ -103,16 +132,63 @@ const AdminDashBoardOrganisation = () => {
                         <span>Back</span>
                     </button>
                 </div>
-
+                
                 <div className="admin-dashboard-organisation-header">
                     <h1 className="admin-dashboard-organisation-title">Organization Management</h1>
                 </div>
 
-                {/* Render the reusable table component */}
-                <AdminDashboardTableComponent
-                    columns={columns}
-                    data={organisationsData}
-                />
+                {organizationsLoading ? (
+                    <div className="admin-dashboard-organisation-loading">
+                        <p>Loading organizations...</p>
+                    </div>
+                ) : organizationsError ? (
+                    <div className="admin-dashboard-organisation-error">
+                        <p>Error: {organizationsError}</p>
+                        <button onClick={() => loadOrganizations(currentPage)} className="admin-dashboard-organisation-retry-button">
+                            Retry
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        {/* Render the reusable table component */}
+                        <AdminDashboardTableComponent
+                            columns={columns}
+                            data={organizations}
+                            isLoading={organizationsLoading}
+                        />
+                        
+                        {/* Pagination */}
+                        {organizationsPagination && organizationsPagination.pages > 1 && (
+                            <div className="admin-dashboard-organisation-pagination">
+                                <button 
+                                    disabled={currentPage === 1}
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    className="admin-dashboard-organisation-pagination-button"
+                                >
+                                    Previous
+                                </button>
+                                
+                                {[...Array(organizationsPagination.pages).keys()].map(page => (
+                                    <button
+                                        key={page + 1}
+                                        className={`admin-dashboard-organisation-pagination-button ${currentPage === page + 1 ? 'active' : ''}`}
+                                        onClick={() => handlePageChange(page + 1)}
+                                    >
+                                        {page + 1}
+                                    </button>
+                                ))}
+                                
+                                <button 
+                                    disabled={currentPage === organizationsPagination.pages}
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    className="admin-dashboard-organisation-pagination-button"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
             <Footer />
         </div>

@@ -215,6 +215,60 @@
     }
 }
 
+/* ========================================= */
+/* Pagination Styles                       */
+/* ========================================= */
+.admin-dashboard-opportunity-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.admin-dashboard-opportunity-pagination-button {
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    color: #495057;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.admin-dashboard-opportunity-pagination-button:hover:not(:disabled) {
+    background-color: #f1f3f5;
+    border-color: #adb5bd;
+}
+
+.admin-dashboard-opportunity-pagination-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.admin-dashboard-opportunity-pagination-button.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+/* Add styling for the clickable opportunity names */
+.admin-dashboard-opportunity-name-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.admin-dashboard-opportunity-name-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
 @media (max-width: 480px) {
     .admin-dashboard-opportunity-button { /* If added back */
         padding: 0.4rem 0.8rem;
@@ -228,5 +282,15 @@
     }
     .admin-dashboard-table-component-action-button {
         font-size: 1rem;
+    }
+    
+    /* Adjust pagination for mobile */
+    .admin-dashboard-opportunity-pagination {
+        gap: 0.3rem;
+    }
+    
+    .admin-dashboard-opportunity-pagination-button {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
     }
 }

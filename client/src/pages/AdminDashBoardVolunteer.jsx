@@ -1,50 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/main components/Header.jsx";
 import Footer from "../components/main components/Footer.jsx";
 // Adjust path as needed
 import AdminDashboardTableComponent from "../components/Dashboard/Admin-DashBoard/AdminDashBoardTableComponent.jsx";
 import { FaTrashAlt, FaFilter, FaSort, FaArrowLeft } from 'react-icons/fa';
+// Added useAdmin hook for backend data
+import useAdmin from '../redux/hooks/useAdmin';
+// Added confirmAlert for delete confirmation
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 // Create or ensure this CSS file exists and adjust the path
 import '../stylesheet/AdminDashBoardVolunteer.css';
 
-// Placeholder images - replace with actual imports or URLs
-import avatar1 from '/contact-us-image.png';
-import avatar2 from '/contact-us-image.png';
-import avatar3 from '/contact-us-image.png';
-import avatar4 from '/contact-us-image.png';
-import avatar5 from '/contact-us-image.png';
-import avatar6 from '/contact-us-image.png';
-import avatar7 from '/contact-us-image.png';
-
-
 const AdminDashBoardVolunteer = () => {
     const navigate = useNavigate();
-
-    // Sample data - replace with actual data from your API
-    const [volunteersData, setVolunteersData] = useState([
-        { id: 1, imageUrl: avatar1, name: 'David Miller', gender: 'Male', city: 'Bangalore', country: 'India', email: 'xyz@gmail.com', phone: '61XXXXXXXXXX', skills: ['Project Management', 'First Aid'] },
-        { id: 2, imageUrl: avatar2, name: 'James Anderson', gender: 'Male', city: 'Delhi', country: 'India', email: 'xyz@gmail.com', phone: '87XXXXXXXXXX', skills: ['Graphic Design', 'Community Outreach'] },
-        { id: 3, imageUrl: avatar3, name: 'Olivia Martinez', gender: 'Female', city: 'Bangalore', country: 'India', email: 'xyz@gmail.com', phone: '75XXXXXXXXXX', skills: ['Teaching', 'Environmentalist'] },
-        { id: 4, imageUrl: avatar4, name: 'Jessica Brown', gender: 'Female', city: 'Assam', country: 'India', email: 'xyz@gmail.com', phone: '65XXXXXXXXXX', skills: ['Content Writing', 'Photography'] },
-        { id: 5, imageUrl: avatar5, name: 'Emily Johnson', gender: 'Female', city: 'Maharashtra', country: 'India', email: 'xyz@gmail.com', phone: '92XXXXXXXXXX', skills: ['Fundraising', 'Social Media Manager'] },
-        { id: 6, imageUrl: avatar6, name: 'Sarah Wilson', gender: 'Female', city: 'Gujarat', country: 'India', email: 'xyz@gmail.com', phone: '72XXXXXXXXXX', skills: ['Project Management', 'First Aid'] },
-        { id: 7, imageUrl: avatar7, name: 'Michael Smith', gender: 'Male', city: 'Jammu', country: 'India', email: 'xyz@gmail.com', phone: '85XXXXXXXXXX', skills: ['Data Analysis', 'Volunteer Training'] },
-    ]);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    // Get volunteers data and functions from the admin hook
+    const { 
+        volunteers, 
+        volunteersLoading, 
+        volunteersError, 
+        volunteersPagination, 
+        loadVolunteers, 
+        deleteVolunteer 
+    } = useAdmin();
+    
+    useEffect(() => {
+        // Load volunteers when component mounts or page changes
+        loadVolunteers(currentPage);
+    }, [loadVolunteers, currentPage]);
+    
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+    
     // --- Action Handlers ---
     const handleDelete = (row) => {
-        console.log('Deleting volunteer:', row.name, row.id);
-        // Implement actual delete logic here (API call, then update state)
-        // e.g., setVolunteersData(prevData => prevData.filter(item => item.id !== row.id));
-        alert(`Delete action for "${row.name}" (ID: ${row.id}). Check console.`);
+        confirmAlert({
+            title: 'Confirm Deletion',
+            message: `Are you sure you want to delete volunteer "${row.name}"? This action cannot be undone.`,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: async () => {
+                        await deleteVolunteer(row.id);
+                        // Reload volunteers to reflect the changes
+                        loadVolunteers(currentPage);
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => {}
+                }
+            ]
+        });
     };
 
     const handleGoBack = () => {
-        navigate(-1); // Navigate back
+        navigate('/admin/dashboard'); // Navigate back to admin dashboard
     };
-
-    // --- Column Definitions ---
+      // --- Column Definitions ---
     const columns = [
         {
             header: 'Volunteer Name',
@@ -52,7 +69,7 @@ const AdminDashBoardVolunteer = () => {
             render: (row) => (
                 <div className="admin-dashboard-volunteer-name-cell">
                     <img
-                        src={row.imageUrl || avatar1} // Default placeholder
+                        src={row.imageUrl || '/dashboard-default-user-image.svg'} 
                         alt={`${row.name}`}
                         className="admin-dashboard-volunteer-name-img"
                     />
@@ -89,10 +106,10 @@ const AdminDashBoardVolunteer = () => {
             accessor: 'skills',
             render: (row) => (
                 <div className="admin-dashboard-volunteer-skills-cell">
-                    {/* Check if skills is an array and map, otherwise display directly */}
-                    {Array.isArray(row.skills) ? row.skills.join(', ') : row.skills}
-                    {/* Or map to separate lines if needed: */}
-                    {/* {Array.isArray(row.skills) ? row.skills.map(skill => <span key={skill}>{skill}</span>) : <span>{row.skills}</span>} */}
+                    {/* Display skills with proper formatting */}
+                    {Array.isArray(row.skills) && row.skills.length > 0 
+                        ? row.skills.slice(0, 3).join(', ') + (row.skills.length > 3 ? ` +${row.skills.length - 3} more` : '')
+                        : 'No skills listed'}
                 </div>
             )
         },
@@ -102,7 +119,7 @@ const AdminDashBoardVolunteer = () => {
             render: (row) => (
                 <button
                     onClick={() => handleDelete(row)}
-                    className="admin-dashboard-table-component-action-button" // Reuse class
+                    className="admin-dashboard-table-component-action-button"
                     aria-label={`Delete ${row.name}`}
                 >
                     <FaTrashAlt />
@@ -125,16 +142,62 @@ const AdminDashBoardVolunteer = () => {
                         <span>Back</span>
                     </button>
                 </div>
-
+                
                 <div className="admin-dashboard-volunteer-header">
                     <h1 className="admin-dashboard-volunteer-title">Volunteers Management</h1>
-                </div>
-
-                {/* Render the reusable table component */}
-                <AdminDashboardTableComponent
-                    columns={columns}
-                    data={volunteersData}
-                />
+                </div>                
+                {volunteersLoading ? (
+                    <div className="admin-dashboard-volunteer-loading">
+                        <p>Loading volunteers...</p>
+                    </div>
+                ) : volunteersError ? (
+                    <div className="admin-dashboard-volunteer-error">
+                        <p>Error: {volunteersError}</p>
+                        <button onClick={() => loadVolunteers(currentPage)} className="admin-dashboard-volunteer-retry-button">
+                            Retry
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        {/* Render the reusable table component */}
+                        <AdminDashboardTableComponent
+                            columns={columns}
+                            data={volunteers}
+                            isLoading={volunteersLoading}
+                        />
+                        
+                        {/* Pagination */}
+                        {volunteersPagination && volunteersPagination.pages > 1 && (
+                            <div className="admin-dashboard-volunteer-pagination">
+                                <button 
+                                    disabled={currentPage === 1}
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    className="admin-dashboard-volunteer-pagination-button"
+                                >
+                                    Previous
+                                </button>
+                                
+                                {[...Array(volunteersPagination.pages).keys()].map(page => (
+                                    <button
+                                        key={page + 1}
+                                        className={`admin-dashboard-volunteer-pagination-button ${currentPage === page + 1 ? 'active' : ''}`}
+                                        onClick={() => handlePageChange(page + 1)}
+                                    >
+                                        {page + 1}
+                                    </button>
+                                ))}
+                                
+                                <button 
+                                    disabled={currentPage === volunteersPagination.pages}
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    className="admin-dashboard-volunteer-pagination-button"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
             <Footer />
         </div>

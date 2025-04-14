@@ -7,6 +7,7 @@ import opportunitiesReducer from './slices/opportunitiesSlice';
 import applicationsReducer from './slices/applicationsSlice';
 import providerProfileReducer from './slices/providerProfileSlice';
 import chatbotReducer from './slices/chatbotSlice';
+import adminReducer from './slices/adminSlice';
 
 // Configure persistence for auth slice (to keep user logged in)
 const authPersistConfig = {
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   applications: applicationsReducer,
   providerProfile: providerProfileReducer,
   chatbot: chatbotReducer,
+  admin: adminReducer,
 });
 
 // Create store
