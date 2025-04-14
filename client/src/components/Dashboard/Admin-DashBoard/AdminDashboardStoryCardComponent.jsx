@@ -23,7 +23,7 @@ const AdminDashboardStoryCardComponent = ({ story, onDelete }) => {
         event.stopPropagation();
         console.log(`View story ID: ${id}`);
         // Example navigation (adjust path as needed)
-        navigate(`/`);
+        navigate(`/stories/${id}`);
         setIsMenuOpen(false); // Close menu after action
     };
 

@@ -20,11 +20,10 @@ const storySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         refPath: 'creatorModel'
-    },
-    creatorModel: {
+    },    creatorModel: {
         type: String,
         required: true,
-        enum: ['Volunteer', 'OpportunityProvider', 'AuthVolunteer', 'AuthOpportunityProvider']
+        enum: ['Volunteer', 'OpportunityProvider', 'AuthVolunteer', 'AuthOpportunityProvider', 'Admin']
     },
     published: {
         type: Boolean,

@@ -1,6 +1,7 @@
 import express from 'express';
 import * as adminController from '../controllers/admin.controller.js';
 import { authenticateToken, requireAdmin } from '../middleware/auth.middleware.js';
+import { upload } from '../helpers/imageUpload.js';
 
 // Create router
 const router = express.Router();
@@ -30,7 +31,7 @@ router.delete('/opportunities/:id', adminController.deleteOpportunity);
 
 // --- Stories Routes ---
 router.get('/stories', adminController.getAllStories);
-router.post('/stories', adminController.createStory);
+router.post('/stories', upload.single('photo'), adminController.createStory);
 router.delete('/stories/:id', adminController.deleteStory);
 
 export default router;

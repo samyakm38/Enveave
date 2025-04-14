@@ -369,8 +369,8 @@ export const getAllStories = async (req, res) => {
                 id: story._id,
                 title: story.title,
                 description: story.content,
-                storyImage: story.imageUrl || '/home-story-3.png', // Default image if none provided
-                createdAt: new Date(story.createdAt).toLocaleDateString('en-US', { 
+                storyImage: story.photo || '/home-story-3.png', // Default image if none provided
+                createdAt: new Date(story.publishedAt).toLocaleDateString('en-US', { 
                     year: 'numeric', 
                     month: 'long', 
                     day: 'numeric' 
@@ -400,7 +400,7 @@ export const getAllStories = async (req, res) => {
 
 export const createStory = async (req, res) => {
     try {
-        const { title, content, imageUrl } = req.body;
+        const { title, content } = req.body;
         
         // Validate required fields
         if (!title || !content) {
@@ -410,11 +410,32 @@ export const createStory = async (req, res) => {
             });
         }
         
-        // Create new story
+        // Handle image upload if file is included
+        let photo = '/home-story-3.png'; // Default image if none provided
+        
+        if (req.file) {
+            try {
+                // Import image upload helper
+                const { uploadImageToCloudinary } = await import('../helpers/imageUpload.js');
+                photo = await uploadImageToCloudinary(req.file.buffer, 'stories');
+            } catch (uploadError) {
+                console.error('Error uploading image:', uploadError);
+                // Continue with default image
+            }
+        }
+        
+        // Get admin ID from authenticated user
+        const adminId = req.user.id;
+        
+        // Create new story with admin as creator
         const newStory = new Story({
             title,
             content,
-            imageUrl: imageUrl || '/home-story-3.png', // Default image if none provided
+            photo, // Use photo field as per model
+            creator: adminId,
+            creatorModel: 'Admin',
+            published: true, // Auto-publish admin stories
+            publishedAt: new Date()
         });
         
         await newStory.save();
