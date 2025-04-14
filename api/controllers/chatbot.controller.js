@@ -6,7 +6,7 @@ const genAI = new GoogleGenerativeAI(env.geminiApiKey);
 
 // Store conversation history for authenticated users (in memory for now)
 // For production, this should be moved to a database
-const conversationHistory = new Map();
+export const conversationHistory = new Map();
 
 /**
  * Generate a system prompt that provides context about Enveave
