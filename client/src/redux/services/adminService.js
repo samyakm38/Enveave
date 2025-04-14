@@ -84,10 +84,21 @@ const adminService = {
       return { success: false, error: error.response?.data?.message || 'Failed to fetch stories' };
     }
   },
-
   createStory: async (storyData) => {
     try {
-      const response = await apiClient.post('/admin/stories', storyData);
+      // Check if storyData is FormData (for file uploads)
+      const isFormData = storyData instanceof FormData;
+      
+      // Set proper headers for FormData or JSON
+      const config = {
+        headers: isFormData ? {
+          'Content-Type': 'multipart/form-data'
+        } : {
+          'Content-Type': 'application/json'
+        }
+      };
+      
+      const response = await apiClient.post('/admin/stories', storyData, config);
       return response.data;
     } catch (error) {
       console.error('Error creating story:', error);

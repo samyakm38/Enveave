@@ -81,21 +81,17 @@ const IndividualStory = () => {
                                 </h1>
                                 
                                 <div className="flex items-center text-gray-600 text-sm mb-6">
-                                    <span>
+                                    {/* <span>
                                         {story.creator?.name ? `By ${story.creator.name}` : 'By Anonymous'}
-                                    </span>
+                                    </span> */}
                                     <span className="mx-2">•</span>
                                     <span>
                                         {formatDate(story.publishedAt || story.createdAt)}
                                     </span>
-                                </div>
-                                  <div className="prose max-w-none">
-                                    {story.content.split('\n').map((paragraph, index) => (
-                                        paragraph ? 
-                                            <p key={index} className="mb-4 text-gray-700">{paragraph}</p> 
-                                            : <br key={index} />
-                                    ))}
-                                </div>
+                                </div>                                <div 
+                                    className="prose max-w-none" 
+                                    dangerouslySetInnerHTML={{ __html: story.content }}
+                                />
                             </div>
                         </article>
                     ) : (

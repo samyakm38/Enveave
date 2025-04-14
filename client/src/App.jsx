@@ -29,6 +29,7 @@ import AdminDashBoardOrganisation from "./pages/AdminDashBoardOrganisation.jsx";
 import AdminDashBoardVolunteer from "./pages/AdminDashBoardVolunteer.jsx";
 import AdminDashBoardOpportunity from "./pages/AdminDashBoardOpportunity.jsx";
 import AdminDashBoardStories from "./pages/AdminDashBoardStories.jsx";
+import CreateStoryForm from "./components/Dashboard/Admin-DashBoard/CreateStoryForm.jsx";
 import ChatWidget from "./components/ChatBot/ChatWidget.jsx";
 
 const App = () => {
@@ -63,6 +64,7 @@ const App = () => {
           <Route path='/admin/dashboard/volunteers' element={<AdminDashBoardVolunteer/>}/>
           <Route path='/admin/dashboard/opportunities' element={<AdminDashBoardOpportunity/>}/>
           <Route path='/admin/dashboard/stories' element={<AdminDashBoardStories/>}/>
+          <Route path='/admin/dashboard/stories/create' element={<CreateStoryForm/>}/>
         </Routes>
         <ChatWidget />
       </BrowserRouter>

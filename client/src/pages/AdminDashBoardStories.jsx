@@ -64,31 +64,9 @@ const AdminDashBoardStories = () => {
         const { name, value } = e.target;
         setNewStory(prev => ({ ...prev, [name]: value }));
     };
-    
-    const handleSubmitStory = async (e) => {
-        e.preventDefault();
-        
-        // Validate inputs
-        if (!newStory.title || !newStory.content) {
-            alert('Please fill in all required fields');
-            return;
-        }
-        
-        // Create the story
-        const result = await createStory(newStory);
-        
-        if (result.success) {
-            // Reset form and hide it
-            setNewStory({
-                title: '',
-                content: '',
-                imageUrl: '/home-story-3.png'
-            });
-            setShowStoryForm(false);
-            
-            // Reload stories to show the new one
-            loadStories(1);
-        }
+      // Navigation function to go to create story form
+    const navigateToCreateStory = () => {
+        navigate('/admin/dashboard/stories/create');
     };
       return (
         <div className="admin-dashboard-stories-page">
@@ -105,12 +83,11 @@ const AdminDashBoardStories = () => {
                 
                 <div className="admin-dashboard-stories-header">
                     <h1 className="admin-dashboard-stories-title">Stories Management</h1>
-                    <div className="admin-dashboard-stories-controls">
-                        <button 
+                    <div className="admin-dashboard-stories-controls">                        <button 
                             className="admin-dashboard-stories-button admin-dashboard-stories-button-add"
-                            onClick={() => setShowStoryForm(!showStoryForm)}
+                            onClick={navigateToCreateStory}
                         >
-                            <FaPlus /> {showStoryForm ? 'Cancel' : 'Add Story'}
+                            <FaPlus /> Add Story
                         </button>
                     </div>
                 </div>
