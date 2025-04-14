@@ -53,6 +53,8 @@ export const signupAdmin = async (req, res) => {
             return res.status(400).json({ message: messages });
         }
 
+        // console.log("Validate input successful")
+
         // 2. Sanitize inputs (use validated data)
         const { name, email, password, phoneNumber } = validatedData;
         const sanitizedData = sanitizeNestedObject({ name, email, phoneNumber });
@@ -61,6 +63,8 @@ export const signupAdmin = async (req, res) => {
         if (!sanitizedEmail || !sanitizedName || !sanitizedPhoneNumber) {
             return res.status(400).json({ message: "Invalid characters in input fields after sanitization." });
         }
+
+        // console.log("Sanitize inputs successful")
 
         // 3. Check for existing admin
         const existingAdmin = await Admin.findOne({ email: sanitizedEmail });
@@ -72,13 +76,19 @@ export const signupAdmin = async (req, res) => {
             return res.status(409).json({ message: 'Admin with this email already exists' }); // Use 409 Conflict
         }
 
+        // console.log("existing admin check successful")
+
         // 4. Reset attempts for new user signup
         if (req.attemptInfo) {
             resetAttempts(req); // Use the new helper
         }
 
+        // console.log("Reset attempts successful")
+
         // 5. Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        // console.log("HashPassword successful")
 
         // 6. Save new admin
         const newAdmin = new Admin({
@@ -89,12 +99,18 @@ export const signupAdmin = async (req, res) => {
         });
         await newAdmin.save();
 
+        // console.log("Save admin successful")
+
         // 7. Generate JWT (Admin signup grants immediate access)
         const token = jwt.sign({ id: newAdmin._id, role: 'admin' }, env.jwtSecret, { expiresIn: env.jwtExpiration }); // Use configured expiration
+
+        // console.log("JWT successful")
 
         // 8. Exclude password from response
         const adminResponse = newAdmin.toObject();
         delete adminResponse.password;
+
+        // console.log(adminResponse);
 
         res.status(201).json({ message: 'Admin registered successfully', admin: adminResponse, token });
 
@@ -176,11 +192,21 @@ export const signupOpportunityProvider = async (req, res) => {
             });
         }
 
-        // 9. Respond: Success - Ask for OTP verification
-        res.status(201).json({
-            message: 'Signup initiated! Please check your contact email for the OTP to complete registration.',
-            email: primaryEmail // Send back the email used
-        });
+        if (process.env.NODE_ENV === 'test') {
+            res.status(201).json({
+                message: 'Signup initiated! Please check your contact email for the OTP to complete registration.',
+                email: primaryEmail, // Send back the email used
+                otp: otpCode
+            });
+        }else{
+            // 9. Respond: Success - Ask for OTP verification
+            res.status(201).json({
+                message: 'Signup initiated! Please check your contact email for the OTP to complete registration.',
+                email: primaryEmail // Send back the email used
+            });
+        }
+
+
         // --- NO AuthOpportunityProvider RECORD CREATED YET ---
 
     } catch (error) {
@@ -258,11 +284,20 @@ export const signupVolunteer = async (req, res) => {
             });
         }
 
-        // 9. Respond: Success - Ask for OTP verification
-        res.status(201).json({
-            message: 'Signup initiated! Please check your email for the OTP to complete registration.',
-            email: sanitizedEmail
-        });
+
+        if (process.env.NODE_ENV === 'test') {
+            res.status(201).json({
+                message: 'Signup initiated! Please check your contact email for the OTP to complete registration.',
+                email: sanitizedEmail, // Send back the email used
+                otp: otpCode
+            });
+        }else{
+            // 9. Respond: Success - Ask for OTP verification
+            res.status(201).json({
+                message: 'Signup initiated! Please check your contact email for the OTP to complete registration.',
+                email: sanitizedEmail // Send back the email used
+            });
+        }
         // --- NO AuthVolunteer RECORD CREATED YET ---
 
     } catch (error) {
