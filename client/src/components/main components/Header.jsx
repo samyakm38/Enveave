@@ -88,13 +88,15 @@ const Header = () => {
                                 <Dropdown.Header>
                                     <span className="block text-sm font-medium truncate">
                                         {userType === 'volunteer' ? (currentUser?.name || 'User') : 
-                                         userType === 'provider' ? (currentUser?.organizationName || 'Organization') : 'User'}
+                                         userType === 'provider' ? (currentUser?.organizationName || 'Organization') : 'Admin'}
                                     </span>
                                     <span className="block truncate text-sm">
                                         {currentUser?.email || ''}
                                     </span>
                                 </Dropdown.Header>
-                                <Dropdown.Item onClick={() => navigate(userType === 'volunteer' ? '/volunteer/dashboard' : '/provider/dashboard')}>
+                                <Dropdown.Item onClick={() => navigate(userType === 'volunteer' ? '/volunteer/dashboard' :
+                                    userType === 'provider' ? '/organization/dashboard' : '/admin/dashboard'
+                                )}>
                                     Dashboard
                                 </Dropdown.Item>
                                 <Dropdown.Divider />

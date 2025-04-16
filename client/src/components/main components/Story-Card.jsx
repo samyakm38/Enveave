@@ -20,7 +20,7 @@ const StoryCard = ({ image, title, description, link, storyId }) => {
                 </a>
             </div>
             <div className="card-description-container flex-grow">
-                <p>{description}</p>
+                <div dangerouslySetInnerHTML={{ __html: description }} />
             </div>
             <div className="card-button">
                 <a href={storyLink}>Read more {">"}</a>
