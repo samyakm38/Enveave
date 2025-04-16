@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import volunteerService from '../../redux/services/volunteerService';
-import { useVolunteer } from '../../redux/hooks/useVolunteer';
+import { useVolunteerRedux as useVolunteer } from '../../redux/hooks/useVolunteerRedux';
 
 const engagementSchema = z.object({
   availability: z.array(z.string())
@@ -47,7 +47,7 @@ const motivationOptions = [
 ];
 
 const EngagementForm = ({ volunteerData, onSubmitSuccess, onBack }) => {
-  const { updateProfileStatus } = useVolunteer();
+  const { updateProfileStatus, fetchVolunteerProfile, updateEngagement } = useVolunteer();
   
   // Initialize form with React Hook Form
   const { control, register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm({
@@ -62,9 +62,7 @@ const EngagementForm = ({ volunteerData, onSubmitSuccess, onBack }) => {
   });
 
   // Watch the hasPreviousExperience field to conditionally render the experience textarea
-  const hasPreviousExperience = watch('hasPreviousExperience');
-
-  // Handle form submission
+  const hasPreviousExperience = watch('hasPreviousExperience');  // Handle form submission
   const onSubmit = async (data) => {
     try {
       // Format data for API
@@ -76,17 +74,20 @@ const EngagementForm = ({ volunteerData, onSubmitSuccess, onBack }) => {
           previousExperience: data.hasPreviousExperience ? data.previousExperience : ''
         }
       };
-      console.log("Submitting engagement data:", formattedData);
-
-      // Submit data to the backend
-      const response = await volunteerService.updateEngagement(formattedData);
+      console.log("Submitting engagement data:", formattedData);      // Submit data to the backend using the Redux action
+      const response = await updateEngagement(formattedData);
       console.log("Engagement update response:", response);
       
       // Update the profile status to indicate profile is complete
       await updateProfileStatus('COMPLETED');
       console.log("Profile status updated to COMPLETED");
       
-      // Call the success callback
+      // IMPORTANT: Force a refresh of the volunteer profile before redirecting
+      // Use the fetchVolunteerProfile function that was already destructured from the hook at the top level
+      await fetchVolunteerProfile(true); // Force a fresh fetch with true parameter
+      console.log("Fetched updated volunteer profile data");
+      
+      // Call the success callback to redirect
       onSubmitSuccess();
     } catch (error) {
       console.error('Error saving engagement info:', error);

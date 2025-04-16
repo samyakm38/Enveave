@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import volunteerService from '../../redux/services/volunteerService';
-import { useVolunteer } from '../../redux/hooks/useVolunteer';
+import { useVolunteerRedux as useVolunteer } from '../../redux/hooks/useVolunteerRedux';
 
 // Zod schema for form validation
 const basicDetailsSchema = z.object({
@@ -35,7 +35,7 @@ const basicDetailsSchema = z.object({
 });
 
 const BasicDetailsForm = ({ userData, volunteerData, onSubmitSuccess }) => {
-  const { updateProfileStatus } = useVolunteer();
+  const { updateProfileStatus, updateBasicDetails } = useVolunteer();
   const [profileImage, setProfileImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(volunteerData?.profilePhoto || null);
@@ -76,12 +76,10 @@ const BasicDetailsForm = ({ userData, volunteerData, onSubmitSuccess }) => {
         profileCompletion: {
           step1: true
         }
-      };
+      };      console.log("Submitting basic details data:", formattedData);
 
-      console.log("Submitting basic details data:", formattedData);
-
-      // Submit data to the backend
-      await volunteerService.updateBasicDetails(formattedData);
+      // Submit data to the backend using the Redux action
+      await updateBasicDetails(formattedData);
       
       // If a profile image was selected, upload it
       if (imageFile) {

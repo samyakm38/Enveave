@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../redux/hooks';
-import { useVolunteer } from '../../redux/hooks/useVolunteer';
+import { useVolunteerRedux as useVolunteer } from '../../redux/hooks/useVolunteerRedux';
 import BasicDetailsForm from './BasicDetailsForm';
 import InterestsForm from './InterestsForm';
 import EngagementForm from './EngagementForm';
@@ -29,21 +29,24 @@ const ProfileCompletionForm = () => {
     
     setIsInitialized(true);
   }, [isAuthenticated, navigate, fetchVolunteerProfile, user]);
-  
-  useEffect(() => {
-    // Determine which step to show based on profile status
-    if (isInitialized && user) {
-      if (user.profileStatus === 'COMPLETED') {
-        setCurrentStep(3);
-      } else if (user.profileStatus === 'STEP_2') {
-        setCurrentStep(3);
-      } else if (user.profileStatus === 'STEP_1') {
-        setCurrentStep(2);
-      } else {
-        setCurrentStep(1);
-      }
-    }
-  }, [isInitialized, volunteerProfile, user]);
+    // NOTE: This effect is now disabled in favor of manual step control
+  // If you want to reinstate automatic step management based on profile status,
+  // uncomment this useEffect.
+  // 
+  // useEffect(() => {
+  //   // Determine which step to show based on profile status
+  //   if (isInitialized && user) {
+  //     if (user.profileStatus === 'COMPLETED') {
+  //       setCurrentStep(3);
+  //     } else if (user.profileStatus === 'STEP_2') {
+  //       setCurrentStep(3);
+  //     } else if (user.profileStatus === 'STEP_1') {
+  //       setCurrentStep(2);
+  //     } else {
+  //       setCurrentStep(1);
+  //     }
+  //   }
+  // }, [isInitialized, volunteerProfile, user]);
   
   // Handlers for step navigation
   const nextStep = () => {
@@ -83,7 +86,7 @@ const ProfileCompletionForm = () => {
       case 3:
         return <EngagementForm 
                  volunteerData={volunteerProfile} 
-                 onSubmitSuccess={() => navigate('/login')} 
+                 onSubmitSuccess={() => navigate('/volunteer/dashboard')} 
                  onBack={prevStep} 
                />;
       default:

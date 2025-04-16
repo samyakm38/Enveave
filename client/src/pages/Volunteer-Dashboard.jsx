@@ -7,7 +7,7 @@ import '../stylesheet/Volunteer-DashBoard.css'
 import {useMemo, useState, useEffect, useRef} from "react";
 import DashboardTable from "../components/Dashboard/Common-components/DashBoardTable.jsx";
 import { useAuth, useApplications, useOpportunities } from '../redux/hooks';
-import { useVolunteer } from '../redux/hooks/useVolunteer'; // Import the new hook
+import { useVolunteerRedux as useVolunteer } from '../redux/hooks/useVolunteerRedux';
 import { format, parseISO } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 // Import our custom loaders
@@ -230,7 +230,7 @@ const VolunteerDashboard = () => {
     const userData = useMemo(() => ({
         ProfilePictureURL: volunteerProfile?.profilePhoto || user?.profilePhoto || '/dashboard-default-user-image.svg',
         userName: user?.name || 'Volunteer',
-        status: volunteerProfile?.status || user?.profileStatus || 'Active',
+        status:'Active',
         completionPercentage: calculateProfileCompletion(volunteerProfile),
         formLink: '/profile-completion' // Updated to use the new form
     }), [volunteerProfile, user, calculateProfileCompletion]);    // Loading state - NOW AFTER ALL HOOKS HAVE BEEN CALLED
