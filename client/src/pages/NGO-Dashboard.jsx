@@ -240,7 +240,7 @@ const NgoDashboard = () => {
         ProfilePictureURL: profile?.organizationDetails?.logo || '/NGO-profile-pic.svg',
         userName: currentUser?.organizationName || 'Organization',
         status: 'Active',
-        completionPercentage: profile?.profileCompletion?.step1 && profile?.profileCompletion?.step2 ? 100 : 50,
+        completionPercentage: profile?.profileCompletion?.step1 && profile?.profileCompletion?.step2 ? 100 : (profile?.profileCompletion?.step1)? 50 : 0,
         formLink: '/provider/profile/edit'
     };
 
