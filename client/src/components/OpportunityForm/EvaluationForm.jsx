@@ -23,15 +23,18 @@ const EvaluationForm = ({ onSubmit, onPrevious, initialData, isLoading }) => {
   
   // Watch for hasMilestones changes
   const watchHasMilestones = watch('hasMilestones');
-  
-  // Handle support selection
+    // Handle support selection
   const handleSupportChange = (e) => {
     const { value, checked } = e.target;
     
     if (checked) {
       // Add support
       const newSupport = { name: value };
-      setSelectedSupport([...selectedSupport, newSupport]);
+      const updatedSupport = [...selectedSupport, newSupport];
+      setSelectedSupport(updatedSupport);
+      
+      // Update form value with the new array
+      setValue('support', updatedSupport);
       
       // Show custom support input if "Other" is selected
       if (value === 'Other') {
@@ -39,16 +42,17 @@ const EvaluationForm = ({ onSubmit, onPrevious, initialData, isLoading }) => {
       }
     } else {
       // Remove support
-      setSelectedSupport(selectedSupport.filter(item => item.name !== value));
+      const updatedSupport = selectedSupport.filter(item => item.name !== value);
+      setSelectedSupport(updatedSupport);
+      
+      // Update form value with the new array
+      setValue('support', updatedSupport);
       
       // Hide custom support input if "Other" is unchecked
       if (value === 'Other') {
         setShowCustomSupport(false);
       }
     }
-    
-    // Update form value
-    setValue('support', selectedSupport);
   };
   
   // Handle custom support input

@@ -6,6 +6,7 @@ import Header from "../components/main components/Header.jsx"; // Import Header 
 import Footer from "../components/main components/Footer.jsx"; // Import Footer component
 import { useAuth } from '../redux/hooks/useAuth.js'; // Import useAuth hook for user type checking
 import { useApplications } from '../redux/hooks/useApplications.js'; // Import useApplications hook for registration function
+import { OpportunitySkeleton } from '../components/ui/LoaderComponents.jsx'; // Import skeleton loader
 // Correct the CSS import path if needed based on your project structure
 import '../stylesheet/Individual-opporunity.css'; // Ensure this CSS file exists and is correctly named/pathed
 
@@ -233,14 +234,12 @@ const IndividualOpportunity = () => {
         } finally {
             setRegistering(false);
         }
-    };
-
-    // --- Conditional Rendering for Loading State ---
+    };    // --- Conditional Rendering for Loading State ---
     if (loading) {
         return (
             <>
                 <Header />
-                <div className="individual-opportunity-loading">Loading opportunity details...</div>
+                <OpportunitySkeleton />
                 <Footer />
             </>
         );
