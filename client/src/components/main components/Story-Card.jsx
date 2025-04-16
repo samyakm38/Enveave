@@ -20,7 +20,7 @@ const StoryCard = ({ image, title, description, link, storyId }) => {
                 </a>
             </div>
             <div className="card-description-container flex-grow">
-                <p>{description}</p>
+                <p>{description?.split(" ").splice(0, 10).join(" ")}...</p>
             </div>
             <div className="card-button">
                 <a href={storyLink}>Read more {">"}</a>
