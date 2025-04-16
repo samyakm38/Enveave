@@ -9,9 +9,16 @@ export const getProviderProfile = async (req, res) => {
     try {
         // Get the provider ID from the authenticated user
         const { id } = req.user;
+
+        const ids = await AuthOpportunityProvider.find({}, '_id');
+        console.log('controller',ids);
+        console.log("controller id", id)
+
+
         
         // First, check the auth provider model for basic info
         const authProvider = await AuthOpportunityProvider.findById(id);
+        console.log('controller',authProvider);
         if (!authProvider) {
             return res.status(404).json({ 
                 success: false, 
