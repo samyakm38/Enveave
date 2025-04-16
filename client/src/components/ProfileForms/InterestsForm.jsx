@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import volunteerService from '../../redux/services/volunteerService';
-import { useVolunteer } from '../../redux/hooks/useVolunteer';
+import { useVolunteerRedux as useVolunteer } from '../../redux/hooks/useVolunteerRedux';
 
 // Zod schema for form validation
 const interestsSchema = z.object({
@@ -46,8 +46,7 @@ const skillOptions = [
 ];
 
 const InterestsForm = ({ volunteerData, onSubmitSuccess, onBack }) => {
-  const { updateProfileStatus } = useVolunteer();
-  
+  const { updateProfileStatus, updateInterests } = useVolunteer();
   // Initialize form with React Hook Form
   const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(interestsSchema),
@@ -56,9 +55,7 @@ const InterestsForm = ({ volunteerData, onSubmitSuccess, onBack }) => {
       causes: volunteerData?.interests?.causes || [],
       skills: volunteerData?.interests?.skills || []
     }
-  });
-
-  // Handle form submission
+  });  // Handle form submission
   const onSubmit = async (data) => {
     try {
       // Format data for API
@@ -66,20 +63,39 @@ const InterestsForm = ({ volunteerData, onSubmitSuccess, onBack }) => {
         interests: {
           causes: data.causes,
           skills: data.skills
+        },
+        // Add profileCompletion.step2=true to match the pattern in BasicDetailsForm
+        profileCompletion: {
+          step2: true
         }
       };
-
-      // Submit data to the backend
-      await volunteerService.updateInterests(formattedData);
+      console.log("Submitting interests data:", formattedData);
+      
+      // Submit data to the backend using the Redux action
+      const interestsResult = await updateInterests(formattedData);
+      console.log("Interests update result:", interestsResult);
+      
+      if (!interestsResult) {
+        throw new Error("Failed to update interests - no response received");
+      }
       
       // Update the profile status to indicate Step 2 is complete
-      await updateProfileStatus('STEP_2');
+      const statusResult = await updateProfileStatus('STEP_2');
+      console.log("Profile status update result:", statusResult);
       
-      // Call the success callback
-      onSubmitSuccess();
+      if (!statusResult) {
+        throw new Error("Failed to update profile status - no response received");
+      }
+      
+      // IMPORTANT: Use a setTimeout to ensure the state changes have time to propagate
+      setTimeout(() => {
+        // Call the success callback to move to next step
+        console.log("Calling onSubmitSuccess to move to next step");
+        onSubmitSuccess();
+      }, 100);
     } catch (error) {
       console.error('Error saving interests:', error);
-      // You could add error state and display to user here
+      alert(`Failed to save your interests: ${error?.message || 'Unknown error'}`);
     }
   };
 
