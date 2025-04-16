@@ -202,6 +202,109 @@ function TableSkeleton({ rows = 5 }) {
   );
 }
 
+// Opportunity Skeleton Loader - Custom for Individual Opportunity Page
+function OpportunitySkeleton() {
+  return (
+    <div className="individual-opportunity-main-container">
+      {/* Top Section */}
+      <div className="individual-opportunity-top-container">
+        {/* Title Bar */}
+        <div className="individual-opportunity-top-title-bar">
+          <Skeleton height={40} width="60%" baseColor="#e9eaec" highlightColor="#f6f67d33" />
+          <div className="individual-opportunity-top-title-toggle">
+            <Skeleton circle width={20} height={20} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+            <Skeleton width={60} baseColor="#e9eaec" highlightColor="#f6f67d33" style={{ marginLeft: '8px' }} />
+          </div>
+        </div>
+        
+        {/* Sub-title Bar */}
+        <div className="individual-opportunity-sub-title-bar">
+          <div className="individual-opportunity-tags-container">
+            {Array(3).fill(0).map((_, index) => (
+              <Skeleton key={index} width={80} height={30} baseColor="#e9eaec" highlightColor="#f6f67d33" style={{ marginRight: '8px', borderRadius: '15px' }} />
+            ))}
+          </div>
+          <Skeleton width={120} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+        </div>
+        
+        {/* Basic Section */}
+        <div className="individual-opportunity-basic-section">
+          <Skeleton height={250} width={320} baseColor="#e9eaec" highlightColor="#f6f67d33" style={{ borderRadius: '8px' }} />
+          
+          <div className="individual-opportunity-basic-section-details">
+            <div className="individual-opportunity-basic-section-upper">
+              {Array(3).fill(0).map((_, index) => (
+                <span key={index} className="individual-opportunity-basic-icons-details">
+                  <Skeleton circle width={24} height={24} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                  <Skeleton width={150} baseColor="#e9eaec" highlightColor="#f6f67d33" style={{ marginLeft: '8px' }} />
+                </span>
+              ))}
+            </div>
+            
+            <div className="individual-opportunity-basic-section-bottom">
+              {Array(3).fill(0).map((_, index) => (
+                <span key={index} className="individual-opportunity-basic-lower-details">
+                  <Skeleton height={20} width={80} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                  <Skeleton height={16} width={100} baseColor="#e9eaec" highlightColor="#f6f67d33" style={{ marginTop: '4px' }} />
+                </span>
+              ))}
+            </div>
+            
+            <Skeleton height={50} width={200} baseColor="#e9eaec" highlightColor="#f6f67d33" style={{ marginTop: '20px', borderRadius: '25px' }} />
+          </div>
+        </div>
+      </div>
+      
+      {/* POC Section */}
+      <div className="individual-opportunity-POC-section">
+        <Skeleton height={30} width="30%" baseColor="#e9eaec" highlightColor="#f6f67d33" className="mb-4" />
+        {Array(2).fill(0).map((_, index) => (
+          <div key={index} className="mb-3">
+            <Skeleton height={20} width={60} baseColor="#e9eaec" highlightColor="#f6f67d33" className="mb-2" />
+            <Skeleton height={20} width={200} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+          </div>
+        ))}
+      </div>
+      
+      {/* Bottom Description Sections */}
+      <div className="individual-opportunity-bottom-container">
+        {/* About Opportunity */}
+        <div className="individual-opportunity-bottom-sub-containers">
+          <Skeleton height={30} width="40%" baseColor="#e9eaec" highlightColor="#f6f67d33" className="mb-4" />
+          <Skeleton count={4} height={20} baseColor="#e9eaec" highlightColor="#f6f67d33" className="mb-2" />
+          
+          <div className="mt-4">
+            <Skeleton height={24} width={150} baseColor="#e9eaec" highlightColor="#f6f67d33" className="mb-3" />
+            {Array(3).fill(0).map((_, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <Skeleton circle width={6} height={6} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+                <Skeleton height={16} width={200} baseColor="#e9eaec" highlightColor="#f6f67d33" style={{ marginLeft: '10px' }} />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Milestones Section */}
+        <div className="individual-opportunity-bottom-sub-containers">
+          <Skeleton height={30} width="30%" baseColor="#e9eaec" highlightColor="#f6f67d33" className="mb-4" />
+          {Array(3).fill(0).map((_, index) => (
+            <div key={index} className="flex items-center mb-2">
+              <Skeleton circle width={6} height={6} baseColor="#e9eaec" highlightColor="#f6f67d33" />
+              <Skeleton height={16} width={280} baseColor="#e9eaec" highlightColor="#f6f67d33" style={{ marginLeft: '10px' }} />
+            </div>
+          ))}
+        </div>
+        
+        {/* About Organization */}
+        <div className="individual-opportunity-bottom-sub-containers">
+          <Skeleton height={30} width="40%" baseColor="#e9eaec" highlightColor="#f6f67d33" className="mb-4" />
+          <Skeleton count={3} height={20} baseColor="#e9eaec" highlightColor="#f6f67d33" className="mb-2" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Export all components
 export {
   SpinnerLoader,
@@ -213,5 +316,6 @@ export {
   CardSkeleton,
   ProfileSkeleton,
   FormSkeleton,
-  TableSkeleton
+  TableSkeleton,
+  OpportunitySkeleton
 };

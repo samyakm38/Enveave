@@ -73,52 +73,21 @@ export const basicDetailsSchema = z.object({
 });
 
 // Validation schema for Step 2: Schedule
-export const scheduleSchema = z.object({
+// Create a base schema first
+const baseScheduleSchema = {
   location: z.string().min(3, "Location must be at least 3 characters long"),
-  startDate: z.string()
-    .refine(date => !isNaN(new Date(date).getTime()), {
-      message: "Start date must be a valid date"
-    }),
-  endDate: z.string()
-    .refine(date => !isNaN(new Date(date).getTime()), {
-      message: "End date must be a valid date"
-    })
-    .superRefine((date, ctx) => {
-      // Only run comparison if we have both dates and they're valid
-      const startDate = ctx.path && ctx.path.length > 0 && ctx.data?.startDate ? 
-        new Date(ctx.data.startDate) : null;
-      const endDate = date ? new Date(date) : null;
-      
-      if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
-        if (endDate <= startDate) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "End date must be after start date"
-          });
-        }
-      }
-      return z.NEVER;
-    }),
-  applicationDeadline: z.string()
-    .refine(date => !isNaN(new Date(date).getTime()), {
-      message: "Application deadline must be a valid date"
-    })
-    .superRefine((date, ctx) => {
-      // Only run comparison if we have both dates and they're valid
-      const startDate = ctx.path && ctx.path.length > 0 && ctx.data?.startDate ? 
-        new Date(ctx.data.startDate) : null;
-      const deadlineDate = date ? new Date(date) : null;
-      
-      if (startDate && deadlineDate && !isNaN(startDate) && !isNaN(deadlineDate)) {
-        if (deadlineDate > startDate) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Application deadline must be on or before start date"
-          });
-        }
-      }
-      return z.NEVER;
-    }),
+  startDate: z.string().refine(
+    (date) => !isNaN(new Date(date).getTime()), 
+    { message: "Start date must be a valid date" }
+  ),
+  endDate: z.string().refine(
+    (date) => !isNaN(new Date(date).getTime()),
+    { message: "End date must be a valid date" }
+  ),
+  applicationDeadline: z.string().refine(
+    (date) => !isNaN(new Date(date).getTime()),
+    { message: "Application deadline must be a valid date" }
+  ),
   timeCommitment: z.enum([
     'Few hours per week',
     '1-2 days per week',
@@ -132,7 +101,42 @@ export const scheduleSchema = z.object({
     email: z.string().email("Please enter a valid email address"),
     phoneNumber: z.string().min(10, "Please enter a valid phone number")
   })
-});
+};
+
+// Export the schedule schema with date validation
+export const scheduleSchema = z.object(baseScheduleSchema).refine(
+  (data) => {
+    // Convert string dates to Date objects for comparison
+    const startDate = new Date(`${data.startDate}T12:00:00`);
+    const endDate = new Date(`${data.endDate}T12:00:00`);
+    
+    // Skip validation if dates are invalid
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) return true;
+    
+    // Return true if validation passes (end date is on or after start date)
+    return endDate >= startDate;
+  },
+  {
+    message: "End date must be on or after start date",
+    path: ["endDate"] // This targets the error to the specific field
+  }
+).refine(
+  (data) => {
+    // Convert string dates to Date objects for comparison
+    const applicationDeadline = new Date(`${data.applicationDeadline}T12:00:00`);
+    const endDate = new Date(`${data.endDate}T12:00:00`);
+    
+    // Skip validation if dates are invalid
+    if (isNaN(applicationDeadline.getTime()) || isNaN(endDate.getTime())) return true;
+    
+    // Return true if validation passes (deadline is before end date)
+    return applicationDeadline < endDate;
+  },
+  {
+    message: "Application deadline must be before end date",
+    path: ["applicationDeadline"] // This targets the error to the specific field
+  }
+);
 
 // Validation schema for Step 3: Support and Milestones
 export const evaluationSchema = z.object({
