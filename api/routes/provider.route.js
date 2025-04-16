@@ -12,19 +12,19 @@ import { upload } from "../helpers/imageUpload.js";
 const router = express.Router();
 
 // All routes require authentication
-router.use(authenticateToken);
+// router.use(authenticateToken);
 
 // Provider profile routes
-router.get('/profile', getProviderProfile);
-router.put('/profile', updateProviderProfile);
+router.get('/profile',authenticateToken, getProviderProfile);
+router.put('/profile',authenticateToken, updateProviderProfile);
 
 // Provider stats route
-router.get('/stats', getProviderStats);
+router.get('/stats',authenticateToken, getProviderStats);
 
 // Provider dashboard route (provides opportunities and stats)
-router.get('/dashboard', getProviderDashboard);
+router.get('/dashboard',authenticateToken, getProviderDashboard);
 
 // Provider logo upload route
-router.post('/upload-logo', upload.single('logo'), uploadProviderLogo);
+router.post('/upload-logo', upload.single('logo'),authenticateToken, uploadProviderLogo);
 
 export default router;
