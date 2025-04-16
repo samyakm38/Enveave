@@ -88,7 +88,8 @@ const IndividualStory = () => {
                                     <span>
                                         {formatDate(story.publishedAt || story.createdAt)}
                                     </span>
-                                </div>                                <div 
+                                </div>                                
+                                <div 
                                     className="prose max-w-none" 
                                     dangerouslySetInnerHTML={{ __html: story.content }}
                                 />
