@@ -12,22 +12,17 @@ const FAQSection = () => {
         {
             question: "Who can use Enveave?",
             answer:
-                "Once your order has shipped, you will receive an email with the tracking information. You can also log in to your account to view your order status."
+                "Anyone interested in taking action on environmental issues is welcome on Enveave. This includes individuals, communities, and organisations of all sizes and types."
         },
         {
             question: "What are the criteria for starting projects on Enveave?",
             answer:
-                "Yes, you can purchase items again after returning them. Just add the desired items to your cart and complete the checkout process as usual."
-        },
-        {
-            question: "What types of environmental issues does Enveave focus on?",
-            answer:
-                "Yes, you can purchase items again after returning them. Just add the desired items to your cart and complete the checkout process as usual."
+                "Organizations looking to start a project on Enveave must be focused on social good, community impact, or charitable causes—not for commercial gain. They need to register on the platform to ensure transparency and build trust with volunteers. Each project should clearly define volunteer roles or tasks, whether remote or on-site. Once registered, organizations can post projects, connect with volunteers, and work together to create meaningful change."
         },
         {
             question: "How can i get involved with Enveave?",
             answer:
-                "Yes, you can purchase items again after returning them. Just add the desired items to your cart and complete the checkout process as usual."
+                "There are many ways to get involved with Enveave! You can sign up for an account on the platform and start a project, work on a project as a volunteer or maybe just browse projects on Enveave and spread the word. "
         }
     ];
 
