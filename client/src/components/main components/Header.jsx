@@ -95,7 +95,7 @@ const Header = () => {
                                     </span>
                                 </Dropdown.Header>
                                 <Dropdown.Item onClick={() => navigate(userType === 'volunteer' ? '/volunteer/dashboard' :
-                                    userType === 'provider' ? '/organization/dashboard' : '/admin/dashboard'
+                                    userType === 'provider' ? '/provider/dashboard' : '/admin/dashboard'
                                 )}>
                                     Dashboard
                                 </Dropdown.Item>
