@@ -4,26 +4,26 @@
 
 ## About Enveave
 
-Enveave is the **Digital Infrastructure** for environmental actions on a mission to become a collective for all environmental initiatives in India. We connect civil society, individuals, expert groups, academia, the research community, and industry on a common platform to collaborate on projects related to ecology and environment.
+Enveave is the **Digital Infrastructure** for societal initiatives, on a mission to become the collective platform for all initiatives that benefit society in India. We connect individuals, organizations, expert groups, academia, and industry on a unified platform to collaborate on meaningful opportunities across diverse sectors—driving social impact and collective progress.
 
-> *"Let a Million Environment Flowers Bloom"*
+> *"Let a Million Ideas Bloom for the Greater Good"*
 
 ## 🌿 Vision & Mission
 
 ### Vision
-Our vision is that Enveave will become the platform for all environmental initiatives by the citizens and organizations in India and the main forum for anyone who wants to contribute to the environment.
+Our vision is for Enveave to become the go-to platform for all citizen-led and organizational initiatives that aim to create positive change in society. We aspire to be the main forum for anyone who wants to contribute their time, skills, or passion toward the greater good.
 
 ### Mission
-Enveave aims to get together civil society, individuals, expert groups, academia, the research community, and industry on a common platform and provide a single place to collaborate on various projects related to Ecology and Environment. We aim to ease the launch and execution of such projects, large or small.
+Our mission is to connect volunteers with NGOs and organizations dedicated to non-commercial initiatives that benefit society. We strive to make it easier for individuals and groups to discover, engage with, and collaborate on meaningful opportunities that drive positive impact in India.
 
 ## 🚀 How It Works
 
 ![How It Works](./client/public/how-it-works-img-1.png)
 
 1. **Connect**: Join our platform as a volunteer or an opportunity provider
-2. **Discover**: Find environmental projects that match your interests and skills
-3. **Collaborate**: Work together with others passionate about environmental action
-4. **Make Impact**: Contribute to meaningful change for our environment
+2. **Discover**: Find opportunity that match your interests and skills
+3. **Collaborate**: Work together with others who are passionate about creating positive social impact.
+4. **Make an Impact**: Contribute to meaningful change across various societal causes.
 
 ## 💻 Technical Overview
 
@@ -105,13 +105,13 @@ Enveave is built with a modern tech stack:
 
 ## 📱 Key Features
 
-- **Environmental Project Discovery**: Browse and search for environmental initiatives
-- **Volunteer Management**: Register, apply, and track participation in projects
-- **Organization Tools**: Create and manage environmental opportunities
-- **Success Stories**: Showcase impactful environmental projects
+- **Environmental Project Discovery**:  Browse and search for initiatives that benefit society
+- **Volunteer Management**:  Register, apply, and track participation in opportunities
+- **Organization Tools**: Create and manage opportunities for social impact
+- **Success Stories**: Showcase impactful initiatives across various sectors
 - **Authentication System**: Secure login and account management
 - **Interactive Dashboard**: For volunteers, organizations, and admins
-- **AI-Powered Support**: Chatbot for answering environmental queries
+- **AI-Powered Support**: Chatbot for answering queries related to initiatives and opportunities
 
 ## 🧪 Testing
 

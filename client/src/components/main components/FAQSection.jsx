@@ -7,23 +7,23 @@ const FAQSection = () => {
         {
             question: "Is there a cost for using Enveave?",
             answer:
-                "Enveave is non-profit and free to use. We are committed to making our platform accessible to as many people as possible."
+                "Enveave is a non-profit platform and completely free to use. We are committed to keeping it accessible to individuals and organizations working for the greater good."
         },
         {
             question: "Who can use Enveave?",
             answer:
-                "Anyone interested in taking action on environmental issues is welcome on Enveave. This includes individuals, communities, and organisations of all sizes and types."
+                "Anyone interested in contributing to positive social change is welcome on Enveave. This includes individuals, volunteers, NGOs, and organizations of all sizes working on non-commercial initiatives."
         },
         {
-            question: "What are the criteria for starting projects on Enveave?",
+            question: "What are the criteria for starting opportunities on Enveave?",
             answer:
-                "Organizations looking to start a project on Enveave must be focused on social good, community impact, or charitable causes—not for commercial gain. They need to register on the platform to ensure transparency and build trust with volunteers. Each project should clearly define volunteer roles or tasks, whether remote or on-site. Once registered, organizations can post projects, connect with volunteers, and work together to create meaningful change."
+                "Organizations looking to post opportunities on Enveave must be focused on societal good, community impact, or charitable causes—not for commercial gain. Registration is required to ensure transparency and build trust with volunteers. Each opportunity should clearly outline roles or tasks, whether remote or on-site. Once registered, organizations can connect with volunteers and collaborate to create meaningful impact."
         },
         {
-            question: "How can i get involved with Enveave?",
+            question: "How can I get involved with Enveave?",
             answer:
-                "There are many ways to get involved with Enveave! You can sign up for an account on the platform and start a project, work on a project as a volunteer or maybe just browse projects on Enveave and spread the word. "
-        }
+                "There are many ways to get involved! You can create an account, sign up as a volunteer or an organization, create or join an opportunity, or simply explore ongoing efforts and help spread the word about Enveave."
+        }       
     ];
 
     // State to keep track of the currently open FAQ index; null means all are closed
