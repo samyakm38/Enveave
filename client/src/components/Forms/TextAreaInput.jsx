@@ -1,5 +1,5 @@
 import React from "react";
-import "./stylesheets/TextAreaInput.css";
+// import "./stylesheets/TextAreaInput.css";
 
 const TextareaInput = ({ name, value, onChange, placeholder, required }) => {
   return (
@@ -8,7 +8,7 @@ const TextareaInput = ({ name, value, onChange, placeholder, required }) => {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="form-textarea-input"
+      // className="form-textarea-input"
       required={required}
       style={{ width: "100%", padding: "10px", fontSize: "14px" }}
     />
