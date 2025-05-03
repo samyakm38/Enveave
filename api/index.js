@@ -82,12 +82,11 @@ if (process.env.NODE_ENV !== 'test') {
   // app.listen(port, () => {
   //   console.log('Server is running on http://localhost:3000');
   // });
-
-  const PORT = process.env.PORT || env.port || 3000;
-
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  const renderPort = process.env.PORT || 3000;
+  app.listen(renderPort, '0.0.0.0', () => {
+    console.log(`Server is running on port ${renderPort}`);
   });
+  
 }
 
 // Export the app for testing
