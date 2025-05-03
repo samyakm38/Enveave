@@ -1,0 +1,56 @@
+{
+  "name": "enveave",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles",
+    "test:watch": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js",
+    "seed": "node api/scripts/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^0.8.0",
+    "@google/generative-ai": "^0.24.0",
+    "@jest/globals": "^29.7.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.0",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.2",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^6.10.0",
+    "nodemon": "^3.1.9",
+    "streamifier": "^0.1.1"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.9",
+    "@faker-js/faker": "^9.6.0",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {},
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "setupFilesAfterEnv": [
+      "./api/tests/setup.js"
+    ]
+  }
+}
