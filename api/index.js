@@ -78,9 +78,15 @@ app.use('/api/admin', adminRoutes);
 
 // Start the server only if not in test mode
 if (process.env.NODE_ENV !== 'test') {
-  const { port } = env;
-  app.listen(port, () => {
-    console.log('Server is running on http://localhost:3000');
+  // const { port } = env;
+  // app.listen(port, () => {
+  //   console.log('Server is running on http://localhost:3000');
+  // });
+
+  const PORT = process.env.PORT || env.port || 3000;
+
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
   });
 }
 
