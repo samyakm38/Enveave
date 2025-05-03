@@ -32,7 +32,7 @@ app.use(helmet());
 
 // Configure CORS with specific options
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Add your frontend URLs
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://enveave.onrender.com/'], // Add your frontend URLs
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
