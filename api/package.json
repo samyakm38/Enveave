@@ -1,5 +1,5 @@
 {
-  "name": "enveave",
+  "name": "enveave-api",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -7,9 +7,9 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles",
     "test:watch": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --watch",
-    "dev": "nodemon api/index.js",
-    "start": "node api/index.js",
-    "seed": "node api/scripts/seed.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "seed": "node scripts/seed.js"
   },
   "keywords": [],
   "author": "",
